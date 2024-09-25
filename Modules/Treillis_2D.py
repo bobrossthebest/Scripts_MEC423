@@ -12,11 +12,11 @@ from Modules.Fonctions_partagées import (calculer_k_barre2d, assembler_matrice,
 
 
 # Calcul du vecteur des charges equivalentes dues a la dilatation thermique d'un element Barre2D
-def calculer_feq_barre2d(E, A, alpha, dT, xi, yi, xj, yj):
-    L = ((xj - xi) ** 2 + (yj - yi) ** 2) ** 0.5
-    cx = (xj - xi) / L
-    cy = (yj - yi) / L
-    feq = (E * A * alpha * dT) * np.array([[-cx],
+def calculer_feq_barre2d(e, a, alpha, dt, xi, yi, xj, yj):
+    l_barre = ((xj - xi) ** 2 + (yj - yi) ** 2) ** 0.5
+    cx = (xj - xi) / l_barre
+    cy = (yj - yi) / l_barre
+    feq = (e * a * alpha * dt) * np.array([[-cx],
                                            [-cy],
                                            [cx],
                                            [cy]])
@@ -24,16 +24,16 @@ def calculer_feq_barre2d(E, A, alpha, dT, xi, yi, xj, yj):
 
 
 # Calcul de la contrainte dans un element Barre2D
-def calculer_contrainte_barre2d(Utot, ddl, E, alpha, dT, xi, yi, xj, yj):
-    Ui = Utot[ddl[0] - 1][0]
-    Vi = Utot[ddl[1] - 1][0]
-    Uj = Utot[ddl[2] - 1][0]
-    Vj = Utot[ddl[3] - 1][0]
-    L = ((xj - xi) ** 2 + (yj - yi) ** 2) ** 0.5
-    cx = (xj - xi) / L
-    cy = (yj - yi) / L
-    sigma = (E / L) * np.array([[-cx, -cy, cx, cy]]) @ np.array([[Ui], [Vi], [Uj], [Vj]]) - np.array([[E * alpha * dT]])
-    return sigma[0][0]
+def calculer_contrainte_barre2d(u_tot, ddl, e, alpha, dt, xi, yi, xj, yj):
+    ui = u_tot[ddl[0] - 1][0]
+    vi = u_tot[ddl[1] - 1][0]
+    uj = u_tot[ddl[2] - 1][0]
+    vj = u_tot[ddl[3] - 1][0]
+    l_ = ((xj - xi) ** 2 + (yj - yi) ** 2) ** 0.5
+    cx = (xj - xi) / l_
+    cy = (yj - yi) / l_
+    sig = (e / l_) * np.array([[-cx, -cy, cx, cy]]) @ np.array([[ui], [vi], [uj], [vj]]) - np.array([[e * alpha * dt]])
+    return sig[0][0]
 
 
 # ----------------------------

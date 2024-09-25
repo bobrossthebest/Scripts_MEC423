@@ -10,69 +10,69 @@ from Modules.Fonctions_partagées import (assembler_matrice, extraire_matrice, e
 # ---------
 
 # Calcul du vecteur des charges equivalentes dues a une charge repartie constante appliquee sur un element Poutre2D
-def calculer_feq_poutre2d(E, A, alpha, dT, qx, qy, xi, yi, xj, yj):
-    L = ((xj - xi) ** 2 + (yj - yi) ** 2) ** 0.5
-    cx = (xj - xi) / L
-    cy = (yj - yi) / L
-    feqT = A * E * alpha * dT * np.array([[-cx],
-                                          [-cy],
-                                          [0],
-                                          [cx],
-                                          [cy],
-                                          [0]])
-    feqQ = np.array([[qx * L / 2],
-                     [qy * L / 2],
-                     [(qy * cx - qx * cy) * L ** 2 / 12],
-                     [qx * L / 2],
-                     [qy * L / 2],
-                     [(qx * cy - qy * cx) * L ** 2 / 12]])
-    feq = feqT + feqQ
+def calculer_feq_poutre2d(e, a, alpha, d_t, qx, qy, xi, yi, xj, yj):
+    l_ = ((xj - xi) ** 2 + (yj - yi) ** 2) ** 0.5
+    cx = (xj - xi) / l_
+    cy = (yj - yi) / l_
+    feq_t = a * e * alpha * d_t * np.array([[-cx],
+                                           [-cy],
+                                           [0],
+                                           [cx],
+                                           [cy],
+                                           [0]])
+    feq_q = np.array([[qx * l_ / 2],
+                     [qy * l_ / 2],
+                     [(qy * cx - qx * cy) * l_ ** 2 / 12],
+                     [qx * l_ / 2],
+                     [qy * l_ / 2],
+                     [(qx * cy - qy * cx) * l_ ** 2 / 12]])
+    feq = feq_t + feq_q
     return feq
 
 
 # Assemblage d'un vecteur
-def assembler_vecteur(Ftot, f, lig):
+def assembler_vecteur(ftot, f, lig):
     for i in range(len(lig)):
-        Ftot[lig[i] - 1][0] += f[i][0]
-    return Ftot
+        ftot[lig[i] - 1][0] += f[i][0]
+    return ftot
 
 
 # Calcul des contraintes aux extremites d'un element Poutre2D
-def calculer_contraintes_poutre2d(Utot, ddl, E, alpha, dT, xi, yi, xj, yj, yplus, ymoins):
-    L = ((xj - xi) ** 2 + (yj - yi) ** 2) ** 0.5
-    cx = (xj - xi) / L
-    cy = (yj - yi) / L
-    R = np.array([[cx, cy, 0, 0, 0, 0],
+def calculer_contraintes_poutre2d(utot, ddl, e, alpha, d_t, xi, yi, xj, yj, yplus, ymoins):
+    l_ = ((xj - xi) ** 2 + (yj - yi) ** 2) ** 0.5
+    cx = (xj - xi) / l_
+    cy = (yj - yi) / l_
+    r = np.array([[cx, cy, 0, 0, 0, 0],
                   [-cy, cx, 0, 0, 0, 0],
                   [0, 0, 1, 0, 0, 0],
                   [0, 0, 0, cx, cy, 0],
                   [0, 0, 0, -cy, cx, 0],
                   [0, 0, 0, 0, 0, 1]])
-    dispGlobal = np.array([[Utot[ddl[0] - 1][0]],
-                           [Utot[ddl[1] - 1][0]],
-                           [Utot[ddl[2] - 1][0]],
-                           [Utot[ddl[3] - 1][0]],
-                           [Utot[ddl[4] - 1][0]],
-                           [Utot[ddl[5] - 1][0]]])
-    dispLocal = R @ dispGlobal
-    ui = dispLocal[0][0]
-    vi = dispLocal[1][0]
-    ti = dispLocal[2][0]
-    uj = dispLocal[3][0]
-    vj = dispLocal[4][0]
-    tj = dispLocal[5][0]
-    sigTrac = E * (uj - ui) / L - E * alpha * dT
-    sigFlexiPlus = -yplus * E * (6 * (vj - vi) / L ** 2 - 2 * (2 * ti + tj) / L)
-    sigFlexiMoins = -ymoins * E * (6 * (vj - vi) / L ** 2 - 2 * (2 * ti + tj) / L)
-    sigFlexjPlus = -yplus * E * (6 * (vi - vj) / L ** 2 + 2 * (ti + 2 * tj) / L)
-    sigFlexjMoins = -ymoins * E * (6 * (vi - vj) / L ** 2 + 2 * (ti + 2 * tj) / L)
-    sigCombiPlus = sigFlexiPlus + sigTrac
-    sigCombiMoins = sigFlexiMoins + sigTrac
-    sigCombjPlus = sigFlexjPlus + sigTrac
-    sigCombjMoins = sigFlexjMoins + sigTrac
+    disp_global = np.array([[utot[ddl[0] - 1][0]],
+                           [utot[ddl[1] - 1][0]],
+                           [utot[ddl[2] - 1][0]],
+                           [utot[ddl[3] - 1][0]],
+                           [utot[ddl[4] - 1][0]],
+                           [utot[ddl[5] - 1][0]]])
+    disp_local = r @ disp_global
+    ui = disp_local[0][0]
+    vi = disp_local[1][0]
+    ti = disp_local[2][0]
+    uj = disp_local[3][0]
+    vj = disp_local[4][0]
+    tj = disp_local[5][0]
+    sig_trac = e * (uj - ui) / l_ - e * alpha * d_t
+    sig_flexi_plus = -yplus * e * (6 * (vj - vi) / l_ ** 2 - 2 * (2 * ti + tj) / l_)
+    sig_flexi_moins = -ymoins * e * (6 * (vj - vi) / l_ ** 2 - 2 * (2 * ti + tj) / l_)
+    sig_flexj_plus = -yplus * e * (6 * (vi - vj) / l_ ** 2 + 2 * (ti + 2 * tj) / l_)
+    sig_flexj_moins = -ymoins * e * (6 * (vi - vj) / l_ ** 2 + 2 * (ti + 2 * tj) / l_)
+    sig_combi_plus = sig_flexi_plus + sig_trac
+    sig_combi_moins = sig_flexi_moins + sig_trac
+    sig_combj_plus = sig_flexj_plus + sig_trac
+    sig_combj_moins = sig_flexj_moins + sig_trac
     sig = np.array(
-        [sigTrac, sigFlexiPlus, sigFlexiMoins, sigFlexjPlus, sigFlexjMoins, sigCombiPlus, sigCombiMoins, sigCombjPlus,
-         sigCombjMoins])
+        [sig_trac, sig_flexi_plus, sig_flexi_moins, sig_flexj_plus, sig_flexj_moins,
+         sig_combi_plus, sig_combi_moins, sig_combj_plus, sig_combj_moins])
     return sig
 
 

@@ -13,15 +13,15 @@ sp.var('x y')
 # ---------
 
 # Calcul des fonctions d'interpolation et de leurs dérivées d'un élément RECT4
-def calculer_deriver_fonctions_interpolation_Rect4(xmin, xmax, ymin, ymax):
-    Ni = ((xmax - x) * (ymax - y)) / ((xmax - xmin) * (ymax - ymin))
-    Nj = ((x - xmin) * (ymax - y)) / ((xmax - xmin) * (ymax - ymin))
-    Nk = ((x - xmin) * (y - ymin)) / ((xmax - xmin) * (ymax - ymin))
-    Nl = ((xmax - x) * (y - ymin)) / ((xmax - xmin) * (ymax - ymin))
-    N = sp.Matrix([Ni, Nj, Nk, Nl])
-    dNdx = sp.Matrix([Ni.diff(x), Nj.diff(x), Nk.diff(x), Nl.diff(x)])
-    dNdy = sp.Matrix([Ni.diff(y), Nj.diff(y), Nk.diff(y), Nl.diff(y)])
-    return N, dNdx, dNdy
+def calculer_deriver_fonctions_interpolation_rect4(xmin, xmax, ymin, ymax):
+    ni = ((xmax - x) * (ymax - y)) / ((xmax - xmin) * (ymax - ymin))
+    nj = ((x - xmin) * (ymax - y)) / ((xmax - xmin) * (ymax - ymin))
+    nk = ((x - xmin) * (y - ymin)) / ((xmax - xmin) * (ymax - ymin))
+    nl = ((xmax - x) * (y - ymin)) / ((xmax - xmin) * (ymax - ymin))
+    n = sp.Matrix([ni, nj, nk, nl])
+    dn_dx = sp.Matrix([ni.diff(x), nj.diff(x), nk.diff(x), nl.diff(x)])
+    dn_dy = sp.Matrix([ni.diff(y), nj.diff(y), nk.diff(y), nl.diff(y)])
+    return n, dn_dx, dn_dy
 
 
 # ----------------------------
@@ -41,7 +41,7 @@ xmin1 = 0
 xmax1 = 0.25
 ymin1 = 0
 ymax1 = 0.25
-N1, dNdx1, dNdy1 = calculer_deriver_fonctions_interpolation_Rect4(xmin1, xmax1, ymin1, ymax1)
+N1, dNdx1, dNdy1 = calculer_deriver_fonctions_interpolation_rect4(xmin1, xmax1, ymin1, ymax1)
 Kk1 = t * kT * sp.integrate(sp.integrate(dNdx1 * dNdx1.T + dNdy1 * dNdy1.T, (x, xmin1, xmax1)), (y, ymin1, ymax1))
 Kh1 = t * h * (sp.integrate((N1 * N1.T).subs(y, ymin1), (x, xmin1, xmax1)))
 Fh1 = t * h * Tf * sp.integrate(N1.subs(y, ymin1), (x, xmin1, xmax1))
@@ -55,7 +55,7 @@ xmin2 = 0.25
 xmax2 = 0.5
 ymin2 = 0
 ymax2 = 0.25
-N2, dNdx2, dNdy2 = calculer_deriver_fonctions_interpolation_Rect4(xmin2, xmax2, ymin2, ymax2)
+N2, dNdx2, dNdy2 = calculer_deriver_fonctions_interpolation_rect4(xmin2, xmax2, ymin2, ymax2)
 Kk2 = t * kT * sp.integrate(sp.integrate(dNdx2 * dNdx2.T + dNdy2 * dNdy2.T, (x, xmin2, xmax2)), (y, ymin2, ymax2))
 Kh2 = t * h * (sp.integrate((N2 * N2.T).subs(y, ymin2), (x, xmin2, xmax2))) + t * h * (
     sp.integrate((N2 * N2.T).subs(x, xmax2), (y, ymin2, ymax2)))
