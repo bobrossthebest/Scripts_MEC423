@@ -2,7 +2,8 @@
 
 import numpy as np
 
-np.set_printoptions(precision=4, linewidth=np.inf)
+from Modules.Fonctions_partagées import (assembler_matrice, extraire_matrice, extraire_vecteur,
+                                         reconstruire_vecteur)
 
 
 # ---------
@@ -44,32 +45,6 @@ def calculer_k_T3(E, nu, t, xi, yi, xj, yj, xk, yk):
     return k
 
 
-# Assemblage d'une matrice
-def assembler_matrice(Ktot, k, lig, col):
-    for i in range(len(lig)):
-        for j in range(len(col)):
-            Ktot[lig[i] - 1][col[j] - 1] += k[i][j]
-    return Ktot
-
-
-# Extraction d'une sous-matrice
-def extraire_matrice(Kin, lig, col):
-    Kout = np.zeros((len(lig), len(col)))
-    for i in range(len(lig)):
-        for j in range(len(col)):
-            Kout[i][j] = Kin[lig[i] - 1][col[j] - 1]
-    return Kout
-
-
-# Reconstruction d'un vecteur a partir de deux vecteurs
-def reconstruire_vecteur(Vin1, lig1, Vin2, lig2):
-    Vout = np.zeros((len(lig1) + len(lig2), 1))
-    for i in range(len(lig1)):
-        Vout[lig1[i] - 1][0] = Vin1[i][0]
-    for i in range(len(lig2)):
-        Vout[lig2[i] - 1][0] = Vin2[i][0]
-    return Vout
-
 
 # Evaluation de la fonction d'interpolation Ni de l'element T3 a un point donne
 def evaluer_Ni_T3(xi, yi, xj, yj, xk, yk, x, y):
@@ -90,14 +65,6 @@ def evaluer_Nk_T3(xi, yi, xj, yj, xk, yk, x, y):
     aire = calculer_aire_T3(xi, yi, xj, yj, xk, yk)
     Nk = 1 / (2 * aire) * ((xi * yj - xj * yi) + (yi - yj) * x + (xj - xi) * y)
     return Nk
-
-
-# Extraction d'un vecteur
-def extraire_vecteur(Vin, lig):
-    Vout = np.zeros((len(lig), 1))
-    for i in range(len(lig)):
-        Vout[i][0] = Vin[lig[i] - 1][0]
-    return Vout
 
 
 # Calcul des contraintes dans un element T3

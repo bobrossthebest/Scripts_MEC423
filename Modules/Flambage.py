@@ -2,20 +2,12 @@
 
 import numpy as np
 
-np.set_printoptions(precision=4, linewidth=np.inf)
+from Modules.Fonctions_partagées import (calculer_k_poutre1d, assembler_matrice, extraire_matrice)
 
 
 # ---------
 # Fonctions
 # ---------
-
-# Calcul de la matrice de rigidite d'un element Poutre1D
-def calculer_k_poutre1d(E, I, L):
-    k = (E * I / L ** 3) * np.array([[12, 6 * L, -12, 6 * L],
-                                     [6 * L, 4 * L ** 2, -6 * L, 2 * L ** 2],
-                                     [-12, -6 * L, 12, -6 * L],
-                                     [6 * L, 2 * L ** 2, -6 * L, 4 * L ** 2]])
-    return k
 
 
 # Calcul de la matrice de rigidite non-lineaire d'un element Poutre1D
@@ -25,23 +17,6 @@ def calculer_knl_poutre1d(L):
                     [-1.2 / L, -0.1, 1.2 / L, -0.1],
                     [0.1, -L / 30, -0.1, 2 * L / 15]])
     return knl
-
-
-# Assemblage d'une matrice
-def assembler_matrice(Ktot, k, lig, col):
-    for i in range(len(lig)):
-        for j in range(len(col)):
-            Ktot[lig[i] - 1][col[j] - 1] += k[i][j]
-    return Ktot
-
-
-# Extraction d'une sous-matrice
-def extraire_matrice(Kin, lig, col):
-    Kout = np.zeros((len(lig), len(col)))
-    for i in range(len(lig)):
-        for j in range(len(col)):
-            Kout[i][j] = Kin[lig[i] - 1][col[j] - 1]
-    return Kout
 
 
 # ----------------------------

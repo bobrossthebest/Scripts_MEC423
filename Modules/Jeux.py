@@ -2,59 +2,8 @@
 
 import numpy as np
 
-np.set_printoptions(precision=4, linewidth=np.inf)
-
-
-# ---------
-# Fonctions
-# ---------
-
-# Calcul de la matrice de rigidite d'un element Barre2D
-def calculer_k_barre2d(E, A, xi, yi, xj, yj):
-    L = ((xj - xi) ** 2 + (yj - yi) ** 2) ** 0.5
-    cx = (xj - xi) / L
-    cy = (yj - yi) / L
-    k = (E * A / L) * np.array([[cx ** 2, cx * cy, -cx ** 2, -cx * cy],
-                                [cx * cy, cy ** 2, -cx * cy, -cy ** 2],
-                                [-cx ** 2, -cx * cy, cx ** 2, cx * cy],
-                                [-cx * cy, -cy ** 2, cx * cy, cy ** 2]])
-    return k
-
-
-# Assemblage d'une matrice
-def assembler_matrice(Ktot, k, lig, col):
-    for i in range(len(lig)):
-        for j in range(len(col)):
-            Ktot[lig[i] - 1][col[j] - 1] += k[i][j]
-    return Ktot
-
-
-# Extraction d'une sous-matrice
-def extraire_matrice(Kin, lig, col):
-    Kout = np.zeros((len(lig), len(col)))
-    for i in range(len(lig)):
-        for j in range(len(col)):
-            Kout[i][j] = Kin[lig[i] - 1][col[j] - 1]
-    return Kout
-
-
-# Reconstruction d'un vecteur a partir de deux vecteurs
-def reconstruire_vecteur(Vin1, lig1, Vin2, lig2):
-    Vout = np.zeros((len(lig1) + len(lig2), 1))
-    for i in range(len(lig1)):
-        Vout[lig1[i] - 1][0] = Vin1[i][0]
-    for i in range(len(lig2)):
-        Vout[lig2[i] - 1][0] = Vin2[i][0]
-    return Vout
-
-
-# Extraction d'un vecteur
-def extraire_vecteur(Vin, lig):
-    Vout = np.zeros((len(lig), 1))
-    for i in range(len(lig)):
-        Vout[i][0] = Vin[lig[i] - 1][0]
-    return Vout
-
+from Modules.Fonctions_partagées import (calculer_k_barre2d, assembler_matrice, extraire_matrice, extraire_vecteur,
+                                         reconstruire_vecteur)
 
 # ----------------------------
 # Proprietes de chaque element

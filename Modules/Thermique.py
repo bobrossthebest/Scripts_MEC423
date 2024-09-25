@@ -1,10 +1,9 @@
 # Unités : m-W-degC
 
-import numpy as np
+import numpy as np, sympy as sp
 
-np.set_printoptions(precision=4, linewidth=np.inf)
+from Modules.Fonctions_partagées import (assembler_matrice, assembler_vecteur)
 
-import sympy as sp
 
 sp.var('x y')
 
@@ -23,21 +22,6 @@ def calculer_deriver_fonctions_interpolation_Rect4(xmin, xmax, ymin, ymax):
     dNdx = sp.Matrix([Ni.diff(x), Nj.diff(x), Nk.diff(x), Nl.diff(x)])
     dNdy = sp.Matrix([Ni.diff(y), Nj.diff(y), Nk.diff(y), Nl.diff(y)])
     return N, dNdx, dNdy
-
-
-# Assemblage d'une matrice
-def assembler_matrice(Ktot, k, lig, col):
-    for i in range(len(lig)):
-        for j in range(len(col)):
-            Ktot[lig[i] - 1][col[j] - 1] += k[i][j]
-    return Ktot
-
-
-# Assemblage d'un vecteur
-def assembler_vecteur(Ftot, f, lig):
-    for i in range(len(lig)):
-        Ftot[lig[i] - 1][0] += f[i][0]
-    return Ftot
 
 
 # ----------------------------

@@ -2,7 +2,8 @@
 
 import numpy as np
 
-np.set_printoptions(precision=4, linewidth=np.inf)
+from Modules.Fonctions_partagées import (assembler_matrice, extraire_matrice, extraire_vecteur,
+                                         reconstruire_vecteur)
 
 
 # ---------
@@ -22,41 +23,6 @@ def calculer_k_barre3d(E, A, xi, yi, zi, xj, yj, zj):
                                 [-cx * cy, -cy ** 2, -cy * cz, cx * cy, cy ** 2, cy * cz],
                                 [-cx * cz, -cy * cz, -cz ** 2, cx * cz, cy * cz, cz ** 2]])
     return k
-
-
-# Assemblage d'une matrice
-def assembler_matrice(Ktot, k, lig, col):
-    for i in range(len(lig)):
-        for j in range(len(col)):
-            Ktot[lig[i] - 1][col[j] - 1] += k[i][j]
-    return Ktot
-
-
-# Extraction d'une sous-matrice
-def extraire_matrice(Kin, lig, col):
-    Kout = np.zeros((len(lig), len(col)))
-    for i in range(len(lig)):
-        for j in range(len(col)):
-            Kout[i][j] = Kin[lig[i] - 1][col[j] - 1]
-    return Kout
-
-
-# Reconstruction d'un vecteur a partir de deux vecteurs
-def reconstruire_vecteur(Vin1, lig1, Vin2, lig2):
-    Vout = np.zeros((len(lig1) + len(lig2), 1))
-    for i in range(len(lig1)):
-        Vout[lig1[i] - 1][0] = Vin1[i][0]
-    for i in range(len(lig2)):
-        Vout[lig2[i] - 1][0] = Vin2[i][0]
-    return Vout
-
-
-# Extraction d'un vecteur
-def extraire_vecteur(Vin, lig):
-    Vout = np.zeros((len(lig), 1))
-    for i in range(len(lig)):
-        Vout[i][0] = Vin[lig[i] - 1][0]
-    return Vout
 
 
 # Calcul de la contrainte dans un element Barre3D
