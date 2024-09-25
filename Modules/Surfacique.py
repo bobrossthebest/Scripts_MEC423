@@ -11,15 +11,15 @@ from Modules.Fonctions_partagées import (assembler_matrice, extraire_matrice, e
 # ---------
 
 # Calcul de la matrice ksi en etat plan de contrainte
-def calculer_ksi_EPC(E, nu):
-    ksi = E / (1 - nu ** 2) * np.array([[1, nu, 0],
+def calculer_ksi_epc(e, nu):
+    ksi = e / (1 - nu ** 2) * np.array([[1, nu, 0],
                                         [nu, 1, 0],
                                         [0, 0, (1 - nu) / 2]])
     return ksi
 
 
 # Calcul de l'aire d'un element T3
-def calculer_aire_T3(xi, yi, xj, yj, xk, yk):
+def calculer_aire_t3(xi, yi, xj, yj, xk, yk):
     temp = np.array([[1, xi, yi],
                      [1, xj, yj],
                      [1, xk, yk]])
@@ -28,56 +28,55 @@ def calculer_aire_T3(xi, yi, xj, yj, xk, yk):
 
 
 # Calcul de la matrice de B d'un element T3
-def calculer_B_T3(xi, yi, xj, yj, xk, yk):
-    aire = calculer_aire_T3(xi, yi, xj, yj, xk, yk)
-    B = 1 / (2 * aire) * np.array([[yj - yk, 0, yk - yi, 0, yi - yj, 0],
+def calculer_b_t3(xi, yi, xj, yj, xk, yk):
+    aire = calculer_aire_t3(xi, yi, xj, yj, xk, yk)
+    b = 1 / (2 * aire) * np.array([[yj - yk, 0, yk - yi, 0, yi - yj, 0],
                                    [0, xk - xj, 0, xi - xk, 0, xj - xi],
                                    [xk - xj, yj - yk, xi - xk, yk - yi, xj - xi, yi - yj]])
-    return B
+    return b
 
 
 # Calcul de la matrice de rigidite d'un element T3
-def calculer_k_T3(E, nu, t, xi, yi, xj, yj, xk, yk):
-    ksi = calculer_ksi_EPC(E, nu)
-    A = calculer_aire_T3(xi, yi, xj, yj, xk, yk)
-    B = calculer_B_T3(xi, yi, xj, yj, xk, yk)
-    k = t * A * (np.transpose(B) @ ksi @ B)
+def calculer_k_t3(e, nu, t, xi, yi, xj, yj, xk, yk):
+    ksi = calculer_ksi_epc(e, nu)
+    a = calculer_aire_t3(xi, yi, xj, yj, xk, yk)
+    b = calculer_b_t3(xi, yi, xj, yj, xk, yk)
+    k = t * a * (np.transpose(b) @ ksi @ b)
     return k
 
 
-
 # Evaluation de la fonction d'interpolation Ni de l'element T3 a un point donne
-def evaluer_Ni_T3(xi, yi, xj, yj, xk, yk, x, y):
-    aire = calculer_aire_T3(xi, yi, xj, yj, xk, yk)
-    Ni = 1 / (2 * aire) * ((xj * yk - xk * yj) + (yj - yk) * x + (xk - xj) * y)
-    return Ni
+def evaluer_ni_t3(xi, yi, xj, yj, xk, yk, x, y):
+    aire = calculer_aire_t3(xi, yi, xj, yj, xk, yk)
+    ni = 1 / (2 * aire) * ((xj * yk - xk * yj) + (yj - yk) * x + (xk - xj) * y)
+    return ni
 
 
 # Evaluation de la fonction d'interpolation Nj de l'element T3 a un point donne
-def evaluer_Nj_T3(xi, yi, xj, yj, xk, yk, x, y):
-    aire = calculer_aire_T3(xi, yi, xj, yj, xk, yk)
-    Nj = 1 / (2 * aire) * ((xk * yi - xi * yk) + (yk - yi) * x + (xi - xk) * y)
-    return Nj
+def evaluer_nj_t3(xi, yi, xj, yj, xk, yk, x, y):
+    aire = calculer_aire_t3(xi, yi, xj, yj, xk, yk)
+    nj = 1 / (2 * aire) * ((xk * yi - xi * yk) + (yk - yi) * x + (xi - xk) * y)
+    return nj
 
 
 # Evaluation de la fonction d'interpolation Nk de l'element T3 a un point donne
-def evaluer_Nk_T3(xi, yi, xj, yj, xk, yk, x, y):
-    aire = calculer_aire_T3(xi, yi, xj, yj, xk, yk)
-    Nk = 1 / (2 * aire) * ((xi * yj - xj * yi) + (yi - yj) * x + (xj - xi) * y)
-    return Nk
+def evaluer_nk_t3(xi, yi, xj, yj, xk, yk, x, y):
+    aire = calculer_aire_t3(xi, yi, xj, yj, xk, yk)
+    nk = 1 / (2 * aire) * ((xi * yj - xj * yi) + (yi - yj) * x + (xj - xi) * y)
+    return nk
 
 
 # Calcul des contraintes dans un element T3
-def calculer_contraintes_T3(Utot, ddl, E, nu, xi, yi, xj, yj, xk, yk):
-    ksi = calculer_ksi_EPC(E, nu)
-    B = calculer_B_T3(xi, yi, xj, yj, xk, yk)
-    U = extraire_vecteur(Utot, ddl)
-    sig = ksi @ B @ U
+def calculer_contraintes_t3(utot, ddl, e, nu, xi, yi, xj, yj, xk, yk):
+    ksi = calculer_ksi_epc(e, nu)
+    b = calculer_b_t3(xi, yi, xj, yj, xk, yk)
+    u = extraire_vecteur(utot, ddl)
+    sig = ksi @ b @ u
     return sig
 
 
 # Calcul de la contrainte equivalente de Mises en etat plan de contrainte
-def calculer_mises_EPC(sig):
+def calculer_mises_epc(sig):
     sx = sig[0][0]
     sy = sig[1][0]
     txy = sig[2][0]
@@ -96,7 +95,7 @@ xk1, yk1 = 0, 10
 t1 = 1.2
 E1 = 2e5
 nu1 = 0.3
-k1 = calculer_k_T3(E1, nu1, t1, xi1, yi1, xj1, yj1, xk1, yk1)
+k1 = calculer_k_t3(E1, nu1, t1, xi1, yi1, xj1, yj1, xk1, yk1)
 
 ddl2 = np.array([3, 4, 5, 6, 7, 8])
 xi2, yi2 = 0, 10
@@ -105,7 +104,7 @@ xk2, yk2 = 20, 10
 t2 = 1.2
 E2 = 2e5
 nu2 = 0.3
-k2 = calculer_k_T3(E2, nu2, t2, xi2, yi2, xj2, yj2, xk2, yk2)
+k2 = calculer_k_t3(E2, nu2, t2, xi2, yi2, xj2, yj2, xk2, yk2)
 
 # ----------
 # Assemblage
@@ -153,19 +152,19 @@ Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 
 xP = 17
 yP = 8
-Ni2P = evaluer_Ni_T3(xi2, yi2, xj2, yj2, xk2, yk2, xP, yP)
-Nj2P = evaluer_Nj_T3(xi2, yi2, xj2, yj2, xk2, yk2, xP, yP)
-Nk2P = evaluer_Nk_T3(xi2, yi2, xj2, yj2, xk2, yk2, xP, yP)
+Ni2P = evaluer_ni_t3(xi2, yi2, xj2, yj2, xk2, yk2, xP, yP)
+Nj2P = evaluer_nj_t3(xi2, yi2, xj2, yj2, xk2, yk2, xP, yP)
+Nk2P = evaluer_nk_t3(xi2, yi2, xj2, yj2, xk2, yk2, xP, yP)
 vi2 = extraire_vecteur(Utot, [4])
 vj2 = extraire_vecteur(Utot, [6])
 vk2 = extraire_vecteur(Utot, [8])
 vP = vi2[0][0] * Ni2P + vj2[0][0] * Nj2P + vk2[0][0] * Nk2P
 print('vP = %.4f mm' % vP)
 
-sig1 = calculer_contraintes_T3(Utot, ddl1, E1, nu1, xi1, yi1, xj1, yj1, xk1, yk1)
-mises1 = calculer_mises_EPC(sig1)
+sig1 = calculer_contraintes_t3(Utot, ddl1, E1, nu1, xi1, yi1, xj1, yj1, xk1, yk1)
+mises1 = calculer_mises_epc(sig1)
 print('Mises_1 = %.1f MPa' % mises1)
 
-sig2 = calculer_contraintes_T3(Utot, ddl2, E2, nu2, xi2, yi2, xj2, yj2, xk2, yk2)
-mises2 = calculer_mises_EPC(sig2)
+sig2 = calculer_contraintes_t3(Utot, ddl2, E2, nu2, xi2, yi2, xj2, yj2, xk2, yk2)
+mises2 = calculer_mises_epc(sig2)
 print('Mises_2 = %.1f MPa' % mises2)

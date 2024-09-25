@@ -11,33 +11,37 @@ from Modules.Fonctions_partagées import (calculer_k_poutre1d, assembler_matrice
 # ---------
 
 # Calcul du vecteur des charges equivalentes dues a une charge repartie constante appliquee sur un element Poutre1D
-def calculer_feq_poutre1d(q, L):
-    feq = np.array([[q * L / 2],
-                    [q * L ** 2 / 12],
-                    [q * L / 2],
-                    [-q * L ** 2 / 12]])
+def calculer_feq_poutre1d(q, l_poutre):
+    feq = np.array([[q * l_poutre / 2],
+                    [q * l_poutre ** 2 / 12],
+                    [q * l_poutre / 2],
+                    [-q * l_poutre ** 2 / 12]])
     return feq
 
 
 # Calcul par interpolation du deplacement transversal dans un element Poutre1D
-def calculer_deplacement_poutre1d(Utot, ddl, L, x):
-    vi = Utot[ddl[0] - 1][0]
-    ti = Utot[ddl[1] - 1][0]
-    vj = Utot[ddl[2] - 1][0]
-    tj = Utot[ddl[3] - 1][0]
-    dep = (2 * x ** 3 / L ** 3 - 3 * x ** 2 / L ** 2 + 1) * vi + (x ** 3 / L ** 2 - 2 * x ** 2 / L + x) * ti + (
-                -2 * x ** 3 / L ** 3 + 3 * x ** 2 / L ** 2) * vj + (x ** 3 / L ** 2 - x ** 2 / L) * tj
+def calculer_deplacement_poutre1d(u_tot, ddl, l_poutre, x):
+    vi = u_tot[ddl[0] - 1][0]
+    ti = u_tot[ddl[1] - 1][0]
+    vj = u_tot[ddl[2] - 1][0]
+    tj = u_tot[ddl[3] - 1][0]
+    dep = ((2 * x ** 3 / l_poutre ** 3 - 3 * x ** 2 / l_poutre ** 2 + 1) * vi +
+           (x ** 3 / l_poutre ** 2 - 2 * x ** 2 / l_poutre + x) * ti +
+           (-2 * x ** 3 / l_poutre ** 3 + 3 * x ** 2 / l_poutre ** 2) * vj +
+           (x ** 3 / l_poutre ** 2 - x ** 2 / l_poutre) * tj)
     return dep
 
 
 # Calcul de la contrainte dans un element Poutre1D
-def calculer_contrainte_poutre1d(Utot, ddl, E, L, x, y):
-    vi = Utot[ddl[0] - 1][0]
+def calculer_contrainte_poutre1d(u_tot, ddl, e, l_poutre, x, y):
+    vi = u_tot[ddl[0] - 1][0]
     ti = Utot[ddl[1] - 1][0]
     vj = Utot[ddl[2] - 1][0]
     tj = Utot[ddl[3] - 1][0]
-    sigma = -y * E * ((12 * x / L ** 3 - 6 / L ** 2) * vi + (6 * x / L ** 2 - 4 / L) * ti + (
-                -12 * x / L ** 3 + 6 / L ** 2) * vj + (6 * x / L ** 2 - 2 / L) * tj)
+    sigma = -y * e * ((12 * x / l_poutre ** 3 - 6 / l_poutre ** 2) * vi +
+                      (6 * x / l_poutre ** 2 - 4 / l_poutre) * ti +
+                      (-12 * x / l_poutre ** 3 + 6 / l_poutre ** 2) * vj +
+                      (6 * x / l_poutre ** 2 - 2 / l_poutre) * tj)
     return sigma
 
 
