@@ -10,7 +10,6 @@ import Modules.Mécanisme as Mcn, Modules.Flambage as Flb, Modules.Thermique as 
 
 
 # Menu est la fonction qui interagit avec l'utilsateur
-# Les variables restent dans la fonction menu, les modules sont utilisés seulement pour les calculs
 # L'affichage est aussi géré par menu
 
 
