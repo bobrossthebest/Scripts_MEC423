@@ -1,9 +1,9 @@
 # Unités : lbf-po
-
+if __name__ == '__main__': pass
 import numpy as np
 
 from Modules.Fonctions_partagées import (assembler_matrice, extraire_matrice, extraire_vecteur,
-                                         reconstruire_vecteur)
+                                         reconstruire_vecteur, noeud_max)
 
 
 # ---------
@@ -20,26 +20,27 @@ def calculer_k_ressort1d(raideur):
 # Proprietes de chaque element
 # ----------------------------
 
-ddl1 = np.array([1, 2])
-raid1 = 200
-k1 = calculer_k_ressort1d(raid1)
+nb_elements = int(input("Combien d'elements contient la structure? "))
+vide = [0]*int(nb_elements)
+elements = {'ddl': vide.copy(), 'raideur': vide.copy(), 'k': vide.copy()}
 
-ddl2 = np.array([3, 4])
-raid2 = 120
-k2 = calculer_k_ressort1d(raid2)
+for i in range(nb_elements):
+    noeud_1 = input(f"Noeud avant l'élément {i+1}: ")
+    noeud_2 = input(f"Noeud après l'élément {i+1}: ")
+    elements['ddl'][i] = [int(noeud_1), int(noeud_2)]
+    elements['raideur'][i] = int(input(f"Raideur de l'élément {i+1}: "))
+    elements['k'][i] = calculer_k_ressort1d(elements['raideur'][i])
 
-ddl3 = np.array([5, 6])
-raid3 = 80
-k3 = calculer_k_ressort1d(raid3)
 
 # ----------
 # Assemblage
 # ----------
+nb_noeuds = noeud_max(elements['ddl'])
 
-Ktot = np.zeros((6, 6))
-Ktot = assembler_matrice(Ktot, k1, ddl1, ddl1)
-Ktot = assembler_matrice(Ktot, k2, ddl2, ddl2)
-Ktot = assembler_matrice(Ktot, k3, ddl3, ddl3)
+Ktot = np.zeros((nb_noeuds, nb_noeuds))
+for i in range(3):
+    Ktot = assembler_matrice(Ktot, elements['k'][i], elements['ddl'][i], elements['ddl'][i])
+
 
 # ---------
 # Couplages
