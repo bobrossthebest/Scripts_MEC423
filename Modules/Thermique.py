@@ -59,8 +59,8 @@ N2, dNdx2, dNdy2 = calculer_deriver_fonctions_interpolation_rect4(xmin2, xmax2, 
 Kk2 = t * kT * sp.integrate(sp.integrate(dNdx2 * dNdx2.T + dNdy2 * dNdy2.T, (x, xmin2, xmax2)), (y, ymin2, ymax2))
 Kh2 = t * h * (sp.integrate((N2 * N2.T).subs(y, ymin2), (x, xmin2, xmax2))) + t * h * (
     sp.integrate((N2 * N2.T).subs(x, xmax2), (y, ymin2, ymax2)))
-Fh2 = t * h * Tf * sp.integrate(N2.subs(y, ymin2), (x, xmin2, xmax2)) + t * h * Tf * sp.integrate(N2.subs(x, xmax2),
-                                                                                                  (y, ymin2, ymax2))
+Fh2 = (t * h * Tf * sp.integrate(N2.subs(y, ymin2), (x, xmin2, xmax2)) +
+       t * h * Tf * sp.integrate(N2.subs(x, xmax2), (y, ymin2, ymax2)))
 K2 = np.array(Kk2 + Kh2)
 F2 = np.array(Fh2)
 
