@@ -95,3 +95,14 @@ def calculer_k_poutre2d(e, a, iz, xi, yi, xj, yj):
                   [0, 0, 0, 0, 0, 1]])
     kglobal = np.transpose(r) @ klocal @ r
     return kglobal
+
+
+# Trouvage du nb de noeuds
+def noeud_max(liste):
+    gros_noeud = 0
+    for i in range(len(liste)):
+        if liste[i][0] > gros_noeud:
+            gros_noeud = liste[i][0]
+        if liste[i][1] > gros_noeud:
+            gros_noeud = liste[i][1]
+    return gros_noeud
