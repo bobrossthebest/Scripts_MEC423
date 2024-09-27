@@ -28,7 +28,7 @@ elements = {'ddl': vide.copy(), 'raideur': vide.copy(), 'k': vide.copy()}
 for i in range(nb_elements):
     noeud_1 = input(f"Noeud avant l'élément {i+1}: ")
     noeud_2 = input(f"Noeud après l'élément {i+1}: ")
-    elements['ddl'][i] = [int(noeud_1), int(noeud_2)]
+    elements['ddl'][i] = (int(noeud_1), int(noeud_2))
     elements['raideur'][i] = int(input(f"Raideur de l'élément {i+1}: "))
     elements['k'][i] = calculer_k_ressort1d(elements['raideur'][i])
 
