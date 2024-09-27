@@ -21,6 +21,7 @@ def calculer_k_ressort1d(raideur):
 # ----------------------------
 
 nb_elements = int(input("Combien d'elements contient la structure? "))
+# shut the fuck up Antoine
 vide = [0]*int(nb_elements)
 elements = {'ddl': vide.copy(), 'raideur': vide.copy(), 'k': vide.copy()}
 
