@@ -38,7 +38,7 @@ for i in range(nb_elements):
 nb_noeuds = noeud_max(elements['ddl'])
 
 Ktot = np.zeros((nb_noeuds, nb_noeuds))
-for i in range(3):
+for i in range(nb_noeuds):
     Ktot = assembler_matrice(Ktot, elements['k'][i], elements['ddl'][i], elements['ddl'][i])
 
 
