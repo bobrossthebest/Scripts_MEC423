@@ -1,10 +1,9 @@
-# Unites : N-mm-MPa
-
 import numpy as np
 
 from Modules.Fonctions_partagées import (calculer_k_barre2d, assembler_matrice, extraire_matrice, extraire_vecteur,
                                          reconstruire_vecteur, assembler_vecteur)
-
+# Unites : N-mm-MPa
+unites = {'f': 'N', 'l': 'mm', 'p': 'MPa'}
 
 # ---------
 # Fonctions
@@ -49,6 +48,30 @@ for i in range(nb_noeuds):
     noeuds['y'][i] = float(input(f"Position x du noeud {i+1}: "))
     # commence à 2 quand i est à 2
     noeuds['ddly'][i] = 2*i+2
+
+
+nb_elements = int(input("Combien d'elements contient la structure? "))
+vide = [0]*int(nb_elements)
+elements = {'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(), 'xj': vide.copy(), 'yj': vide.copy(),
+            'E': vide.copy(), 'A': vide.copy()}
+for i in range(nb_elements):
+    # soustraction de 1 pour passer du numéro du noeud à son indice dans le tableau
+    noeud_i = int(input(f"Noeud avant l'élément {i+1}: ")) - 1
+    noeud_j = int(input(f"Noeud après l'élément {i+1}: ")) - 1
+    elements['ddl'][i] = np.array(
+        [noeuds['ddlx'][noeud_i],
+         noeuds['ddly'][noeud_i],
+         noeuds['ddlx'][noeud_j],
+         noeuds['ddlx'][noeud_j]])
+    elements['xi'][i],  elements['yi'][i] = noeuds['x'][noeud_i], noeuds['y'][noeud_i]
+    elements['xj'][i], elements['yj'][i] = noeuds['x'][noeud_j], noeuds['y'][noeud_j]
+
+    print("Pour un ressort, poser un module d'élasticité de 0")
+    elements['E'][i] = float(input(f"Module d'élasticité de l'élément {i+1} en {unites['f']}: "))
+    elements['A'][i] = float(input(f"Aire de section de l'élément {i+1} en {unites['l']}^2: "))
+
+    # Il manque alpha, dT, Sy, k et feq.
+
 
 
 ddl1 = np.array([1, 2, 3, 4])
