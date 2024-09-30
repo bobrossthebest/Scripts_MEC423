@@ -12,13 +12,16 @@ unites = {'f': 'N', 'l': 'mm', 'p': 'MPa'}
 
 # Calcul du vecteur des charges equivalentes dues a la dilatation thermique d'un element Barre2D
 def calculer_feq_barre2d(e, a, alpha, dt, xi, yi, xj, yj):
-    l_barre = ((xj - xi) ** 2 + (yj - yi) ** 2) ** 0.5
-    cx = (xj - xi) / l_barre
-    cy = (yj - yi) / l_barre
-    feq = (e * a * alpha * dt) * np.array([[-cx],
-                                           [-cy],
-                                           [cx],
-                                           [cy]])
+    if dt != 0:
+        l_barre = ((xj - xi) ** 2 + (yj - yi) ** 2) ** 0.5
+        cx = (xj - xi) / l_barre
+        cy = (yj - yi) / l_barre
+        feq = (e * a * alpha * dt) * np.array([[-cx],
+                                               [-cy],
+                                               [cx],
+                                               [cy]])
+    else:
+        feq = np.array([0, 0, 0, 0])
     return feq
 
 
@@ -53,7 +56,9 @@ for i in range(nb_noeuds):
 nb_elements = int(input("Combien d'elements contient la structure? "))
 vide = [0]*int(nb_elements)
 elements = {'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(), 'xj': vide.copy(), 'yj': vide.copy(),
-            'E': vide.copy(), 'A': vide.copy()}
+            'E': vide.copy(), 'A': vide.copy(), 'alpha': vide.copy(), 'dT': vide.copy(),
+            'k': vide.copy(), 'feq': vide.copy()}
+
 for i in range(nb_elements):
     # soustraction de 1 pour passer du numéro du noeud à son indice dans le tableau
     noeud_i = int(input(f"Noeud avant l'élément {i+1}: ")) - 1
@@ -66,12 +71,22 @@ for i in range(nb_elements):
     elements['xi'][i],  elements['yi'][i] = noeuds['x'][noeud_i], noeuds['y'][noeud_i]
     elements['xj'][i], elements['yj'][i] = noeuds['x'][noeud_j], noeuds['y'][noeud_j]
 
-    print("Pour un ressort, poser un module d'élasticité de 0")
-    elements['E'][i] = float(input(f"Module d'élasticité de l'élément {i+1} en {unites['f']}: "))
-    elements['A'][i] = float(input(f"Aire de section de l'élément {i+1} en {unites['l']}^2: "))
-
-    # Il manque alpha, dT, Sy, k et feq.
-
+    print(f"Élément {i+1}, pour un ressort, poser un module d'élasticité de 0")
+    elements['E'][i] = float(input(f"Module d'élasticité en {unites['f']}: "))
+    if elements['E'][i] > 0:
+        elements['A'][i] = float(input(f"Aire de section en {unites['l']}^2: "))
+    elements['dT'][i] = float(input('Différence de température: '))
+    if elements['dT'][i] != 0:
+        elements['alpha'][i] = float(input("Coefficient de dilatation thermique: "))
+    if elements['E'][i] > 0:
+        elements['k'][i] = calculer_contrainte_barre2d(elements['E'][i], elements['A'][i],
+                                                       elements['xi'][i], elements['yi'][i],
+                                                       elements['xj'][i], elements['yj'][i])
+    else:
+        elements['k'][i] = float(input(f"Raideur du ressort {i+1}: "))
+    elements['feq'][i] = calculer_feq_barre2d(elements['E'][i], elements['alpha'][i], elements['dT'][i],
+                                              elements['xi'][i], elements['yi'][i],
+                                              elements['xj'][i], elements['yj'][i])
 
 
 ddl1 = np.array([1, 2, 3, 4])
