@@ -14,10 +14,14 @@ def calculer_k_barre2d(e, a, xi, yi, xj, yj):
     l_barre = ((xj - xi) ** 2 + (yj - yi) ** 2) ** 0.5
     cx = (xj - xi) / l_barre
     cy = (yj - yi) / l_barre
-    k = (e * a / l_barre) * np.array([[cx ** 2, cx * cy, -cx ** 2, -cx * cy],
+    tab_cos =  np.array([[cx ** 2, cx * cy, -cx ** 2, -cx * cy],
                                       [cx * cy, cy ** 2, -cx * cy, -cy ** 2],
                                       [-cx ** 2, -cx * cy, cx ** 2, cx * cy],
                                       [-cx * cy, -cy ** 2, cx * cy, cy ** 2]])
+    if e > 0:
+        k = (e * a / l_barre) * tab_cos
+    else:
+        k = a * tab_cos
     return k
 
 
