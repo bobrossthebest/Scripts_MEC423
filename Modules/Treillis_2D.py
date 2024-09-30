@@ -3,7 +3,9 @@ import numpy as np
 from Modules.Fonctions_partagées import (calculer_k_barre2d, assembler_matrice, extraire_matrice, extraire_vecteur,
                                          reconstruire_vecteur, assembler_vecteur)
 # Unites : N-mm-MPa
-unites = {'f': 'N', 'l': 'mm', 'p': 'MPa'}
+F = 'N'
+L = 'mm'
+P = 'MPa'
 
 # ---------
 # Fonctions
@@ -71,9 +73,9 @@ for i in range(nb_elements):
     elements['xj'][i], elements['yj'][i] = noeuds['x'][noeud_j], noeuds['y'][noeud_j]
 
     print(f"Pour un ressort, poser un module d'élasticité de 0 et la raideur au-lieu de l'aire")
-    elements['E'][i] = float(input(f"Module d'élasticité en {unites['f']}: "))
+    elements['E'][i] = float(input(f"Module d'élasticité en {F}: "))
     if elements['E'][i] > 0:
-        elements['A'][i] = float(input(f"Aire de section en {unites['l']}^2: "))
+        elements['A'][i] = float(input(f"Aire de section en {L}^2: "))
     elements['dT'][i] = float(input('Différence de température: '))
     if elements['dT'][i] != 0:
         elements['alpha'][i] = float(input("Coefficient de dilatation thermique: "))
@@ -149,4 +151,4 @@ tab_force = [0]*nb_elements
 for i in range(nb_elements):
     tab_force[i] = elements['A'][i]*tab_sigma[i]
 
-print('force_CF = %.1f N' % tab_force[2])
+print(f'force_CF = {tab_force[2]:.1f} {F}')
