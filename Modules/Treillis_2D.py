@@ -39,6 +39,17 @@ def calculer_contrainte_barre2d(u_tot, ddl, e, alpha, dt, xi, yi, xj, yj):
 # ----------------------------
 # Proprietes de chaque element
 # ----------------------------
+nb_noeuds = int(input("Combien de noeuds contient la structure? "))
+noeuds = {'x': [0]*nb_noeuds, 'y': [0]*nb_noeuds, 'ddlx': [0]*nb_noeuds, 'ddly': [0]*nb_noeuds}
+for i in range(nb_noeuds):
+    # Le premier noeud, d'indice 0, est le noeud "1" à l'affichage
+    noeuds['x'][i] = float(input(f"Position x du noeud {i+1}: "))
+    # commence à 1 quand i est à 0
+    noeuds['ddlx'][i] = 2*i+1
+    noeuds['y'][i] = float(input(f"Position x du noeud {i+1}: "))
+    # commence à 2 quand i est à 2
+    noeuds['ddly'][i] = 2*i+2
+
 
 ddl1 = np.array([1, 2, 3, 4])
 xi1, yi1 = 0, 0
