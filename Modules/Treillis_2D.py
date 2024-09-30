@@ -71,19 +71,16 @@ for i in range(nb_elements):
     elements['xi'][i],  elements['yi'][i] = noeuds['x'][noeud_i], noeuds['y'][noeud_i]
     elements['xj'][i], elements['yj'][i] = noeuds['x'][noeud_j], noeuds['y'][noeud_j]
 
-    print(f"Élément {i+1}, pour un ressort, poser un module d'élasticité de 0")
+    print(f"Pour un ressort, poser un module d'élasticité de 0 et la raideur au-lieu de l'aire")
     elements['E'][i] = float(input(f"Module d'élasticité en {unites['f']}: "))
     if elements['E'][i] > 0:
         elements['A'][i] = float(input(f"Aire de section en {unites['l']}^2: "))
     elements['dT'][i] = float(input('Différence de température: '))
     if elements['dT'][i] != 0:
         elements['alpha'][i] = float(input("Coefficient de dilatation thermique: "))
-    if elements['E'][i] > 0:
-        elements['k'][i] = calculer_k_barre2d(elements['E'][i], elements['A'][i],
-                                              elements['xi'][i], elements['yi'][i],
-                                              elements['xj'][i], elements['yj'][i])
-    else:
-        elements['k'][i] = float(input(f"Raideur du ressort {i+1}: "))
+    elements['k'][i] = calculer_k_barre2d(elements['E'][i], elements['A'][i],
+                                          elements['xi'][i], elements['yi'][i],
+                                          elements['xj'][i], elements['yj'][i])
     elements['feq'][i] = calculer_feq_barre2d(elements['E'][i], elements['A'][i],
                                               elements['alpha'][i], elements['dT'][i],
                                               elements['xi'][i], elements['yi'][i],
