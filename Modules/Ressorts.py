@@ -21,14 +21,15 @@ def calculer_k_ressort1d(raideur):
 # ----------------------------
 
 nb_elements = int(input("Combien d'elements contient la structure? "))
-# shut the fuck up Antoine
 vide = [0]*int(nb_elements)
 elements = {'ddl': vide.copy(), 'raideur': vide.copy(), 'k': vide.copy()}
 
+
+# Mauvaise compréhension, ddl1 et ddl2 devraient simplement être 1, 2, 3...
 for i in range(nb_elements):
     noeud_1 = input(f"Noeud avant l'élément {i+1}: ")
     noeud_2 = input(f"Noeud après l'élément {i+1}: ")
-    elements['ddl'][i] = (int(noeud_1), int(noeud_2))
+    elements['ddl'][i] = np.array([int(noeud_1), int(noeud_2)])
     elements['raideur'][i] = int(input(f"Raideur de l'élément {i+1}: "))
     elements['k'][i] = calculer_k_ressort1d(elements['raideur'][i])
 
@@ -38,8 +39,8 @@ for i in range(nb_elements):
 # ----------
 nb_noeuds = noeud_max(elements['ddl'])
 
-Ktot = np.zeros((nb_noeuds, nb_noeuds))
-for i in range(nb_noeuds):
+Ktot = np.zeros((2*nb_elements, 2*nb_elements))
+for i in range(nb_elements):
     Ktot = assembler_matrice(Ktot, elements['k'][i], elements['ddl'][i], elements['ddl'][i])
 
 
