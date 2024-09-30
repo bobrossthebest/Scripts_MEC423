@@ -52,7 +52,6 @@ for i in range(nb_noeuds):
     # commence à 2 quand i est à 2
     noeuds['ddly'][i] = 2*i+2
 
-
 nb_elements = int(input("Combien d'elements contient la structure? "))
 vide = [0]*int(nb_elements)
 elements = {'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(), 'xj': vide.copy(), 'yj': vide.copy(),
@@ -151,4 +150,3 @@ for i in range(nb_elements):
     tab_force[i] = elements['A'][i]*tab_sigma[i]
 
 print('force_CF = %.1f N' % tab_force[2])
-
