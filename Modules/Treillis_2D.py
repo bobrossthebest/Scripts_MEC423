@@ -139,14 +139,16 @@ print('UyF = %.2f mm' % VF[0][0])
 RB = extraire_vecteur(Ftot, [1, 2])
 print('RxB = %.1f N, RyB = %.1f N' % (RB[0][0], RB[1][0]))
 
-sigma = [0]*nb_elements
+tab_sigma = [0] * nb_elements
 for i in range(nb_elements):
-    sigma[i] = calculer_contrainte_barre2d(Utot, elements['ddl'][i], elements['E'][i], )
+    tab_sigma[i] = calculer_contrainte_barre2d(Utot, elements['ddl'][i], elements['E'][i],
+                                               elements['alpha'][i], elements['dT'][i],
+                                               elements['xi'][i], elements['yi'][i],
+                                               elements['xj'][i], elements['yj'][i])
 
-sigma3 = calculer_contrainte_barre2d(Utot, elements['ddl'][3], E3, alpha3, dT3, xi3, yi3, xj3, yj3)
-force3 = sigma3 * A3
-print('force_CF = %.1f N' % force3)
+tab_force = [0]*nb_elements
+for i in range(nb_elements):
+    tab_force[i] = elements['A'][i]*tab_sigma[i]
 
-sigma1 = calculer_contrainte_barre2d(Utot, ddl1, E1, alpha1, dT1, xi1, yi1, xj1, yj1)
-fs1 = Sy1 / sigma1
-print('FS_BC = %.2f' % fs1)
+print('force_CF = %.1f N' % tab_force[2])
+
