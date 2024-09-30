@@ -79,74 +79,16 @@ for i in range(nb_elements):
     if elements['dT'][i] != 0:
         elements['alpha'][i] = float(input("Coefficient de dilatation thermique: "))
     if elements['E'][i] > 0:
-        elements['k'][i] = calculer_contrainte_barre2d(elements['E'][i], elements['A'][i],
-                                                       elements['xi'][i], elements['yi'][i],
-                                                       elements['xj'][i], elements['yj'][i])
+        elements['k'][i] = calculer_k_barre2d(elements['E'][i], elements['A'][i],
+                                              elements['xi'][i], elements['yi'][i],
+                                              elements['xj'][i], elements['yj'][i])
     else:
         elements['k'][i] = float(input(f"Raideur du ressort {i+1}: "))
-    elements['feq'][i] = calculer_feq_barre2d(elements['E'][i], elements['alpha'][i], elements['dT'][i],
+    elements['feq'][i] = calculer_feq_barre2d(elements['E'][i], elements['A'][i],
+                                              elements['alpha'][i], elements['dT'][i],
                                               elements['xi'][i], elements['yi'][i],
                                               elements['xj'][i], elements['yj'][i])
 
-
-# ddl1 = np.array([1, 2, 3, 4])
-# xi1, yi1 = 0, 0
-# xj1, yj1 = 800, 600
-# E1 = 2e5
-# A1 = 24
-# alpha1 = 12e-6
-# dT1 = 100
-# Sy1 = 310
-# k1 = calculer_k_barre2d(E1, A1, xi1, yi1, xj1, yj1)
-# feq1 = calculer_feq_barre2d(E1, A1, alpha1, dT1, xi1, yi1, xj1, yj1)
-#
-# ddl2 = np.array([3, 4, 5, 6])
-# xi2, yi2 = 800, 600
-# xj2, yj2 = 800, 0
-# E2 = 2e5
-# A2 = 24
-# alpha2 = 12e-6
-# dT2 = 0
-# Sy2 = 310
-# k2 = calculer_k_barre2d(E2, A2, xi2, yi2, xj2, yj2)
-# feq2 = calculer_feq_barre2d(E2, A2, alpha2, dT2, xi2, yi2, xj2, yj2)
-#
-# ddl3 = np.array([3, 4, 7, 8])
-# xi3, yi3 = 800, 600
-# xj3, yj3 = 1600, 0
-# E3 = 2e5
-# A3 = 24
-# alpha3 = 12e-6
-# dT3 = 0
-# Sy3 = 310
-# k3 = calculer_k_barre2d(E3, A3, xi3, yi3, xj3, yj3)
-# feq3 = calculer_feq_barre2d(E3, A3, alpha3, dT3, xi3, yi3, xj3, yj3)
-#
-# ddl4 = np.array([1, 2, 5, 6])
-# xi4, yi4 = 0, 0
-# xj4, yj4 = 800, 0
-# E4 = 2e5
-# A4 = 24
-# alpha4 = 12e-6
-# dT4 = 0
-# Sy4 = 310
-# k4 = calculer_k_barre2d(E4, A4, xi4, yi4, xj4, yj4)
-# feq4 = calculer_feq_barre2d(E4, A4, alpha4, dT4, xi4, yi4, xj4, yj4)
-#
-# ddl5 = np.array([5, 6, 7, 8])
-# xi5, yi5 = 800, 0
-# xj5, yj5 = 1600, 0
-# E5 = 2e5
-# A5 = 24
-# alpha5 = 12e-6
-# dT5 = 0
-# Sy5 = 310
-# k5 = calculer_k_barre2d(E5, A5, xi5, yi5, xj5, yj5)
-# feq5 = calculer_feq_barre2d(E5, A5, alpha5, dT5, xi5, yi5, xj5, yj5)
-
-# ----------
-# Assemblage
-# ----------
 
 Ktot = np.zeros((nb_noeuds * 2, nb_noeuds * 2))
 for i in range(nb_elements):
@@ -200,7 +142,11 @@ print('UyF = %.2f mm' % VF[0][0])
 RB = extraire_vecteur(Ftot, [1, 2])
 print('RxB = %.1f N, RyB = %.1f N' % (RB[0][0], RB[1][0]))
 
-sigma3 = calculer_contrainte_barre2d(Utot, ddl3, E3, alpha3, dT3, xi3, yi3, xj3, yj3)
+sigma = [0]*nb_elements
+for i in range(nb_elements):
+    sigma[i] = calculer_contrainte_barre2d(Utot, elements['ddl'][i], elements['E'][i], )
+
+sigma3 = calculer_contrainte_barre2d(Utot, elements['ddl'][3], E3, alpha3, dT3, xi3, yi3, xj3, yj3)
 force3 = sigma3 * A3
 print('force_CF = %.1f N' % force3)
 
