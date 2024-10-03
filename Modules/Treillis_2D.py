@@ -74,10 +74,12 @@ for i in range(nb_elements):
     elements['xi'][i], elements['yi'][i] = noeuds['x'][noeud_i], noeuds['y'][noeud_i]
     elements['xj'][i], elements['yj'][i] = noeuds['x'][noeud_j], noeuds['y'][noeud_j]
 
-    print(f"\tPour un ressort, poser un module d'élasticité de 0 et la raideur au-lieu de l'aire")
+    print(f"\tPour un ressort, poser un module d'élasticité de 0")
     elements['E'][i] = float(input(f"Module d'élasticité en {P}: "))
     if elements['E'][i] > 0:
         elements['A'][i] = float(input(f"Aire de section en {L}^2: "))
+    else:
+        elements['A'][i] = float(input(f"Raideur du ressort en {F}/{L}: "))
     elements['dT'][i] = float(input('Différence de température: '))
     if elements['dT'][i] != 0:
         elements['alpha'][i] = float(input("Coefficient de dilatation thermique: "))
