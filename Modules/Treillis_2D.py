@@ -109,24 +109,27 @@ for i in range(nb_elements):
 # -------------------------
 # Conditions aux frontieres
 # -------------------------
-nb_Uc = int(input('Combien de déplacements sont connus?'))
-ddlUc = [0]*nb_Uc
-Uc = np.zeros((nb_Uc, 1))
-for i in range(nb_Uc):
-    ddlUc[i] = int(input(f'Numéro du ddl connu #{i+1}: '))
-    Uc[i][0] = eval(input(f'Déplacement en {L} du noeud {ddlUc[i]}: '))
-for i in range(nb_Uc):
-    print(f'Noeud {ddlUc[i]} : {Uc[i][0]} {L}')
+while redo is False:
+    nb_Uc = int(input('Combien de déplacements sont connus?'))
+    ddlUc = [0]*nb_Uc
+    Uc = np.zeros((nb_Uc, 1))
+    for i in range(nb_Uc):
+        ddlUc[i] = int(input(f'Numéro du ddl connu #{i+1}: '))
+        Uc[i][0] = eval(input(f'Déplacement en {L} du noeud {ddlUc[i]}: '))
+    for i in range(nb_Uc):
+        print(f'Noeud {ddlUc[i]} : {Uc[i][0]} {L}')
+    redo = not bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
-nb_Fc = int(input('Combien de forces sont connues?'))
-ddlFc = [0]*nb_Fc
-Fc = np.zeros((nb_Fc, 1))
-for i in range(nb_Fc):
-    ddlFc[i] = int(input(f'Numéro de la force connue #{i+1}: '))
-    Fc[i][0] = eval(input(f'Grandeur en {F} de la force {ddlFc[i]}: '))
-for i in range(nb_Fc):
-    print(f'Noeud {ddlFc[i]} : {Fc[i][0]} {F}')
-
+while redo is False:
+    nb_Fc = int(input('Combien de forces sont connues?'))
+    ddlFc = [0]*nb_Fc
+    Fc = np.zeros((nb_Fc, 1))
+    for i in range(nb_Fc):
+        ddlFc[i] = int(input(f'Numéro de la force connue #{i+1}: '))
+        Fc[i][0] = eval(input(f'Grandeur en {F} de la force {ddlFc[i]}: '))
+    for i in range(nb_Fc):
+        print(f'Noeud {ddlFc[i]} : {Fc[i][0]} {F}')
+    redo = not bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 # ---------------
 # Partitionnement
