@@ -43,20 +43,23 @@ def calculer_contrainte_barre2d(u_tot, ddl, e, alpha, dt, xi, yi, xj, yj):
 # ----------------------------
 # Proprietes de chaque element
 # ----------------------------
-nb_noeuds = int(input("Combien de noeuds contient la structure? "))
-noeuds = {'x': [0]*nb_noeuds, 'y': [0]*nb_noeuds, 'ddlx': [0]*nb_noeuds, 'ddly': [0]*nb_noeuds}
-for i in range(nb_noeuds):
-    # Le premier noeud, d'indice 0, est le noeud "1" à l'affichage
-    noeuds['x'][i] = float(input(f"Position x du noeud {i+1} en {F}: "))
-    # commence à 1 quand i est à 0
-    noeuds['ddlx'][i] = 2*i+1
-    noeuds['y'][i] = float(input(f"Position y du noeud {i+1} en {F}: "))
-    # commence à 2 quand i est à 2
-    noeuds['ddly'][i] = 2*i+2
+ok = False
+while ok is not True:
+    nb_noeuds = int(input("Combien de noeuds contient la structure? "))
+    noeuds = {'x': [0]*nb_noeuds, 'y': [0]*nb_noeuds, 'ddlx': [0]*nb_noeuds, 'ddly': [0]*nb_noeuds}
+    for i in range(nb_noeuds):
+        # Le premier noeud, d'indice 0, est le noeud "1" à l'affichage
+        noeuds['x'][i] = float(input(f"Position x du noeud {i+1} en {F}: "))
+        # commence à 1 quand i est à 0
+        noeuds['ddlx'][i] = 2*i+1
+        noeuds['y'][i] = float(input(f"Position y du noeud {i+1} en {F}: "))
+        # commence à 2 quand i est à 2
+        noeuds['ddly'][i] = 2*i+2
 
-print(noeuds)
+    print(noeuds)
+    ok = not bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
-nb_elements = int(input("\nCombien d'éléments contient la structure? "))
+nb_elements = int(input("Combien d'éléments contient la structure? "))
 vide = [0]*int(nb_elements)
 elements = {'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(), 'xj': vide.copy(), 'yj': vide.copy(),
             'E': vide.copy(), 'A': vide.copy(), 'alpha': vide.copy(), 'dT': vide.copy(),
