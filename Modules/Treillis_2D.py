@@ -49,15 +49,15 @@ while redo is False:
     noeuds = {'x': [0]*nb_noeuds, 'y': [0]*nb_noeuds, 'ddlx': [0]*nb_noeuds, 'ddly': [0]*nb_noeuds}
     for i in range(nb_noeuds):
         # Le premier noeud, d'indice 0, est le noeud "1" à l'affichage
-        noeuds['x'][i] = float(input(f"Position x du noeud {i+1} en {F}: "))
+        noeuds['x'][i] = float(input(f"Position x du noeud {i+1} en {L}: "))
         # commence à 1 quand i est à 0
         noeuds['ddlx'][i] = 2*i+1
-        noeuds['y'][i] = float(input(f"Position y du noeud {i+1} en {F}: "))
+        noeuds['y'][i] = float(input(f"Position y du noeud {i+1} en {L}: "))
         # commence à 2 quand i est à 2
         noeuds['ddly'][i] = 2*i+2
 
     print(noeuds)
-    redo = not bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
+    redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 while redo is False:
     nb_elements = int(input("Combien d'éléments contient la structure? "))
@@ -96,7 +96,7 @@ while redo is False:
                                                   elements['xj'][i], elements['yj'][i])
 
     print(elements)
-    redo = not bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
+    redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 Ktot = np.zeros((nb_noeuds * 2, nb_noeuds * 2))
 for i in range(nb_elements):
@@ -129,7 +129,7 @@ while redo is False:
         Fc[i][0] = eval(input(f'Grandeur en {F} de la force {ddlFc[i]}: '))
     for i in range(nb_Fc):
         print(f'Noeud {ddlFc[i]} : {Fc[i][0]} {F}')
-    redo = not bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
+    redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 # ---------------
 # Partitionnement
