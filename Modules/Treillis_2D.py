@@ -140,13 +140,6 @@ Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 # --------
 # Reponses
 # --------
-
-VF = extraire_vecteur(Utot, [8])
-print('UyF = %.2f mm' % VF[0][0])
-
-RB = extraire_vecteur(Ftot, [1, 2])
-print('RxB = %.1f N, RyB = %.1f N' % (RB[0][0], RB[1][0]))
-
 tab_sigma = [0] * nb_elements
 for i in range(nb_elements):
     tab_sigma[i] = calculer_contrainte_barre2d(Utot, elements['ddl'][i], elements['E'][i],
@@ -157,5 +150,3 @@ for i in range(nb_elements):
 tab_force = [0]*nb_elements
 for i in range(nb_elements):
     tab_force[i] = elements['A'][i]*tab_sigma[i]
-
-print(f'force_CF = {tab_force[2]:.1f} {F}')
