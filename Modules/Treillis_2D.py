@@ -43,8 +43,8 @@ def calculer_contrainte_barre2d(u_tot, ddl, e, alpha, dt, xi, yi, xj, yj):
 # ----------------------------
 # Proprietes de chaque element
 # ----------------------------
-redo = False
-while redo is False:
+redo = True
+while redo is True:
     nb_noeuds = int(input("Combien de noeuds contient la structure? "))
     noeuds = {'x': [0]*nb_noeuds, 'y': [0]*nb_noeuds, 'ddlx': [0]*nb_noeuds, 'ddly': [0]*nb_noeuds}
     for i in range(nb_noeuds):
@@ -59,7 +59,8 @@ while redo is False:
     print(noeuds)
     redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
-while redo is False:
+redo = True
+while redo is True:
     nb_elements = int(input("Combien d'éléments contient la structure? "))
     vide = [0]*int(nb_elements)
     elements = {'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(), 'xj': vide.copy(), 'yj': vide.copy(),
@@ -109,7 +110,8 @@ for i in range(nb_elements):
 # -------------------------
 # Conditions aux frontieres
 # -------------------------
-while redo is False:
+redo = True
+while redo is True:
     nb_Uc = int(input('Combien de déplacements sont connus?'))
     ddlUc = [0]*nb_Uc
     Uc = np.zeros((nb_Uc, 1))
