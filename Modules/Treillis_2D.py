@@ -43,8 +43,8 @@ def calculer_contrainte_barre2d(u_tot, ddl, e, alpha, dt, xi, yi, xj, yj):
 # ----------------------------
 # Proprietes de chaque element
 # ----------------------------
-ok = False
-while ok is not True:
+redo = False
+while redo is False:
     nb_noeuds = int(input("Combien de noeuds contient la structure? "))
     noeuds = {'x': [0]*nb_noeuds, 'y': [0]*nb_noeuds, 'ddlx': [0]*nb_noeuds, 'ddly': [0]*nb_noeuds}
     for i in range(nb_noeuds):
@@ -57,44 +57,46 @@ while ok is not True:
         noeuds['ddly'][i] = 2*i+2
 
     print(noeuds)
-    ok = not bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
+    redo = not bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
-nb_elements = int(input("Combien d'éléments contient la structure? "))
-vide = [0]*int(nb_elements)
-elements = {'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(), 'xj': vide.copy(), 'yj': vide.copy(),
-            'E': vide.copy(), 'A': vide.copy(), 'alpha': vide.copy(), 'dT': vide.copy(),
-            'k': vide.copy(), 'feq': vide.copy()}
+while redo is False:
+    nb_elements = int(input("Combien d'éléments contient la structure? "))
+    vide = [0]*int(nb_elements)
+    elements = {'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(), 'xj': vide.copy(), 'yj': vide.copy(),
+                'E': vide.copy(), 'A': vide.copy(), 'alpha': vide.copy(), 'dT': vide.copy(),
+                'k': vide.copy(), 'feq': vide.copy()}
 
-for i in range(nb_elements):
-    # soustraction de 1 pour passer du numéro du noeud à son indice dans le tableau
-    noeud_i = int(input(f"\n ÉLÉMENT {i+1}: \nNoeud avant l'élément: ")) - 1
-    noeud_j = int(input("Noeud après l'élément: ")) - 1
-    elements['ddl'][i] = np.array(
-        [noeuds['ddlx'][noeud_i],
-         noeuds['ddly'][noeud_i],
-         noeuds['ddlx'][noeud_j],
-         noeuds['ddlx'][noeud_j]])
-    elements['xi'][i], elements['yi'][i] = noeuds['x'][noeud_i], noeuds['y'][noeud_i]
-    elements['xj'][i], elements['yj'][i] = noeuds['x'][noeud_j], noeuds['y'][noeud_j]
+    for i in range(nb_elements):
+        # soustraction de 1 pour passer du numéro du noeud à son indice dans le tableau
+        noeud_i = int(input(f"\n ÉLÉMENT {i+1}: \nNoeud avant l'élément: ")) - 1
+        noeud_j = int(input("Noeud après l'élément: ")) - 1
+        elements['ddl'][i] = np.array(
+            [noeuds['ddlx'][noeud_i],
+             noeuds['ddly'][noeud_i],
+             noeuds['ddlx'][noeud_j],
+             noeuds['ddlx'][noeud_j]])
+        elements['xi'][i], elements['yi'][i] = noeuds['x'][noeud_i], noeuds['y'][noeud_i]
+        elements['xj'][i], elements['yj'][i] = noeuds['x'][noeud_j], noeuds['y'][noeud_j]
 
-    print(f"\tPour un ressort, poser un module d'élasticité de 0")
-    elements['E'][i] = float(input(f"Module d'élasticité en {P}: "))
-    if elements['E'][i] > 0:
-        elements['A'][i] = float(input(f"Aire de section en {L}^2: "))
-    else:
-        elements['A'][i] = float(input(f"Raideur du ressort en {F}/{L}: "))
-    elements['dT'][i] = float(input('Différence de température: '))
-    if elements['dT'][i] != 0:
-        elements['alpha'][i] = float(input("Coefficient de dilatation thermique: "))
-    elements['k'][i] = calculer_k_barre2d(elements['E'][i], elements['A'][i],
-                                          elements['xi'][i], elements['yi'][i],
-                                          elements['xj'][i], elements['yj'][i])
-    elements['feq'][i] = calculer_feq_barre2d(elements['E'][i], elements['A'][i],
-                                              elements['alpha'][i], elements['dT'][i],
+        print(f"\tPour un ressort, poser un module d'élasticité de 0")
+        elements['E'][i] = float(input(f"Module d'élasticité en {P}: "))
+        if elements['E'][i] > 0:
+            elements['A'][i] = float(input(f"Aire de section en {L}^2: "))
+        else:
+            elements['A'][i] = float(input(f"Raideur du ressort en {F}/{L}: "))
+        elements['dT'][i] = float(input('Différence de température: '))
+        if elements['dT'][i] != 0:
+            elements['alpha'][i] = float(input("Coefficient de dilatation thermique: "))
+        elements['k'][i] = calculer_k_barre2d(elements['E'][i], elements['A'][i],
                                               elements['xi'][i], elements['yi'][i],
                                               elements['xj'][i], elements['yj'][i])
+        elements['feq'][i] = calculer_feq_barre2d(elements['E'][i], elements['A'][i],
+                                                  elements['alpha'][i], elements['dT'][i],
+                                                  elements['xi'][i], elements['yi'][i],
+                                                  elements['xj'][i], elements['yj'][i])
 
-print(elements)
+    print(elements)
+    redo = not bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 Ktot = np.zeros((nb_noeuds * 2, nb_noeuds * 2))
 for i in range(nb_elements):
