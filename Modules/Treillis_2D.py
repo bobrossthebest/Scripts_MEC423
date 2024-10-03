@@ -11,7 +11,6 @@ P = 'MPa'
 # Fonctions
 # ---------
 
-
 # Calcul du vecteur des charges equivalentes dues a la dilatation thermique d'un element Barre2D
 def calculer_feq_barre2d(e, a, alpha, dt, xi, yi, xj, yj):
     if dt != 0:
