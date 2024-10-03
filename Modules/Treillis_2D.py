@@ -75,14 +75,14 @@ while redo is True:
             [noeuds['ddlx'][noeud_i],
              noeuds['ddly'][noeud_i],
              noeuds['ddlx'][noeud_j],
-             noeuds['ddlx'][noeud_j]])
+             noeuds['ddly'][noeud_j]])
         elements['xi'][i], elements['yi'][i] = noeuds['x'][noeud_i], noeuds['y'][noeud_i]
         elements['xj'][i], elements['yj'][i] = noeuds['x'][noeud_j], noeuds['y'][noeud_j]
 
         print(f"\tPour un ressort, poser un module d'élasticité de 0")
-        elements['E'][i] = float(input(f"Module d'élasticité en {P}: "))
+        elements['E'][i] = eval(input(f"Module d'élasticité en {P}: "))
         if elements['E'][i] > 0:
-            elements['A'][i] = float(input(f"Aire de section en {L}^2: "))
+            elements['A'][i] = eval(input(f"Aire de section en {L}^2: "))
         else:
             elements['A'][i] = float(input(f"Raideur du ressort en {F}/{L}: "))
         elements['dT'][i] = float(input('Différence de température: '))
@@ -112,7 +112,7 @@ for i in range(nb_elements):
 # -------------------------
 redo = True
 while redo is True:
-    nb_Uc = int(input('Combien de déplacements sont connus?'))
+    nb_Uc = int(input('Combien de déplacements sont connus? '))
     ddlUc = [0]*nb_Uc
     Uc = np.zeros((nb_Uc, 1))
     for i in range(nb_Uc):
@@ -120,17 +120,18 @@ while redo is True:
         Uc[i][0] = eval(input(f'Déplacement en {L} du noeud {ddlUc[i]}: '))
     for i in range(nb_Uc):
         print(f'Noeud {ddlUc[i]} : {Uc[i][0]} {L}')
-    redo = not bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
+    redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
-while redo is False:
-    nb_Fc = int(input('Combien de forces sont connues?'))
+redo = True
+while redo is True:
+    nb_Fc = int(input('Combien de forces sont connues? '))
     ddlFc = [0]*nb_Fc
     Fc = np.zeros((nb_Fc, 1))
     for i in range(nb_Fc):
         ddlFc[i] = int(input(f'Numéro de la force connue #{i+1}: '))
         Fc[i][0] = eval(input(f'Grandeur en {F} de la force {ddlFc[i]}: '))
     for i in range(nb_Fc):
-        print(f'Noeud {ddlFc[i]} : {Fc[i][0]} {F}')
+        print(f'Noeud {ddlFc[i]} : {Fc[i][0]:.2} {F}')
     redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 # ---------------
@@ -175,3 +176,5 @@ for i in range(nb_elements):
     tab_force[i] = elements['A'][i]*tab_sigma[i]
 
 print(tab_force)
+
+print(Ui)
