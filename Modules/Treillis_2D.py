@@ -23,7 +23,7 @@ def calculer_feq_barre2d(e, a, alpha, dt, xi, yi, xj, yj):
                                                [cx],
                                                [cy]])
     else:
-        feq = np.array([0, 0, 0, 0])
+        feq = np.array([[0], [0], [0], [0]])
     return feq
 
 
@@ -54,7 +54,7 @@ for i in range(nb_noeuds):
     # commence à 2 quand i est à 2
     noeuds['ddly'][i] = 2*i+2
 
-nb_elements = int(input("Combien d'elements contient la structure? "))
+nb_elements = int(input("\nCombien d'éléments contient la structure? "))
 vide = [0]*int(nb_elements)
 elements = {'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(), 'xj': vide.copy(), 'yj': vide.copy(),
             'E': vide.copy(), 'A': vide.copy(), 'alpha': vide.copy(), 'dT': vide.copy(),
@@ -62,8 +62,8 @@ elements = {'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(), 'xj': vide
 
 for i in range(nb_elements):
     # soustraction de 1 pour passer du numéro du noeud à son indice dans le tableau
-    noeud_i = int(input(f"Noeud avant l'élément {i+1}: ")) - 1
-    noeud_j = int(input(f"Noeud après l'élément {i+1}: ")) - 1
+    noeud_i = int(input(f"\n ÉLÉMENT {i+1}: \nNoeud avant l'élément: ")) - 1
+    noeud_j = int(input("Noeud après l'élément: ")) - 1
     elements['ddl'][i] = np.array(
         [noeuds['ddlx'][noeud_i],
          noeuds['ddly'][noeud_i],
@@ -72,8 +72,8 @@ for i in range(nb_elements):
     elements['xi'][i], elements['yi'][i] = noeuds['x'][noeud_i], noeuds['y'][noeud_i]
     elements['xj'][i], elements['yj'][i] = noeuds['x'][noeud_j], noeuds['y'][noeud_j]
 
-    print(f"Pour un ressort, poser un module d'élasticité de 0 et la raideur au-lieu de l'aire")
-    elements['E'][i] = float(input(f"Module d'élasticité en {F}: "))
+    print(f"\tPour un ressort, poser un module d'élasticité de 0 et la raideur au-lieu de l'aire")
+    elements['E'][i] = float(input(f"Module d'élasticité en {P}: "))
     if elements['E'][i] > 0:
         elements['A'][i] = float(input(f"Aire de section en {L}^2: "))
     elements['dT'][i] = float(input('Différence de température: '))
