@@ -54,6 +54,8 @@ for i in range(nb_noeuds):
     # commence à 2 quand i est à 2
     noeuds['ddly'][i] = 2*i+2
 
+print(noeuds)
+
 nb_elements = int(input("\nCombien d'éléments contient la structure? "))
 vide = [0]*int(nb_elements)
 elements = {'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(), 'xj': vide.copy(), 'yj': vide.copy(),
@@ -87,6 +89,7 @@ for i in range(nb_elements):
                                               elements['xi'][i], elements['yi'][i],
                                               elements['xj'][i], elements['yj'][i])
 
+print(elements)
 
 Ktot = np.zeros((nb_noeuds * 2, nb_noeuds * 2))
 for i in range(nb_elements):
@@ -105,12 +108,18 @@ Uc = np.zeros((nb_Uc, 1))
 for i in range(nb_Uc):
     ddlUc[i] = int(input(f'Numéro du ddl connu #{i+1}: '))
     Uc[i][0] = eval(input(f'Déplacement en {L} du noeud {ddlUc[i]}: '))
+for i in range(nb_Uc):
+    print(f'Noeud {ddlUc[i]} : {Uc[i][0]} {L}')
+
 nb_Fc = int(input('Combien de forces sont connues?'))
 ddlFc = [0]*nb_Fc
 Fc = np.zeros((nb_Fc, 1))
 for i in range(nb_Fc):
     ddlFc[i] = int(input(f'Numéro de la force connue #{i+1}: '))
     Fc[i][0] = eval(input(f'Grandeur en {F} de la force {ddlFc[i]}: '))
+for i in range(nb_Fc):
+    print(f'Noeud {ddlFc[i]} : {Fc[i][0]} {F}')
+
 
 # ---------------
 # Partitionnement
