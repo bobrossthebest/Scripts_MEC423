@@ -158,6 +158,10 @@ for i in range(nb_elements):
                                                elements['xi'][i], elements['yi'][i],
                                                elements['xj'][i], elements['yj'][i])
 
+print(tab_sigma)
+
 tab_force = [0]*nb_elements
 for i in range(nb_elements):
     tab_force[i] = elements['A'][i]*tab_sigma[i]
+
+print(tab_force)
