@@ -8,6 +8,9 @@ F = 'N'
 L = 'mm'
 P = 'MPa'
 
+# Variables définies dans des boucles
+noeuds, nb_noeuds, nb_elements, elements, ddlFc, ddlUc, Fc, Uc = False
+
 
 # ---------
 # Fonctions
@@ -222,7 +225,7 @@ for i in range(nb_elements):
     tab_force[i] = elements['A'][i] * tab_sigma[i]
 
 for i in range(nb_elements):
-    print(f"Élément {i+1}\tForce: {tab_force[i]}{F}\tContrainte: {tab_sigma[i]}{P}")
+    print(f"Élément {i + 1}\tForce: {tab_force[i]}{F}\tContrainte: {tab_sigma[i]}{P}")
 
 for i in range(len(Ui)):
     print(f"Déplacement {ddlFc[i]}:\t{Ui[i]}")
