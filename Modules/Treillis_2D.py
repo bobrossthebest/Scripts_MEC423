@@ -123,6 +123,9 @@ while redo is True:
             except ValueError:
                 print("Erreur dans les valeurs entrées")
                 continue
+            except TypeError:
+                print("Erreur dans les valeurs entrées")
+                continue
             elements['k'][i] = calculer_k_barre2d(elements['E'][i], elements['A'][i],
                                                   elements['xi'][i], elements['yi'][i],
                                                   elements['xj'][i], elements['yj'][i])
