@@ -2,16 +2,22 @@ import numpy as np
 
 from Modules.Fonctions_partagées import (calculer_k_barre2d, assembler_matrice, extraire_matrice, extraire_vecteur,
                                          reconstruire_vecteur, assembler_vecteur)
+
 # Unites : N-mm-MPa
 F = 'N'
 L = 'mm'
 P = 'MPa'
+
+
+# Variable globale pour la correction des entrées
+
 
 # ---------
 # Fonctions
 # ---------
 
 # Calcul du vecteur des charges equivalentes dues a la dilatation thermique d'un element Barre2D
+
 def calculer_feq_barre2d(e, a, alpha, dt, xi, yi, xj, yj):
     if dt != 0:
         l_barre = ((xj - xi) ** 2 + (yj - yi) ** 2) ** 0.5
@@ -42,18 +48,17 @@ def calculer_contrainte_barre2d(u_tot, ddl, e, alpha, dt, xi, yi, xj, yj):
 # ----------------------------
 # Proprietes de chaque element
 # ----------------------------
-redo = True
 while redo is True:
     nb_noeuds = int(input("Combien de noeuds contient la structure? "))
-    noeuds = {'x': [0]*nb_noeuds, 'y': [0]*nb_noeuds, 'ddlx': [0]*nb_noeuds, 'ddly': [0]*nb_noeuds}
+    noeuds = {'x': [0] * nb_noeuds, 'y': [0] * nb_noeuds, 'ddlx': [0] * nb_noeuds, 'ddly': [0] * nb_noeuds}
     for i in range(nb_noeuds):
         # Le premier noeud, d'indice 0, est le noeud "1" à l'affichage
-        noeuds['x'][i] = float(input(f"Position x du noeud {i+1} en {L}: "))
+        noeuds['x'][i] = float(input(f"Position x du noeud {i + 1} en {L}: "))
         # commence à 1 quand i est à 0
-        noeuds['ddlx'][i] = 2*i+1
-        noeuds['y'][i] = float(input(f"Position y du noeud {i+1} en {L}: "))
+        noeuds['ddlx'][i] = 2 * i + 1
+        noeuds['y'][i] = float(input(f"Position y du noeud {i + 1} en {L}: "))
         # commence à 2 quand i est à 2
-        noeuds['ddly'][i] = 2*i+2
+        noeuds['ddly'][i] = 2 * i + 2
 
     print(noeuds)
     redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
@@ -61,14 +66,14 @@ while redo is True:
 redo = True
 while redo is True:
     nb_elements = int(input("Combien d'éléments contient la structure? "))
-    vide = [0]*int(nb_elements)
+    vide = [0] * int(nb_elements)
     elements = {'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(), 'xj': vide.copy(), 'yj': vide.copy(),
                 'E': vide.copy(), 'A': vide.copy(), 'alpha': vide.copy(), 'dT': vide.copy(),
                 'k': vide.copy(), 'feq': vide.copy()}
 
     for i in range(nb_elements):
         # soustraction de 1 pour passer du numéro du noeud à son indice dans le tableau
-        noeud_i = int(input(f"\n ÉLÉMENT {i+1}: \nNoeud avant l'élément: ")) - 1
+        noeud_i = int(input(f"\n ÉLÉMENT {i + 1}: \nNoeud avant l'élément: ")) - 1
         noeud_j = int(input("Noeud après l'élément: ")) - 1
         elements['ddl'][i] = np.array(
             [noeuds['ddlx'][noeud_i],
@@ -112,10 +117,10 @@ for i in range(nb_elements):
 redo = True
 while redo is True:
     nb_Uc = int(input('Combien de déplacements sont connus? '))
-    ddlUc = [0]*nb_Uc
+    ddlUc = [0] * nb_Uc
     Uc = np.zeros((nb_Uc, 1))
     for i in range(nb_Uc):
-        ddlUc[i] = int(input(f'Numéro du ddl connu #{i+1}: '))
+        ddlUc[i] = int(input(f'Numéro du ddl connu #{i + 1}: '))
         Uc[i][0] = eval(input(f'Déplacement en {L} du noeud {ddlUc[i]}: '))
     for i in range(nb_Uc):
         print(f'Noeud {ddlUc[i]} : {Uc[i][0]} {L}')
@@ -124,10 +129,10 @@ while redo is True:
 redo = True
 while redo is True:
     nb_Fc = int(input('Combien de forces sont connues? '))
-    ddlFc = [0]*nb_Fc
+    ddlFc = [0] * nb_Fc
     Fc = np.zeros((nb_Fc, 1))
     for i in range(nb_Fc):
-        ddlFc[i] = int(input(f'Numéro de la force connue #{i+1}: '))
+        ddlFc[i] = int(input(f'Numéro de la force connue #{i + 1}: '))
         Fc[i][0] = eval(input(f'Grandeur en {F} de la force {ddlFc[i]}: '))
     for i in range(nb_Fc):
         print(f'Noeud {ddlFc[i]} : {Fc[i][0]:.2} {F}')
@@ -170,10 +175,11 @@ for i in range(nb_elements):
 
 print(tab_sigma)
 
-tab_force = [0]*nb_elements
+tab_force = [0] * nb_elements
 for i in range(nb_elements):
-    tab_force[i] = elements['A'][i]*tab_sigma[i]
+    tab_force[i] = elements['A'][i] * tab_sigma[i]
 
 print(tab_force)
 
-print(Ui)
+for i in range(len(Ui)):
+    print(f"Déplacement {ddlFc[i]}:\t{Ui[i]}")
