@@ -9,9 +9,6 @@ L = 'mm'
 P = 'MPa'
 
 
-# Variable globale pour la correction des entrées
-
-
 # ---------
 # Fonctions
 # ---------
@@ -48,17 +45,35 @@ def calculer_contrainte_barre2d(u_tot, ddl, e, alpha, dt, xi, yi, xj, yj):
 # ----------------------------
 # Proprietes de chaque element
 # ----------------------------
+
+
+redo = True
 while redo is True:
-    nb_noeuds = int(input("Combien de noeuds contient la structure? "))
+    try:
+        nb_noeuds = int(input("Combien de noeuds contient la structure? "))
+    except ValueError:
+        continue
     noeuds = {'x': [0] * nb_noeuds, 'y': [0] * nb_noeuds, 'ddlx': [0] * nb_noeuds, 'ddly': [0] * nb_noeuds}
     for i in range(nb_noeuds):
-        # Le premier noeud, d'indice 0, est le noeud "1" à l'affichage
-        noeuds['x'][i] = float(input(f"Position x du noeud {i + 1} en {L}: "))
-        # commence à 1 quand i est à 0
-        noeuds['ddlx'][i] = 2 * i + 1
-        noeuds['y'][i] = float(input(f"Position y du noeud {i + 1} en {L}: "))
-        # commence à 2 quand i est à 2
-        noeuds['ddly'][i] = 2 * i + 2
+        # boucle for pour passer à travers les noeuds, boucle while pour valider les entrées
+        while True:
+            try:
+                noeuds['x'][i] = float(input(f"Position x du noeud {i + 1} en {L}: "))
+            except ValueError:
+                print('Entrée invalide, corrigez')
+                continue
+            # commence à 1 quand i est à 0
+            noeuds['ddlx'][i] = 2 * i + 1
+            try:
+                noeuds['y'][i] = float(input(f"Position y du noeud {i + 1} en {L}: "))
+            except ValueError:
+                print('Entre invalide, corrigez')
+                continue
+            # commence à 2 quand i est à 2
+            noeuds['ddly'][i] = 2 * i + 2
+
+            # Si aucun problème d'entrée, sortir de la boucle d'entrée
+            break
 
     print(noeuds)
     redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
