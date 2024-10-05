@@ -170,8 +170,14 @@ while redo is True:
     ddlFc = [0] * nb_Fc
     Fc = np.zeros((nb_Fc, 1))
     for i in range(nb_Fc):
-        ddlFc[i] = int(input(f'Numéro de la force connue #{i + 1}: '))
-        Fc[i][0] = eval(input(f'Grandeur en {F} de la force {ddlFc[i]}: '))
+        while True:
+            try:
+                ddlFc[i] = int(input(f'Numéro de la force connue #{i + 1}: '))
+                Fc[i][0] = eval(input(f'Grandeur en {F} de la force {ddlFc[i]}: '))
+            except (ValueError, SyntaxError, TypeError):
+                print('Valeur erronnée')
+                continue
+            break
     for i in range(nb_Fc):
         print(f'Noeud {ddlFc[i]} : {Fc[i][0]:.2} {F}')
     redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
