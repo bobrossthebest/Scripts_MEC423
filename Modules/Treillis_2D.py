@@ -51,7 +51,7 @@ redo = True
 while redo is True:
     try:
         nb_noeuds = int(input("Combien de noeuds contient la structure? "))
-    except ValueError:
+    except (ValueError, SyntaxError, TypeError):
         continue
     noeuds = {'x': [0] * nb_noeuds, 'y': [0] * nb_noeuds, 'ddlx': [0] * nb_noeuds, 'ddly': [0] * nb_noeuds}
     for i in range(nb_noeuds):
@@ -59,14 +59,14 @@ while redo is True:
         while True:
             try:
                 noeuds['x'][i] = float(input(f"Position x du noeud {i + 1} en {L}: "))
-            except ValueError:
+            except (ValueError, SyntaxError, TypeError):
                 print('Entrée invalide, corrigez')
                 continue
             # commence à 1 quand i est à 0
             noeuds['ddlx'][i] = 2 * i + 1
             try:
                 noeuds['y'][i] = float(input(f"Position y du noeud {i + 1} en {L}: "))
-            except ValueError or SyntaxError:
+            except (ValueError, SyntaxError, TypeError):
                 print('Entrée invalide, corrigez')
                 continue
             # commence à 2 quand i est à 2
@@ -82,7 +82,7 @@ redo = True
 while redo is True:
     try:
         nb_elements = int(input("Combien d'éléments contient la structure? "))
-    except ValueError or SyntaxError:
+    except (ValueError, SyntaxError, TypeError):
         continue
     vide = [0] * int(nb_elements)
     elements = {'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(), 'xj': vide.copy(), 'yj': vide.copy(),
@@ -95,7 +95,7 @@ while redo is True:
             try:
                 noeud_i = int(input(f"\n ÉLÉMENT {i + 1}: \nNoeud avant l'élément: ")) - 1
                 noeud_j = int(input("Noeud après l'élément: ")) - 1
-            except ValueError:
+            except (ValueError, SyntaxError, TypeError):
                 print("Valeur invalide")
                 continue
 
@@ -117,13 +117,7 @@ while redo is True:
                 elements['dT'][i] = float(input('Différence de température: '))
                 if elements['dT'][i] != 0:
                     elements['alpha'][i] = float(input("Coefficient de dilatation thermique: "))
-            except SyntaxError:
-                print("Erreur dans les valeurs entrées")
-                continue
-            except ValueError:
-                print("Erreur dans les valeurs entrées")
-                continue
-            except TypeError:
+            except (SyntaxError, ValueError, TypeError):
                 print("Erreur dans les valeurs entrées")
                 continue
             elements['k'][i] = calculer_k_barre2d(elements['E'][i], elements['A'][i],
@@ -151,12 +145,21 @@ for i in range(nb_elements):
 # -------------------------
 redo = True
 while redo is True:
-    nb_Uc = int(input('Combien de déplacements sont connus? '))
+    try:
+        nb_Uc = int(input('Combien de déplacements sont connus? '))
+    except (ValueError, SyntaxError, TypeError):
+        continue
     ddlUc = [0] * nb_Uc
     Uc = np.zeros((nb_Uc, 1))
     for i in range(nb_Uc):
-        ddlUc[i] = int(input(f'Numéro du ddl connu #{i + 1}: '))
-        Uc[i][0] = eval(input(f'Déplacement en {L} du noeud {ddlUc[i]}: '))
+        while True:
+            try:
+                ddlUc[i] = int(input(f'Numéro du ddl connu #{i + 1}: '))
+                Uc[i][0] = eval(input(f'Déplacement en {L} du noeud {ddlUc[i]}: '))
+            except (ValueError, SyntaxError, TypeError):
+                print('Valeur erronnée')
+                continue
+            break
     for i in range(nb_Uc):
         print(f'Noeud {ddlUc[i]} : {Uc[i][0]} {L}')
     redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
