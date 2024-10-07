@@ -4,9 +4,9 @@ from Modules.Fonctions_partagées import (calculer_k_barre2d, assembler_matrice,
                                          reconstruire_vecteur, assembler_vecteur)
 
 # Unites :
-F = input("Quelle est l'unité de mesure de force")
-L = input("Quelle est l'unité de mesure de longueur")
-P = input("Quelle est l'unité de mesure de contrainte")
+F = input("Quelle est l'unité de mesure de force?\t\t")
+L = input("Quelle est l'unité de mesure de longueur?\t")
+P = input("Quelle est l'unité de mesure de contrainte?\t")
 
 # Variables définies dans des boucles
 noeuds, nb_noeuds, nb_elements, elements, ddlFc, ddlUc, Fc, Uc = [False]*8

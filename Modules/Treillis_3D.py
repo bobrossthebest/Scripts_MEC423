@@ -4,9 +4,9 @@ from Modules.Fonctions_partagées import (assembler_matrice, extraire_matrice,
                                          reconstruire_vecteur)
 
 # Unites :
-F = input("Quelle est l'unité de mesure de force")
-L = input("Quelle est l'unité de mesure de longueur")
-P = input("Quelle est l'unité de mesure de contrainte")
+F = input("\nQuelle est l'unité de mesure de force?\t\t")
+L = input("Quelle est l'unité de mesure de longueur?\t")
+P = input("Quelle est l'unité de mesure de contrainte?\t")
 
 # Variables définies dans des boucles
 noeuds, nb_noeuds, nb_elements, elements, ddlFc, ddlUc, Fc, Uc = [False] * 8
@@ -52,10 +52,12 @@ def calculer_contrainte_barre3d(u_tot, ddl, e, alpha, dt, xi, yi, zi, xj, yj, zj
 # Proprietes de chaque element
 # ----------------------------
 
+# Boucle d'entrée pour les noeuds
+
 redo = True
 while redo is True:
     try:
-        nb_noeuds = int(input("Combien de noeuds contient la structure? "))
+        nb_noeuds = int(input("\nCombien de noeuds contient la structure?\t"))
     except (ValueError, SyntaxError, TypeError):
         continue
     noeuds = {'x': [0] * nb_noeuds, 'y': [0] * nb_noeuds, 'z': [0] * nb_noeuds,
@@ -64,26 +66,21 @@ while redo is True:
         # boucle for pour passer à travers les noeuds, boucle while pour valider les entrées
         while True:
             try:
-                noeuds['x'][i] = float(input(f"Position x du noeud {i + 1} en {L}: "))
-            except (ValueError, SyntaxError, TypeError):
-                print('Entrée invalide, corrigez')
-                continue
-            # commence à 1 quand i est à 0
-            noeuds['ddlx'][i] = 3 * i + 1
-            try:
-                noeuds['y'][i] = float(input(f"Position y du noeud {i + 1} en {L}: "))
-            except (ValueError, SyntaxError, TypeError):
-                print('Entrée invalide, corrigez')
-                continue
-            # commence à 2 quand i est à 0
-            noeuds['ddly'][i] = 3 * i + 2
-            try:
-                noeuds['z'][i] = float(input(f"Position z du noeud {i + 1} en {L}: "))
-            except (ValueError, SyntaxError, TypeError):
-                print('Entrée invalide, corrigez')
-                continue
+                noeuds['x'][i] = float(input(f"\nPosition x du noeud {i + 1} en {L}:\t"))
+                # commence à 1 quand i est à 0
+                noeuds['ddlx'][i] = 3 * i + 1
+
+                noeuds['y'][i] = float(input(f"Position y du noeud {i + 1} en {L}:\t"))
+                # commence à 2 quand i est à 0
+                noeuds['ddly'][i] = 3 * i + 2
+
+                noeuds['z'][i] = float(input(f"Position z du noeud {i + 1} en {L}:\t"))
                 # commence à 3 quand i est à 0
-            noeuds['ddlz'][i] = 3 * i + 3
+                noeuds['ddlz'][i] = 3 * i + 3
+
+            except (ValueError, SyntaxError, TypeError):
+                print('Entrée invalide pour ce noeud, corrigez\n')
+                continue
 
             # Si aucun problème d'entrée, sortir de la boucle d'entrée
             break
@@ -91,55 +88,7 @@ while redo is True:
     print(noeuds)
     redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
-redo = True
-while redo is True:
-    try:
-        nb_elements = int(input("Combien d'éléments contient la structure? "))
-    except (ValueError, SyntaxError, TypeError):
-        continue
-    vide = [0] * int(nb_elements)
-    elements = {'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(), 'xj': vide.copy(), 'yj': vide.copy(),
-                'E': vide.copy(), 'A': vide.copy(), 'alpha': vide.copy(), 'dT': vide.copy(),
-                'k': vide.copy(), 'feq': vide.copy()}
-
-    for i in range(nb_elements):
-        # soustraction de 1 pour passer du numéro du noeud à son indice dans le tableau
-        while True:
-            try:
-                noeud_i = int(input(f"\n ÉLÉMENT {i + 1}: \nNoeud avant l'élément: ")) - 1
-                noeud_j = int(input("Noeud après l'élément: ")) - 1
-            except (ValueError, SyntaxError, TypeError):
-                print("Valeur invalide")
-                continue
-
-            elements['ddl'][i] = np.array(
-                [noeuds['ddlx'][noeud_i],
-                 noeuds['ddly'][noeud_i],
-                 noeuds['ddlx'][noeud_j],
-                 noeuds['ddly'][noeud_j]])
-            elements['xi'][i], elements['yi'][i] = noeuds['x'][noeud_i], noeuds['y'][noeud_i]
-            elements['xj'][i], elements['yj'][i] = noeuds['x'][noeud_j], noeuds['y'][noeud_j]
-
-            try:
-                print(f"\tPour un ressort, poser un module d'élasticité de 0")
-                elements['E'][i] = eval(input(f"Module d'élasticité en {P}: "))
-                if elements['E'][i] > 0:
-                    elements['A'][i] = eval(input(f"Aire de section en {L}^2: "))
-                else:
-                    elements['A'][i] = float(input(f"Raideur du ressort en {F}/{L}: "))
-                elements['dT'][i] = float(input('Différence de température: '))
-                if elements['dT'][i] != 0:
-                    elements['alpha'][i] = float(input("Coefficient de dilatation thermique: "))
-            except (SyntaxError, ValueError, TypeError):
-                print("Erreur dans les valeurs entrées")
-                continue
-            elements['k'][i] = calculer_k_barre3d(elements['E'][i], elements['A'][i],
-                                                  elements['xi'][i], elements['yi'][i], elements['zi'][i],
-                                                  elements['xj'][i], elements['yj'][i], elements['zj'][i])
-            break
-
-    print(elements)
-    redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
+# Boucle d'entrée pour les éléments
 
 redo = True
 while redo is True:
@@ -157,8 +106,8 @@ while redo is True:
         # soustraction de 1 pour passer du numéro du noeud à son indice dans le tableau
         while True:
             try:
-                noeud_i = int(input(f"\n ÉLÉMENT {i + 1}: \nNoeud avant l'élément: ")) - 1
-                noeud_j = int(input("Noeud après l'élément: ")) - 1
+                noeud_i = int(input(f"\n ÉLÉMENT {i + 1}: \nNoeud avant l'élément:\t")) - 1
+                noeud_j = int(input("Noeud après l'élément:\t")) - 1
             except (ValueError, SyntaxError, TypeError):
                 print("Valeur invalide")
                 continue
@@ -173,14 +122,14 @@ while redo is True:
 
             try:
                 print(f"\tPour un ressort, poser un module d'élasticité de 0")
-                elements['E'][i] = eval(input(f"Module d'élasticité en {P}: "))
+                elements['E'][i] = eval(input(f"Module d'élasticité en {P}:\t"))
                 if elements['E'][i] > 0:
-                    elements['A'][i] = eval(input(f"Aire de section en {L}^2: "))
+                    elements['A'][i] = eval(input(f"Aire de section en {L}^2:\t"))
                 else:
-                    elements['A'][i] = float(input(f"Raideur du ressort en {F}/{L}: "))
-                elements['dT'][i] = float(input('Différence de température: '))
+                    elements['A'][i] = float(input(f"Raideur du ressort en {F}/{L}:\t"))
+                elements['dT'][i] = float(input('Différence de température:\t\t'))
                 if elements['dT'][i] != 0:
-                    elements['alpha'][i] = float(input("Coefficient de dilatation thermique: "))
+                    elements['alpha'][i] = float(input("Coefficient de dilatation thermique:\t"))
             except (SyntaxError, ValueError, TypeError):
                 print("Erreur dans les valeurs entrées")
                 continue
