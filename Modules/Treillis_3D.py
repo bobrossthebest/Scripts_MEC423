@@ -219,13 +219,14 @@ Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 # Reponses
 # --------
 
+# Tableau de contraintes
 tab_sigma = [0] * nb_elements
 for i in range(nb_elements):
     tab_sigma[i] = calculer_contrainte_barre3d(Utot, elements['ddl'][i], elements['E'][i],
                                                elements['alpha'][i], elements['dT'][i],
                                                elements['xi'][i], elements['yi'][i], elements['zi'][i],
                                                elements['xj'][i], elements['yj'][i], elements['zj'][i])
-
+# Tableau de forces
 tab_force = [0] * nb_elements
 for i in range(nb_elements):
     tab_force[i] = elements['A'][i] * tab_sigma[i]
