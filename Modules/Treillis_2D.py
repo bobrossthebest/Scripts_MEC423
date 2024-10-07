@@ -3,10 +3,10 @@ import numpy as np
 from Modules.Fonctions_partagées import (calculer_k_barre2d, assembler_matrice, extraire_matrice, extraire_vecteur,
                                          reconstruire_vecteur, assembler_vecteur)
 
-# Unites : N-mm-MPa
-F = 'N'
-L = 'mm'
-P = 'MPa'
+# Unites :
+F = input("Quelle est l'unité de mesure de force")
+L = input("Quelle est l'unité de mesure de longueur")
+P = input("Quelle est l'unité de mesure de contrainte")
 
 # Variables définies dans des boucles
 noeuds, nb_noeuds, nb_elements, elements, ddlFc, ddlUc, Fc, Uc = [False]*8
