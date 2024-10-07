@@ -1,6 +1,6 @@
 import numpy as np
 
-from Modules.Fonctions_partagées import (assembler_matrice, extraire_matrice, extraire_vecteur,
+from Modules.Fonctions_partagées import (assembler_matrice, extraire_matrice,
                                          reconstruire_vecteur)
 
 # Unites :
@@ -91,55 +91,55 @@ while redo is True:
     print(noeuds)
     redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
-    redo = True
-    while redo is True:
-        try:
-            nb_elements = int(input("Combien d'éléments contient la structure? "))
-        except (ValueError, SyntaxError, TypeError):
-            continue
-        vide = [0] * int(nb_elements)
-        elements = {'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(), 'xj': vide.copy(), 'yj': vide.copy(),
-                    'E': vide.copy(), 'A': vide.copy(), 'alpha': vide.copy(), 'dT': vide.copy(),
-                    'k': vide.copy(), 'feq': vide.copy()}
+redo = True
+while redo is True:
+    try:
+        nb_elements = int(input("Combien d'éléments contient la structure? "))
+    except (ValueError, SyntaxError, TypeError):
+        continue
+    vide = [0] * int(nb_elements)
+    elements = {'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(), 'xj': vide.copy(), 'yj': vide.copy(),
+                'E': vide.copy(), 'A': vide.copy(), 'alpha': vide.copy(), 'dT': vide.copy(),
+                'k': vide.copy(), 'feq': vide.copy()}
 
-        for i in range(nb_elements):
-            # soustraction de 1 pour passer du numéro du noeud à son indice dans le tableau
-            while True:
-                try:
-                    noeud_i = int(input(f"\n ÉLÉMENT {i + 1}: \nNoeud avant l'élément: ")) - 1
-                    noeud_j = int(input("Noeud après l'élément: ")) - 1
-                except (ValueError, SyntaxError, TypeError):
-                    print("Valeur invalide")
-                    continue
+    for i in range(nb_elements):
+        # soustraction de 1 pour passer du numéro du noeud à son indice dans le tableau
+        while True:
+            try:
+                noeud_i = int(input(f"\n ÉLÉMENT {i + 1}: \nNoeud avant l'élément: ")) - 1
+                noeud_j = int(input("Noeud après l'élément: ")) - 1
+            except (ValueError, SyntaxError, TypeError):
+                print("Valeur invalide")
+                continue
 
-                elements['ddl'][i] = np.array(
-                    [noeuds['ddlx'][noeud_i],
-                     noeuds['ddly'][noeud_i],
-                     noeuds['ddlx'][noeud_j],
-                     noeuds['ddly'][noeud_j]])
-                elements['xi'][i], elements['yi'][i] = noeuds['x'][noeud_i], noeuds['y'][noeud_i]
-                elements['xj'][i], elements['yj'][i] = noeuds['x'][noeud_j], noeuds['y'][noeud_j]
+            elements['ddl'][i] = np.array(
+                [noeuds['ddlx'][noeud_i],
+                 noeuds['ddly'][noeud_i],
+                 noeuds['ddlx'][noeud_j],
+                 noeuds['ddly'][noeud_j]])
+            elements['xi'][i], elements['yi'][i] = noeuds['x'][noeud_i], noeuds['y'][noeud_i]
+            elements['xj'][i], elements['yj'][i] = noeuds['x'][noeud_j], noeuds['y'][noeud_j]
 
-                try:
-                    print(f"\tPour un ressort, poser un module d'élasticité de 0")
-                    elements['E'][i] = eval(input(f"Module d'élasticité en {P}: "))
-                    if elements['E'][i] > 0:
-                        elements['A'][i] = eval(input(f"Aire de section en {L}^2: "))
-                    else:
-                        elements['A'][i] = float(input(f"Raideur du ressort en {F}/{L}: "))
-                    elements['dT'][i] = float(input('Différence de température: '))
-                    if elements['dT'][i] != 0:
-                        elements['alpha'][i] = float(input("Coefficient de dilatation thermique: "))
-                except (SyntaxError, ValueError, TypeError):
-                    print("Erreur dans les valeurs entrées")
-                    continue
-                elements['k'][i] = calculer_k_barre3d(elements['E'][i], elements['A'][i],
-                                                      elements['xi'][i], elements['yi'][i], elements['zi'][i],
-                                                      elements['xj'][i], elements['yj'][i], elements['zj'][i])
-                break
+            try:
+                print(f"\tPour un ressort, poser un module d'élasticité de 0")
+                elements['E'][i] = eval(input(f"Module d'élasticité en {P}: "))
+                if elements['E'][i] > 0:
+                    elements['A'][i] = eval(input(f"Aire de section en {L}^2: "))
+                else:
+                    elements['A'][i] = float(input(f"Raideur du ressort en {F}/{L}: "))
+                elements['dT'][i] = float(input('Différence de température: '))
+                if elements['dT'][i] != 0:
+                    elements['alpha'][i] = float(input("Coefficient de dilatation thermique: "))
+            except (SyntaxError, ValueError, TypeError):
+                print("Erreur dans les valeurs entrées")
+                continue
+            elements['k'][i] = calculer_k_barre3d(elements['E'][i], elements['A'][i],
+                                                  elements['xi'][i], elements['yi'][i], elements['zi'][i],
+                                                  elements['xj'][i], elements['yj'][i], elements['zj'][i])
+            break
 
-        print(elements)
-        redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
+    print(elements)
+    redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 redo = True
 while redo is True:
