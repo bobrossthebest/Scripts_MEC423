@@ -130,6 +130,8 @@ while redo is True:
                 elements['dT'][i] = float(input('Différence de température:\t\t'))
                 if elements['dT'][i] != 0:
                     elements['alpha'][i] = float(input("Coefficient de dilatation thermique:\t"))
+                else:
+                    elements['alpha'][i] = 0
             except (SyntaxError, ValueError, TypeError):
                 print("Erreur dans les valeurs entrées")
                 continue
