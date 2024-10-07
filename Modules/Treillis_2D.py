@@ -226,6 +226,6 @@ for i in range(nb_elements):
 
 for i in range(nb_elements):
     print(f"Élément {i+1}\tForce: {tab_force[i]}{F}\tContrainte: {tab_sigma[i]}{P}")
-
+print('\n')
 for i in range(len(Ui)):
     print(f"Déplacement {ddlFc[i]}:\t{Ui[i]}")
