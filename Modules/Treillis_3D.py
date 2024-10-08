@@ -101,11 +101,12 @@ while redo is True:
     except (ValueError, SyntaxError, TypeError):
         continue
     vide = [0] * int(nb_elements)
-    elements = {'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(), 'zi': vide.copy,
+    elements = {'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(), 'zi': vide.copy(),
                 'xj': vide.copy(), 'yj': vide.copy(), 'zj': vide.copy(),
                 'E': vide.copy(), 'A': vide.copy(), 'alpha': vide.copy(), 'dT': vide.copy(),
                 'k': vide.copy(), 'feq': vide.copy(), 'noeud_i': vide.copy(), 'noeud_j': vide.copy()}
 
+    print(f"\tPour un ressort, poser un module d'élasticité de 0")
     for i in range(nb_elements):
         # soustraction de 1 pour passer du numéro du noeud à son indice dans le tableau
         while True:
@@ -126,14 +127,13 @@ while redo is True:
             elements['xj'][i], elements['yj'][i], elements['zj'][i] = (
                 noeuds['x'][noeud_j], noeuds['y'][noeud_j], noeuds['z'][noeud_j])
 
-            print(f"\tPour un ressort, poser un module d'élasticité de 0")
             try:
                 elements['E'][i] = eval(input(f"Module d'élasticité en {P}:\t"))
                 if elements['E'][i] > 0:
                     elements['A'][i] = eval(input(f"Aire de section en {L}^2:\t"))
                 else:
                     elements['A'][i] = float(input(f"Raideur du ressort en {F}/{L}:\t"))
-                elements['dT'][i] = float(input('Différence de température:\t\t'))
+                elements['dT'][i] = float(input('Différence de température:\t'))
                 if elements['dT'][i] != 0:
                     elements['alpha'][i] = float(input("Coefficient de dilatation thermique:\t"))
             except (SyntaxError, ValueError, TypeError):
@@ -148,24 +148,25 @@ while redo is True:
     for i in range(nb_elements):
         if elements['E'][i] > 0 and elements['dT'][i] == 0:
             print(f"Élément {i + 1} du noeud {elements['noeud_i'][i]} au noeud {elements['noeud_j'][i]}:\t"
-                  f"E = {elements['E'][i]:>5} {P},\tA = {elements['A'][i]:>5} {L}^2")
+                  f"E = {elements['E'][i]:<5} {P},\tA = {elements['A'][i]:<5} {L}^2")
         elif elements['dT'][i] != 0:
             print(f"Élément {i + 1} du noeud {elements['noeud_i'][i]} au noeud {elements['noeud_j'][i]}:\t"
-                  f"E = {elements['E'][i]:>5} {P},\tA = {elements['A'][i]:>5} {L}^2,\t"
-                  f"dT = {elements['dT'][i]:>5},\talpha = {elements['alpha'][i]:>5}")
+                  f"E = {elements['E'][i]:<5} {P},\tA = {elements['A'][i]:<5} {L}^2,\t"
+                  f"dT = {elements['dT'][i]:<5},\talpha = {elements['alpha'][i]:<5}")
         elif elements['E'][i] == 0:
             print(f"Élément {i + 1} du noeud {elements['noeud_i'][i]} au noeud {elements['noeud_j'][i]}:\t"
-                  f"k = {elements['A'][i]:>5} {F}/{L}")
+                  f"k = {elements['A'][i]:<5} {F}/{L}")
         else:
             print(f"Élément {i + 1} du noeud {elements['noeud_i'][i]} au noeud {elements['noeud_j'][i]}:\t"
-                  f"k = {elements['A'][i]:>5} {F}/{L},\t"
-                  f"dT = {elements['dT'][i]:>5},\talpha = {elements['alpha'][i]:>5}")
+                  f"k = {elements['A'][i]:<5} {F}/{L},\t"
+                  f"dT = {elements['dT'][i]:<5},\talpha = {elements['alpha'][i]:<5}")
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 # ----------
 # Assemblage
 # ----------
 
+# 3 pcq 3 ddl par noeud
 Ktot = np.zeros((nb_noeuds * 3, nb_noeuds * 3))
 for i in range(nb_elements):
     Ktot = assembler_matrice(Ktot, elements['k'][i], elements['ddl'][i], elements['ddl'][i])
@@ -192,8 +193,8 @@ while redo is True:
                 continue
             break
     for i in range(nb_Uc):
-        print(f'Noeud {ddlUc[i]} : {Uc[i][0]} {L}')
-    redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
+        print(f'Noeud {ddlUc[i]}:\t{Uc[i][0]} {L}')
+    redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 redo = True
 while redo is True:
@@ -210,8 +211,8 @@ while redo is True:
                 continue
             break
     for i in range(nb_Fc):
-        print(f'Noeud {ddlFc[i]} : {Fc[i][0]:.2} {F}')
-    redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
+        print(f'Noeud {ddlFc[i]}:\t{Fc[i][0]:.2} {F}')
+    redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 # ---------------
 # Partitionnement
