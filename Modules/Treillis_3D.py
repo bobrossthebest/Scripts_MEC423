@@ -104,7 +104,7 @@ while redo is True:
     elements = {'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(), 'zi': vide.copy,
                 'xj': vide.copy(), 'yj': vide.copy(), 'zj': vide.copy(),
                 'E': vide.copy(), 'A': vide.copy(), 'alpha': vide.copy(), 'dT': vide.copy(),
-                'k': vide.copy(), 'feq': vide.copy()}
+                'k': vide.copy(), 'feq': vide.copy(), 'noeud_i': vide.copy(), 'noeud_j': vide.copy()}
 
     for i in range(nb_elements):
         # soustraction de 1 pour passer du numéro du noeud à son indice dans le tableau
@@ -112,6 +112,8 @@ while redo is True:
             try:
                 noeud_i = int(input(f"\n ÉLÉMENT {i + 1}: \nNoeud avant l'élément:\t")) - 1
                 noeud_j = int(input("Noeud après l'élément:\t")) - 1
+                elements['noeud_i'][i] = noeud_i
+                elements['noeud_j'][i] = noeud_j
             except (ValueError, SyntaxError, TypeError):
                 print("Valeur invalide")
                 continue
@@ -124,8 +126,8 @@ while redo is True:
             elements['xj'][i], elements['yj'][i], elements['zj'][i] = (
                 noeuds['x'][noeud_j], noeuds['y'][noeud_j], noeuds['z'][noeud_j])
 
+            print(f"\tPour un ressort, poser un module d'élasticité de 0")
             try:
-                print(f"\tPour un ressort, poser un module d'élasticité de 0")
                 elements['E'][i] = eval(input(f"Module d'élasticité en {P}:\t"))
                 if elements['E'][i] > 0:
                     elements['A'][i] = eval(input(f"Aire de section en {L}^2:\t"))
@@ -142,8 +144,23 @@ while redo is True:
                                                   elements['xj'][i], elements['yj'][i], elements['zj'][i])
             break
 
-    print(elements)
-    redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
+    print('\n')
+    for i in range(nb_elements):
+        if elements['E'][i] > 0 and elements['dT'][i] == 0:
+            print(f"Élément {i + 1} du noeud {elements['noeud_i'][i]} au noeud {elements['noeud_j'][i]}:\t"
+                  f"E = {elements['E'][i]:>5} {P},\tA = {elements['A'][i]:>5} {L}^2")
+        elif elements['dT'][i] != 0:
+            print(f"Élément {i + 1} du noeud {elements['noeud_i'][i]} au noeud {elements['noeud_j'][i]}:\t"
+                  f"E = {elements['E'][i]:>5} {P},\tA = {elements['A'][i]:>5} {L}^2,\t"
+                  f"dT = {elements['dT'][i]:>5},\talpha = {elements['alpha'][i]:>5}")
+        elif elements['E'][i] == 0:
+            print(f"Élément {i + 1} du noeud {elements['noeud_i'][i]} au noeud {elements['noeud_j'][i]}:\t"
+                  f"k = {elements['A'][i]:>5} {F}/{L}")
+        else:
+            print(f"Élément {i + 1} du noeud {elements['noeud_i'][i]} au noeud {elements['noeud_j'][i]}:\t"
+                  f"k = {elements['A'][i]:>5} {F}/{L},\t"
+                  f"dT = {elements['dT'][i]:>5},\talpha = {elements['alpha'][i]:>5}")
+    redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 # ----------
 # Assemblage
