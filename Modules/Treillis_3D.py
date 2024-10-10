@@ -198,7 +198,10 @@ while redo is True:
 
 redo = True
 while redo is True:
-    nb_Fc = int(input('Combien de forces sont connues? '))
+    try:
+        nb_Fc = int(input('Combien de forces sont connues? '))
+    except (ValueError, SyntaxError, TypeError):
+        continue
     ddlFc = [0] * nb_Fc
     Fc = np.zeros((nb_Fc, 1))
     for i in range(nb_Fc):
