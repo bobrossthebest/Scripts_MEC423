@@ -223,6 +223,12 @@ Kcc = extraire_matrice(Ktot, ddlFc, ddlUc)
 Kii = extraire_matrice(Ktot, ddlUc, ddlFc)
 Kci = extraire_matrice(Ktot, ddlUc, ddlUc)
 
+print('\n')
+for tableau in (Kic, Kcc, Kii, Kci):
+    for i in range(len(tableau)):
+        for j in range(len(tableau[0])):
+            print(tableau[i][j])
+
 # --------
 # Solution
 # --------
