@@ -88,7 +88,7 @@ while redo is True:
     print('\n')
     for i in range(nb_noeuds):
         # opérateur ">" pour aligner à droite
-        print(f"Noeud {i+1}:\t[{noeuds['x'][i]:>6}],\t[{noeuds['y'][i]:>6}],\t[{noeuds['z'][i]:>6}], "
+        print(f"Noeud {i + 1}:\t[{noeuds['x'][i]:>6}],\t[{noeuds['y'][i]:>6}],\t[{noeuds['z'][i]:>6}], "
               f"ddl {noeuds['ddlx'][i]} à {noeuds['ddlz'][i]}")
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
@@ -228,9 +228,9 @@ Kci = extraire_matrice(Ktot, ddlUc, ddlUc)
 
 print('\n')
 for tableau in (Kic, Kcc, Kii, Kci):
+    print('\n')
     for i in range(len(tableau)):
-        for j in range(len(tableau[0])):
-            print(tableau[i][j])
+        print(tableau[i])
 
 # --------
 # Solution
