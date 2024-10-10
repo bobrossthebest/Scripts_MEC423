@@ -113,8 +113,8 @@ while redo is True:
             try:
                 noeud_i = int(input(f"\n ÉLÉMENT {i + 1}: \nNoeud avant l'élément:\t")) - 1
                 noeud_j = int(input("Noeud après l'élément:\t")) - 1
-                elements['noeud_i'][i] = noeud_i
-                elements['noeud_j'][i] = noeud_j
+                elements['noeud_i'][i] = noeud_i + 1
+                elements['noeud_j'][i] = noeud_j + 1
             except (ValueError, SyntaxError, TypeError):
                 print("Valeur invalide")
                 continue
@@ -187,13 +187,13 @@ while redo is True:
         while True:
             try:
                 ddlUc[i] = int(input(f'Numéro du ddl connu #{i + 1}: '))
-                Uc[i][0] = eval(input(f'Déplacement en {L} du noeud {ddlUc[i]}: '))
+                Uc[i][0] = eval(input(f'Déplacement en {L} de U{ddlUc[i]}: '))
             except (ValueError, SyntaxError, TypeError):
                 print('Valeur erronnée')
                 continue
             break
     for i in range(nb_Uc):
-        print(f'Noeud {ddlUc[i]}:\t{Uc[i][0]} {L}')
+        print(f'U{ddlUc[i]}:\t{Uc[i][0]} {L}')
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 redo = True
@@ -208,13 +208,13 @@ while redo is True:
         while True:
             try:
                 ddlFc[i] = int(input(f'Numéro de la force connue #{i + 1}: '))
-                Fc[i][0] = eval(input(f'Grandeur en {F} de la force {ddlFc[i]}: '))
+                Fc[i][0] = eval(input(f'Grandeur en {F} de  F{ddlFc[i]}: '))
             except (ValueError, SyntaxError, TypeError):
                 print('Valeur erronnée')
                 continue
             break
     for i in range(nb_Fc):
-        print(f'Noeud {ddlFc[i]}:\t{Fc[i][0]:.2} {F}')
+        print(f'F{ddlFc[i]}:\t{Fc[i][0]:.2} {F}')
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 # ---------------
