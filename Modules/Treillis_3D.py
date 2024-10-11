@@ -278,7 +278,7 @@ for i in range(nb_elements):
     print(f"Élément {i + 1}\tForce interne: {tab_force[i]}{F}\tContrainte: {tab_sigma[i]}{P}")
 print('\n')
 for i in range(len(Ui)):
-    print(f"U{ddlFc[i]}:\t{Ui[i]} {F}")
+    print(f"U{ddlFc[i]}:\t{Ui[i]} {L}")
 print('\n')
 for i in range(len(Fi)):
     print(f"F{ddlUc[i]}:\t{Fi[i]} {F}")
