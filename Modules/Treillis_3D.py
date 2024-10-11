@@ -1,7 +1,7 @@
 import numpy as np
 
 from Modules.Fonctions_partagées import (assembler_matrice, extraire_matrice,
-                                         reconstruire_vecteur)
+                                         reconstruire_vecteur, assembler_vecteur, extraire_vecteur)
 
 # Unites :
 F = input("\nQuelle est l'unité de mesure de force?\t\t")
@@ -50,6 +50,20 @@ def calculer_contrainte_barre3d(u_tot, ddl, e, alpha, dt, xi, yi, zi, xj, yj, zj
     sigma = (e / l_) * np.array([[-cx, -cy, -cz, cx, cy, cz]]) @ np.array(
         [[ui], [vi], [wi], [uj], [vj], [wj]]) - np.array([[e * alpha * dt]])
     return sigma[0][0]
+
+
+# J'ajoute la dilatation thermique dans le 3D
+def calculer_feq_barre3d(e, a, alpha, dt, xi, yi, zi, xj, yj, zj):
+    if dt != 0:
+        l_barre = ((xj - xi) ** 2 + (yj - yi) ** 2 + (zj - zi) ** 2) ** 0.5
+        cx = (xj - xi) / l_barre
+        cy = (yj - yi) / l_barre
+        cz = (zj - zi) / l_barre
+        feq = (e * a * alpha * dt) * np.array([[-cx], [-cy], [-cz],
+                                               [cx], [cy], [cz]])
+    else:
+        feq = np.array([[[0]]*9])
+    return feq
 
 
 # ----------------------------
@@ -149,6 +163,10 @@ while redo is True:
             elements['k'][i] = calculer_k_barre3d(elements['E'][i], elements['A'][i],
                                                   elements['xi'][i], elements['yi'][i], elements['zi'][i],
                                                   elements['xj'][i], elements['yj'][i], elements['zj'][i])
+            elements['feq'][i] = calculer_feq_barre3d(elements['E'][i], elements['A'][i],
+                                                      elements['alpha'][i], elements['dT'][i],
+                                                      elements['xi'][i], elements['yi'][i], elements['zi'][i],
+                                                      elements['xj'][i], elements['yj'][i], elements['zj'][i])
             break
 
     print('\n')
@@ -177,6 +195,11 @@ while redo is True:
 Ktot = np.zeros((nb_noeuds * 3, nb_noeuds * 3))
 for i in range(nb_elements):
     Ktot = assembler_matrice(Ktot, elements['k'][i], elements['ddl'][i], elements['ddl'][i])
+
+# pour dilatation thermique
+Feqtot = np.zeros((nb_noeuds * 2, 1))
+for i in range(nb_elements):
+    Feqtot = assembler_vecteur(Feqtot, elements['feq'][i], elements['ddl'][i])
 
 # -------------------------
 # Conditions aux frontieres
@@ -232,6 +255,8 @@ Kic = extraire_matrice(Ktot, ddlFc, ddlFc)
 Kcc = extraire_matrice(Ktot, ddlFc, ddlUc)
 Kii = extraire_matrice(Ktot, ddlUc, ddlFc)
 Kci = extraire_matrice(Ktot, ddlUc, ddlUc)
+Feqi = extraire_vecteur(Feqtot, ddlUc)
+Feqc = extraire_vecteur(Feqtot, ddlFc)
 
 print('Kic:')
 for i in range(len(Kic)):
@@ -251,8 +276,8 @@ print('\n')
 # Solution
 # --------
 
-Ui = np.linalg.inv(Kic) @ (Fc - Kcc @ Uc)
-Fi = Kii @ Ui + Kci @ Uc
+Ui = np.linalg.inv(Kic) @ (Fc + Feqc - Kcc @ Uc)
+Fi = Kii @ Ui + Kci @ Uc - Feqi
 
 # --------------
 # Reconstruction
