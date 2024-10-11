@@ -131,7 +131,7 @@ while redo is True:
             try:
                 noeud_i = int(input(f"\n ÉLÉMENT {i + 1}: \nNoeud avant l'élément:\t")) - 1
                 noeud_j = int(input("Noeud après l'élément:\t")) - 1
-                if not (0 < noeud_i < nb_elements and 0 < noeud_j < nb_elements):
+                if not (0 <= noeud_i < nb_noeuds and 0 <= noeud_j < nb_noeuds):
                     print("\t noeud hors de l'étendue")
                     continue
                 elements['noeud_i'][i] = noeud_i + 1
