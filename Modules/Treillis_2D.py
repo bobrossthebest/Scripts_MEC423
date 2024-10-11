@@ -229,3 +229,6 @@ for i in range(nb_elements):
 print('\n')
 for i in range(len(Ui)):
     print(f"Déplacement {ddlFc[i]}:\t{Ui[i]}")
+print('\n')
+for i in range(len(Fi)):
+    print(f"F{ddlUc[i]}:\t{Fi[i]} {F}")
