@@ -197,7 +197,7 @@ for i in range(nb_elements):
     Ktot = assembler_matrice(Ktot, elements['k'][i], elements['ddl'][i], elements['ddl'][i])
 
 # pour dilatation thermique
-Feqtot = np.zeros((nb_noeuds * 2, 1))
+Feqtot = np.zeros((nb_noeuds * 3, 1))
 for i in range(nb_elements):
     Feqtot = assembler_vecteur(Feqtot, elements['feq'][i], elements['ddl'][i])
 
