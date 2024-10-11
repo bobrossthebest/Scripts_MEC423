@@ -22,12 +22,16 @@ def calculer_k_barre3d(e, a, xi, yi, zi, xj, yj, zj):
     cx = (xj - xi) / l_
     cy = (yj - yi) / l_
     cz = (zj - zi) / l_
-    k = (e * a / l_) * np.array([[cx ** 2, cx * cy, cx * cz, -cx ** 2, -cx * cy, -cx * cz],
-                                 [cx * cy, cy ** 2, cy * cz, -cx * cy, -cy ** 2, -cy * cz],
-                                 [cx * cz, cy * cz, cz ** 2, -cx * cz, -cy * cz, -cz ** 2],
-                                 [-cx ** 2, -cx * cy, -cx * cz, cx ** 2, cx * cy, cx * cz],
-                                 [-cx * cy, -cy ** 2, -cy * cz, cx * cy, cy ** 2, cy * cz],
-                                 [-cx * cz, -cy * cz, -cz ** 2, cx * cz, cy * cz, cz ** 2]])
+    tab_cos = np.array([[cx ** 2, cx * cy, cx * cz, -cx ** 2, -cx * cy, -cx * cz],
+                        [cx * cy, cy ** 2, cy * cz, -cx * cy, -cy ** 2, -cy * cz],
+                        [cx * cz, cy * cz, cz ** 2, -cx * cz, -cy * cz, -cz ** 2],
+                        [-cx ** 2, -cx * cy, -cx * cz, cx ** 2, cx * cy, cx * cz],
+                        [-cx * cy, -cy ** 2, -cy * cz, cx * cy, cy ** 2, cy * cz],
+                        [-cx * cz, -cy * cz, -cz ** 2, cx * cz, cy * cz, cz ** 2]])
+    if e > 0:
+        k = (e * a / l_) * tab_cos
+    else:
+        k = a * tab_cos
     return k
 
 
