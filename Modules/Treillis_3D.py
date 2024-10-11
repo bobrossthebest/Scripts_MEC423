@@ -139,7 +139,7 @@ while redo is True:
                     elements['A'][i] = float(input(f"Raideur du ressort en {F}/{L}:\t"))
                 elements['dT'][i] = float(input('Différence de température:\t'))
                 if elements['dT'][i] != 0:
-                    elements['alpha'][i] = float(input("Coefficient de dilatation thermique:\t"))
+                    elements['alpha'][i] = eval(input("Coefficient de dilatation thermique:\t"))
             except (SyntaxError, ValueError, TypeError):
                 print("Erreur dans les valeurs entrées")
                 continue
@@ -275,7 +275,10 @@ for i in range(nb_elements):
     tab_force[i] = elements['A'][i] * tab_sigma[i]
 
 for i in range(nb_elements):
-    print(f"Élément {i + 1}\tForce: {tab_force[i]}{F}\tContrainte: {tab_sigma[i]}{P}")
+    print(f"Élément {i + 1}\tForce interne: {tab_force[i]}{F}\tContrainte: {tab_sigma[i]}{P}")
 print('\n')
 for i in range(len(Ui)):
-    print(f"Déplacement {ddlFc[i]}:\t{Ui[i]}")
+    print(f"U{ddlFc[i]}:\t{Ui[i]} {F}")
+print('\n')
+for i in range(len(Fi)):
+    print(f"F{ddlUc[i]}:\t{Fi[i]} {F}")
