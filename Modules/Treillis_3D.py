@@ -62,7 +62,7 @@ def calculer_feq_barre3d(e, a, alpha, dt, xi, yi, zi, xj, yj, zj):
         feq = (e * a * alpha * dt) * np.array([[-cx], [-cy], [-cz],
                                                [cx], [cy], [cz]])
     else:
-        feq = np.array([[[0]]*9])
+        feq = np.array([[0]]*6)
     return feq
 
 
@@ -258,6 +258,9 @@ Kci = extraire_matrice(Ktot, ddlUc, ddlUc)
 Feqi = extraire_vecteur(Feqtot, ddlUc)
 Feqc = extraire_vecteur(Feqtot, ddlFc)
 
+print('Ktot:')
+for i in range(len(Ktot)):
+    print(Ktot[i])
 print('Kic:')
 for i in range(len(Kic)):
     print(Kic[i])
