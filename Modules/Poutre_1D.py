@@ -1,6 +1,7 @@
 # Unites : N-mm-MPa
 
 import numpy as np
+import math
 
 from Modules.Fonctions_partagées import (calculer_k_poutre1d, assembler_matrice, extraire_matrice, extraire_vecteur,
                                          reconstruire_vecteur, assembler_vecteur)
@@ -43,6 +44,40 @@ def calculer_contrainte_poutre1d(u_tot, ddl, e, l_poutre, x, y):
                       (-12 * x / l_poutre ** 3 + 6 / l_poutre ** 2) * vj +
                       (6 * x / l_poutre ** 2 - 2 / l_poutre) * tj)
     return sigma
+
+# Calcul de l'inertie en Iz pour les calculs
+def calcul_Iz():
+
+    while True:
+        type_element = print(f"Quelle type de poutre avez-vouz:\trectangle\ttriangle\tcercle\tdemi-cercle\tcercle-mince\n"
+                           "Écrivez exactement la réponse comme elle est écrite.")
+        if type_element == "rectangle":
+            b = float(print(f"Quelle est la valeur de la base?"))
+            h = float(print(f"Quelle est la valeur de la hauteur?"))
+            Iz = (b*(h**3))/12
+            return Iz
+        elif type_element == "triangle":
+            b = float(print(f"Quelle est la valeur de la base?"))
+            h = float(print(f"Quelle est la valeur de la hauteur?"))
+            Iz = (b*(h**3))/36
+            return Iz
+        elif type_element == "cercle":
+            r = float(print(f"Quelle est la valeur du rayon?"))
+            Iz = (math.pi*(r**4))/4
+            return Iz
+        elif type_element == "demi-cercle":
+            r = float(print(f"Quelle est la valeur du rayon?"))
+            Iz = math.pi*(r**4)*((1/8)-(8/9*math.pi**2))
+            return Iz
+        elif type_element == "cercle-mince":
+            rm = float(print(f"Quelle est la valeur du rayon moyen?"))
+            t = float(print(f"Quelle est la valeur de l'epaisseur?"))
+            Iz = math.pi*(rm**3)*t
+            return Iz
+        else:
+            print('Erreur de saisie, veuillez recommencer.')
+            continue
+
 
 
 # ----------------------------
