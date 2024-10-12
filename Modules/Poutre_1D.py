@@ -5,7 +5,11 @@ import math
 
 from Modules.Fonctions_partagées import (calculer_k_poutre1d, assembler_matrice, extraire_matrice, extraire_vecteur,
                                          reconstruire_vecteur, assembler_vecteur)
-
+# Unites :
+F = input("\nQuelle est l'unité de mesure de force?\t\t")
+L = input("Quelle est l'unité de mesure de longueur?\t")
+M = input("Quelle est l'unité de mesure du moment?\t")
+P = input("Quelle est l'unité de mesure de contrainte?\t")
 
 # ---------
 # Fonctions
@@ -83,6 +87,10 @@ def calcul_Iz():
 # ----------------------------
 # Proprietes de chaque element
 # ----------------------------
+
+ nb_noeuds = int(input("\nCombien de noeuds contient la structure?\t"))
+
+
 
 ddl1 = np.array([1, 2, 3, 4])
 L1 = 400
