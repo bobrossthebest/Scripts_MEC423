@@ -1,25 +1,34 @@
-# Unites : N-mm-MPa
-
 import numpy as np
 
 from Modules.Fonctions_partagées import (calculer_k_barre2d, assembler_matrice, extraire_matrice, extraire_vecteur,
                                          reconstruire_vecteur, assembler_vecteur)
+
+# Unites :
+F = input("Quelle est l'unité de mesure de force?\t\t")
+L = input("Quelle est l'unité de mesure de longueur?\t")
+P = input("Quelle est l'unité de mesure de contrainte?\t")
+
+# Variables définies dans des boucles
+noeuds, nb_noeuds, nb_elements, elements, ddlFc, ddlUc, Fc, Uc = [False]*8
 
 
 # ---------
 # Fonctions
 # ---------
 
-
 # Calcul du vecteur des charges equivalentes dues a la dilatation thermique d'un element Barre2D
+
 def calculer_feq_barre2d(e, a, alpha, dt, xi, yi, xj, yj):
-    l_barre = ((xj - xi) ** 2 + (yj - yi) ** 2) ** 0.5
-    cx = (xj - xi) / l_barre
-    cy = (yj - yi) / l_barre
-    feq = (e * a * alpha * dt) * np.array([[-cx],
-                                           [-cy],
-                                           [cx],
-                                           [cy]])
+    if dt != 0:
+        l_barre = ((xj - xi) ** 2 + (yj - yi) ** 2) ** 0.5
+        cx = (xj - xi) / l_barre
+        cy = (yj - yi) / l_barre
+        feq = (e * a * alpha * dt) * np.array([[-cx],
+                                               [-cy],
+                                               [cx],
+                                               [cy]])
+    else:
+        feq = np.array([[0], [0], [0], [0]])
     return feq
 
 
@@ -40,87 +49,141 @@ def calculer_contrainte_barre2d(u_tot, ddl, e, alpha, dt, xi, yi, xj, yj):
 # Proprietes de chaque element
 # ----------------------------
 
-ddl1 = np.array([1, 2, 3, 4])
-xi1, yi1 = 0, 0
-xj1, yj1 = 800, 600
-E1 = 2e5
-A1 = 24
-alpha1 = 12e-6
-dT1 = 100
-Sy1 = 310
-k1 = calculer_k_barre2d(E1, A1, xi1, yi1, xj1, yj1)
-feq1 = calculer_feq_barre2d(E1, A1, alpha1, dT1, xi1, yi1, xj1, yj1)
 
-ddl2 = np.array([3, 4, 5, 6])
-xi2, yi2 = 800, 600
-xj2, yj2 = 800, 0
-E2 = 2e5
-A2 = 24
-alpha2 = 12e-6
-dT2 = 0
-Sy2 = 310
-k2 = calculer_k_barre2d(E2, A2, xi2, yi2, xj2, yj2)
-feq2 = calculer_feq_barre2d(E2, A2, alpha2, dT2, xi2, yi2, xj2, yj2)
+redo = True
+while redo is True:
+    try:
+        nb_noeuds = int(input("Combien de noeuds contient la structure? "))
+    except (ValueError, SyntaxError, TypeError):
+        continue
+    noeuds = {'x': [0] * nb_noeuds, 'y': [0] * nb_noeuds, 'ddlx': [0] * nb_noeuds, 'ddly': [0] * nb_noeuds}
+    for i in range(nb_noeuds):
+        # boucle for pour passer à travers les noeuds, boucle while pour valider les entrées
+        while True:
+            try:
+                noeuds['x'][i] = float(input(f"Position x du noeud {i + 1} en {L}: "))
+            except (ValueError, SyntaxError, TypeError):
+                print('Entrée invalide, corrigez')
+                continue
+            # commence à 1 quand i est à 0
+            noeuds['ddlx'][i] = 2 * i + 1
+            try:
+                noeuds['y'][i] = float(input(f"Position y du noeud {i + 1} en {L}: "))
+            except (ValueError, SyntaxError, TypeError):
+                print('Entrée invalide, corrigez')
+                continue
+            # commence à 2 quand i est à 2
+            noeuds['ddly'][i] = 2 * i + 2
 
-ddl3 = np.array([3, 4, 7, 8])
-xi3, yi3 = 800, 600
-xj3, yj3 = 1600, 0
-E3 = 2e5
-A3 = 24
-alpha3 = 12e-6
-dT3 = 0
-Sy3 = 310
-k3 = calculer_k_barre2d(E3, A3, xi3, yi3, xj3, yj3)
-feq3 = calculer_feq_barre2d(E3, A3, alpha3, dT3, xi3, yi3, xj3, yj3)
+            # Si aucun problème d'entrée, sortir de la boucle d'entrée
+            break
 
-ddl4 = np.array([1, 2, 5, 6])
-xi4, yi4 = 0, 0
-xj4, yj4 = 800, 0
-E4 = 2e5
-A4 = 24
-alpha4 = 12e-6
-dT4 = 0
-Sy4 = 310
-k4 = calculer_k_barre2d(E4, A4, xi4, yi4, xj4, yj4)
-feq4 = calculer_feq_barre2d(E4, A4, alpha4, dT4, xi4, yi4, xj4, yj4)
+    print(noeuds)
+    redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
-ddl5 = np.array([5, 6, 7, 8])
-xi5, yi5 = 800, 0
-xj5, yj5 = 1600, 0
-E5 = 2e5
-A5 = 24
-alpha5 = 12e-6
-dT5 = 0
-Sy5 = 310
-k5 = calculer_k_barre2d(E5, A5, xi5, yi5, xj5, yj5)
-feq5 = calculer_feq_barre2d(E5, A5, alpha5, dT5, xi5, yi5, xj5, yj5)
+redo = True
+while redo is True:
+    try:
+        nb_elements = int(input("Combien d'éléments contient la structure? "))
+    except (ValueError, SyntaxError, TypeError):
+        continue
+    vide = [0] * int(nb_elements)
+    elements = {'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(), 'xj': vide.copy(), 'yj': vide.copy(),
+                'E': vide.copy(), 'A': vide.copy(), 'alpha': vide.copy(), 'dT': vide.copy(),
+                'k': vide.copy(), 'feq': vide.copy()}
 
-# ----------
-# Assemblage
-# ----------
+    for i in range(nb_elements):
+        # soustraction de 1 pour passer du numéro du noeud à son indice dans le tableau
+        while True:
+            try:
+                noeud_i = int(input(f"\n ÉLÉMENT {i + 1}: \nNoeud avant l'élément: ")) - 1
+                noeud_j = int(input("Noeud après l'élément: ")) - 1
+            except (ValueError, SyntaxError, TypeError):
+                print("Valeur invalide")
+                continue
 
-Ktot = np.zeros((8, 8))
-Ktot = assembler_matrice(Ktot, k1, ddl1, ddl1)
-Ktot = assembler_matrice(Ktot, k2, ddl2, ddl2)
-Ktot = assembler_matrice(Ktot, k3, ddl3, ddl3)
-Ktot = assembler_matrice(Ktot, k4, ddl4, ddl4)
-Ktot = assembler_matrice(Ktot, k5, ddl5, ddl5)
+            elements['ddl'][i] = np.array(
+                [noeuds['ddlx'][noeud_i],
+                 noeuds['ddly'][noeud_i],
+                 noeuds['ddlx'][noeud_j],
+                 noeuds['ddly'][noeud_j]])
+            elements['xi'][i], elements['yi'][i] = noeuds['x'][noeud_i], noeuds['y'][noeud_i]
+            elements['xj'][i], elements['yj'][i] = noeuds['x'][noeud_j], noeuds['y'][noeud_j]
 
-Feqtot = np.zeros((8, 1))
-Feqtot = assembler_vecteur(Feqtot, feq1, ddl1)
-Feqtot = assembler_vecteur(Feqtot, feq2, ddl2)
-Feqtot = assembler_vecteur(Feqtot, feq3, ddl3)
-Feqtot = assembler_vecteur(Feqtot, feq4, ddl4)
-Feqtot = assembler_vecteur(Feqtot, feq5, ddl5)
+            try:
+                print(f"\tPour un ressort, poser un module d'élasticité de 0")
+                elements['E'][i] = eval(input(f"Module d'élasticité en {P}: "))
+                if elements['E'][i] > 0:
+                    elements['A'][i] = eval(input(f"Aire de section en {L}^2: "))
+                else:
+                    elements['A'][i] = float(input(f"Raideur du ressort en {F}/{L}: "))
+                elements['dT'][i] = float(input('Différence de température: '))
+                if elements['dT'][i] != 0:
+                    elements['alpha'][i] = float(input("Coefficient de dilatation thermique: "))
+            except (SyntaxError, ValueError, TypeError):
+                print("Erreur dans les valeurs entrées")
+                continue
+            elements['k'][i] = calculer_k_barre2d(elements['E'][i], elements['A'][i],
+                                                  elements['xi'][i], elements['yi'][i],
+                                                  elements['xj'][i], elements['yj'][i])
+            elements['feq'][i] = calculer_feq_barre2d(elements['E'][i], elements['A'][i],
+                                                      elements['alpha'][i], elements['dT'][i],
+                                                      elements['xi'][i], elements['yi'][i],
+                                                      elements['xj'][i], elements['yj'][i])
+            break
+
+    print(elements)
+    redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
+
+Ktot = np.zeros((nb_noeuds * 2, nb_noeuds * 2))
+for i in range(nb_elements):
+    Ktot = assembler_matrice(Ktot, elements['k'][i], elements['ddl'][i], elements['ddl'][i])
+
+Feqtot = np.zeros((nb_noeuds * 2, 1))
+for i in range(nb_elements):
+    Feqtot = assembler_vecteur(Feqtot, elements['feq'][i], elements['ddl'][i])
 
 # -------------------------
 # Conditions aux frontieres
 # -------------------------
+redo = True
+while redo is True:
+    try:
+        nb_Uc = int(input('Combien de déplacements sont connus? '))
+    except (ValueError, SyntaxError, TypeError):
+        continue
+    ddlUc = [0] * nb_Uc
+    Uc = np.zeros((nb_Uc, 1))
+    for i in range(nb_Uc):
+        while True:
+            try:
+                ddlUc[i] = int(input(f'Numéro du ddl connu #{i + 1}: '))
+                Uc[i][0] = eval(input(f'Déplacement en {L} du noeud {ddlUc[i]}: '))
+            except (ValueError, SyntaxError, TypeError):
+                print('Valeur erronnée')
+                continue
+            break
+    for i in range(nb_Uc):
+        print(f'Noeud {ddlUc[i]} : {Uc[i][0]} {L}')
+    redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
-ddlUc = np.array([1, 2, 6])
-Uc = np.array([[0], [0], [0]])
-ddlFc = np.array([3, 4, 5, 7, 8])
-Fc = np.array([[0], [0], [0], [-1200 * np.sin(40 * np.pi / 180)], [-1200 * np.cos(40 * np.pi / 180)]])
+redo = True
+while redo is True:
+    nb_Fc = int(input('Combien de forces sont connues? '))
+    ddlFc = [0] * nb_Fc
+    Fc = np.zeros((nb_Fc, 1))
+    for i in range(nb_Fc):
+        while True:
+            try:
+                ddlFc[i] = int(input(f'Numéro de la force connue #{i + 1}: '))
+                Fc[i][0] = eval(input(f'Grandeur en {F} de la force {ddlFc[i]}: '))
+            except (ValueError, SyntaxError, TypeError):
+                print('Valeur erronnée')
+                continue
+            break
+    for i in range(nb_Fc):
+        print(f'Noeud {ddlFc[i]} : {Fc[i][0]:.2} {F}')
+    redo = bool(input('Appuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 # ---------------
 # Partitionnement
@@ -150,17 +213,22 @@ Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 # --------
 # Reponses
 # --------
+tab_sigma = [0] * nb_elements
+for i in range(nb_elements):
+    tab_sigma[i] = calculer_contrainte_barre2d(Utot, elements['ddl'][i], elements['E'][i],
+                                               elements['alpha'][i], elements['dT'][i],
+                                               elements['xi'][i], elements['yi'][i],
+                                               elements['xj'][i], elements['yj'][i])
 
-VF = extraire_vecteur(Utot, [8])
-print('UyF = %.2f mm' % VF[0][0])
+tab_force = [0] * nb_elements
+for i in range(nb_elements):
+    tab_force[i] = elements['A'][i] * tab_sigma[i]
 
-RB = extraire_vecteur(Ftot, [1, 2])
-print('RxB = %.1f N, RyB = %.1f N' % (RB[0][0], RB[1][0]))
-
-sigma3 = calculer_contrainte_barre2d(Utot, ddl3, E3, alpha3, dT3, xi3, yi3, xj3, yj3)
-force3 = sigma3 * A3
-print('force_CF = %.1f N' % force3)
-
-sigma1 = calculer_contrainte_barre2d(Utot, ddl1, E1, alpha1, dT1, xi1, yi1, xj1, yj1)
-fs1 = Sy1 / sigma1
-print('FS_BC = %.2f' % fs1)
+for i in range(nb_elements):
+    print(f"Élément {i+1}\tForce: {tab_force[i]}{F}\tContrainte: {tab_sigma[i]}{P}")
+print('\n')
+for i in range(len(Ui)):
+    print(f"Déplacement {ddlFc[i]}:\t{Ui[i]}")
+print('\n')
+for i in range(len(Fi)):
+    print(f"F{ddlUc[i]}:\t{Fi[i]} {F}")

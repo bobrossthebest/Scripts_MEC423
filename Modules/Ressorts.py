@@ -17,17 +17,14 @@ def calculer_k_ressort1d(raideur):
 
 
 # ----------------------------
-# Proprietes de chaque element avec maillage
+# Proprietes de chaque element
 # ----------------------------
 
 nb_elements = int(input("Combien d'elements contient la structure? "))
 # shut the fuck up Antoine
-vide = [0]*nb_elements
+vide = [0]*int(nb_elements)
 elements = {'ddl': vide.copy(), 'raideur': vide.copy(), 'k': vide.copy()}
 
-#Ici on genere chaque element avec leur ddl, raideur et k respectif
-#L'utilisation de i+1 est pour montrer a l'affichage le vrai nombre de l'element
-# si i=0 alors on parle de l'element 1
 for i in range(nb_elements):
     noeud_1 = input(f"Noeud avant l'élément {i+1}: ")
     noeud_2 = input(f"Noeud après l'élément {i+1}: ")
@@ -35,10 +32,6 @@ for i in range(nb_elements):
     elements['raideur'][i] = int(input(f"Raideur de l'élément {i+1}: "))
     elements['k'][i] = calculer_k_ressort1d(elements['raideur'][i])
 
-#Impression de l'information sur le maillage
-print("Num\tDDL\tType\tRaideur")
-for i in range(nb_elements):
-    print(f"{i}\t{elements['ddl'][i]}\tRessort 1D\t{elements['raideur'][i]}")
 
 # ----------
 # Assemblage
