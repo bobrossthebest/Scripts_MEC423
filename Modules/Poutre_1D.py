@@ -306,7 +306,7 @@ for element in range(nb_element):
                                                                 elements['L'][element], x))
 for i, v in enumerate(tab_deplacement):
     if i % 2 == 0:  # Even index
-        print(f"V_{i + 1} = %.3f {P}" % v)
+        print(f"V_{i + 1} = %.3f {mm}" % v)
     else:  # Odd index
         print(f"V_{i + 1} = %.3f rad" % v)
 
@@ -314,9 +314,10 @@ for i, v in enumerate(tab_deplacement):
 #Impression de tous les force
 for i in range(len(Ftot)):
     if i % 2 == 0:  # Even index
-        print(f"F{i + 1}:\t{Ftot[i]:.3f} {F} ")
+        print(f"F{i + 1}:\t{Ftot[i].item():.3f} {F} ")
     else:  # Odd index
-        print(f"F{i + 1}:\t{Ftot[i]:.3f} {M} ")
+        print(f"F{i + 1}:\t{Ftot[i].item():.3f} {M} ")
+
 
 
 #Tableau des contraintes et print. Pour avoir chaque position en x la boucle ajoute la longueur de chaque element fin d'element
