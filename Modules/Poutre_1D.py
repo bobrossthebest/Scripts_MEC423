@@ -55,41 +55,51 @@ def calculer_contrainte_poutre1d(u_tot, ddl, e, l_poutre, x, y):
 
 # Calcul de l'inertie en Iz pour les calculs
 def calcul_Iz():
-
     while True:
         try:
-            type_element = print(f"Quelle type de poutre avez-vouz:\trectangle\ttriangle\tcercle\tdemi-cercle\tcercle-mince\n"
-                           "Écrivez exactement la réponse comme elle est écrite.")
-        except(ValueError, SyntaxError, TypeError):
-            continue
-
-        if type_element == "rectangle":
-            b = float(print(f"Quelle est la valeur de la base en {L}?"))
-            h = float(print(f"Quelle est la valeur de la hauteur en {L}?"))
-            Iz = (b*(h**3))/12
-            return Iz
-        elif type_element == "triangle":
-            b = float(print(f"Quelle est la valeur de la base en {L}?"))
-            h = float(print(f"Quelle est la valeur de la hauteur en {L}?"))
-            Iz = (b*(h**3))/36
-            return Iz
-        elif type_element == "cercle":
-            r = float(print(f"Quelle est la valeur du rayon en {L}?"))
-            Iz = (math.pi*(r**4))/4
-            return Iz
-        elif type_element == "demi-cercle":
-            r = float(print(f"Quelle est la valeur du rayon en {L}?"))
-            Iz = math.pi*(r**4)*((1/8)-(8/9*math.pi**2))
-            return Iz
-        elif type_element == "cercle-mince":
-            rm = float(print(f"Quelle est la valeur du rayon moyen en {L}?"))
-            t = float(print(f"Quelle est la valeur de l'epaisseur en {L}?"))
-            Iz = math.pi*(rm**3)*t
-            return Iz
-        else:
+            type_element = input(
+                "Quelle type de poutre avez-vous : rectangle, triangle, cercle, demi-cercle, cercle-mince\n"
+                "Écrivez exactement la réponse comme elle est écrite : ")
+        except (ValueError, SyntaxError, TypeError):
             print('Erreur de saisie, veuillez recommencer.')
             continue
 
+        if type_element == "rectangle":
+            b = float(input(f"Quelle est la valeur de la base en {L} ? "))
+            h = float(input(f"Quelle est la valeur de la hauteur en {L} ? "))
+            Iz = (b * (h ** 3)) / 12
+            print("Iz =", Iz)
+            return Iz
+
+        elif type_element == "triangle":
+            b = float(input(f"Quelle est la valeur de la base en {L} ? "))
+            h = float(input(f"Quelle est la valeur de la hauteur en {L} ? "))
+            Iz = (b * (h ** 3)) / 36
+            print("Iz =", Iz)
+            return Iz
+
+        elif type_element == "cercle":
+            r = float(input(f"Quelle est la valeur du rayon en {L} ? "))
+            Iz = (math.pi * (r ** 4)) / 4
+            print("Iz =", Iz)
+            return Iz
+
+        elif type_element == "demi-cercle":
+            r = float(input(f"Quelle est la valeur du rayon en {L} ? "))
+            Iz = math.pi * (r ** 4) * ((1 / 8) - (8 / 9 * math.pi ** 2))
+            print("Iz =", Iz)
+            return Iz
+
+        elif type_element == "cercle-mince":
+            rm = float(input(f"Quelle est la valeur du rayon moyen en {L} ? "))
+            t = float(input(f"Quelle est la valeur de l'épaisseur en {L} ? "))
+            Iz = math.pi * (rm ** 3) * t
+            print("Iz =", Iz)
+            return Iz
+
+        else:
+            print('Erreur de saisie, veuillez recommencer.')
+            continue
 
 
 # ----------------------------
