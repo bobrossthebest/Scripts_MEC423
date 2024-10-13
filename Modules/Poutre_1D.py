@@ -265,6 +265,23 @@ Kci = extraire_matrice(Ktot, ddlUc, ddlUc)
 Feqi = extraire_vecteur(Feqtot, ddlUc)
 Feqc = extraire_vecteur(Feqtot, ddlFc)
 
+print('Ktot:')
+for i in range(len(Ktot)):
+    print(Ktot[i])
+print('Kic:')
+for i in range(len(Kic)):
+    print(Kic[i])
+print('\nKcc:')
+for i in range(len(Kcc)):
+    print(Kcc[i])
+print('\nKii:')
+for i in range(len(Kii)):
+    print(Kii[i])
+print('\nKci:')
+for i in range(len(Kci)):
+    print(Kci[i])
+print('\n')
+
 # --------
 # Solution
 # --------
