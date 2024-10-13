@@ -113,66 +113,75 @@ elements = {'ddl': [[0,0,0,0] for _ in range(nb_element)], 'L': [0] * nb_element
               'E': [0] * nb_element,'q': [0] * nb_element, 'ymax': [0] * nb_element, 'k': [0] * nb_element, 'feq': [0]*nb_element }
 
 redo = True
-while redo is True:
+while redo:
     for element in range(nb_element):
-        #Te demande les ddl de la membrure
+        # Request the degrees of freedom of the element
         while True:
             try:
                 for i in range(len(elements['ddl'][element])):
-                    elements['ddl'][element][i] = int(input(f"l'élement {element+1} quel est le {i+1} degrée de liberté?"))
+                    elements['ddl'][element][i] = int(input(f"L'élément {element + 1}, quel est le {i + 1} degré de liberté? "))
+                break  # Exit this loop after successful input
+            except (ValueError, SyntaxError, TypeError):
+                print("Entrée invalide, veuillez réessayer.")
 
-            except(ValueError, SyntaxError, TypeError):
-                continue
-            break
-        #Te demande la longueur de l'element
+        # Request the length of the element
         while True:
             try:
-               elements['L'][element] = float(input(f"Quelle est la longueur de l'élément {element+1} en {L}?"))
-            except(ValueError, SyntaxError, TypeError):
-                continue
-            break
-        #T'envoie dans la function Iz pour calculer l'inertie
+                elements['L'][element] = float(input(f"Quelle est la longueur de l'élément {element + 1} en {L}? "))
+                break
+            except (ValueError, SyntaxError, TypeError):
+                print("Entrée invalide, veuillez réessayer.")
+
+        # Calculate Iz
         elements['Iz'][element] = calcul_Iz()
-        #Demande le module d'elasticit/ de l'element
+
+        # Request the modulus of elasticity
         while True:
             try:
-               elements['E'][element] = float(input(f"Quelle est le module d'elasticite en {P} de l'élément {element}?"))
-            except(ValueError, SyntaxError, TypeError):
-                continue
-            break
-        #Demande si il y a une charge repartie
-        print(f"Appuyez sur '1' si l'élément {element+1} a une charge répartie, ou '0' pour pas de charge.")
+                elements['E'][element] = float(input(f"Quel est le module d'élasticité en {P} de l'élément {element + 1}? "))
+                break
+            except (ValueError, SyntaxError, TypeError):
+                print("Entrée invalide, veuillez réessayer.")
+
+        # Check for distributed load
+        print(f"Appuyez sur '1' si l'élément {element + 1} a une charge répartie, ou '0' pour pas de charge.")
         while True:
             if keyboard.is_pressed('1'):
                 q_present = 1
                 print("Vous avez appuyé sur 1.")
                 while True:
                     try:
-                        elements['q'][element] = float(input(f"Quelle est la charge répartie en {F}/{L} de l'élément {element}?"))
-                    except(ValueError, SyntaxError, TypeError):
-                        continue
-                    break
+                        elements['q'][element] = float(input(f"Quelle est la charge répartie en {F}/{L} de l'élément {element + 1}? "))
+                        break
+                    except (ValueError, SyntaxError, TypeError):
+                        print("Entrée invalide, veuillez réessayer.")
                 break
             elif keyboard.is_pressed('0'):
                 q_present = 0
                 print("Vous avez appuyé sur 0.")
                 elements['q'][element] = False
                 break
-        #Demande la fibre la plus éloigné de la fibre neutre
+
+        # Request the maximum distance from the neutral axis
         while True:
             try:
-               elements['ymax'][element] = float(input(f"Quelle est le ymax en {L} de l'élément {element}?"))
-            except(ValueError, SyntaxError, TypeError):
-                continue
-            break
-        #Calcul le k de l'element
-        elements['k'][element] = calculer_k_poutre1d(elements['E'][element],elements['Iz'][element],elements['L'][element])
-        #Si charge repartie est presente calcul de feq
+                elements['ymax'][element] = float(input(f"Quelle est le ymax en {L} de l'élément {element + 1}? "))
+                break
+            except (ValueError, SyntaxError, TypeError):
+                print("Entrée invalide, veuillez réessayer.")
+
+        # Calculate k for the element
+        elements['k'][element] = calculer_k_poutre1d(elements['E'][element], elements['Iz'][element], elements['L'][element])
+
+        # If distributed load is present, calculate feq
         if q_present == 1:
-            elements['feq'][element] = calculer_feq_poutre1d(elements['q'][element],elements['L'][element])
-        elif q_present == 0:
+            elements['feq'][element] = calculer_feq_poutre1d(elements['q'][element], elements['L'][element])
+        else:
             elements['feq'][element] = False
-    redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
+
+    # Check if the user wants to redo the process
+    redo_input = input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer: ')
+    redo = redo_input.strip() == '1'
 
 
 # ----------
