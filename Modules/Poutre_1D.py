@@ -307,19 +307,19 @@ Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 #Print de tous les deplacement
 tab_deplacement = []
 x = 0
-while True:
-    try:
-        xp = float(input('Veux-tu un point en particulier pour le deplacement? Si oui donne la coordonnée en x:'))
-    except (ValueError, SyntaxError, TypeError):
-        print('Valeur erronnée')
-        continue
-    break
+# while True:
+#     try:
+#         xp = float(input('Veux-tu un point en particulier pour le deplacement? Si oui donne la coordonnée en x:'))
+#     except (ValueError, SyntaxError, TypeError):
+#         print('Valeur erronnée')
+#         continue
+#     break
 for element in range(nb_element):
     for ddl in range(2):
-        if xp < x and xp > (x - elements['L'][element]):
-            tab_deplacement.append(calculer_deplacement_poutre1d(Utot, elements['ddl'][element],
-                                                                 elements['L'][element], xp))
-        elif ddl == 0:
+        # if xp < x and xp > (x - elements['L'][element]):
+        #     tab_deplacement.append(calculer_deplacement_poutre1d(Utot, elements['ddl'][element],
+        #                                                          elements['L'][element], xp))
+        if ddl == 0:
             tab_deplacement.append(calculer_deplacement_poutre1d(Utot, elements['ddl'][element],
                                                       elements['L'][element], x))
         else:
@@ -347,19 +347,19 @@ for i in range(len(Ftot)):
 #jusqu'a la fin de la poutre
 tab_sigma = []
 x = 0
-while True:
-    try:
-        xp = float(input('Veux-tu un point en particulier pour la contrainte? Si oui donne la coordonnée en x:'))
-    except (ValueError, SyntaxError, TypeError):
-        print('Valeur erronnée')
-        continue
-    break
+# while True:
+#     try:
+#         xp = float(input('Veux-tu un point en particulier pour la contrainte? Si oui donne la coordonnée en x:'))
+#     except (ValueError, SyntaxError, TypeError):
+#         print('Valeur erronnée')
+#         continue
+#     break
 for element in range(nb_element):
     for ddl in range(2):
-        if xp<x and xp>(x-elements['L'][element]):
-            tab_sigma.append(calculer_contrainte_poutre1d(Utot, elements['ddl'][element], elements['E'][element],
-                                                          elements['L'][element], xp, elements['ymax'][element]))
-        elif ddl == 0:
+        # if xp<x and xp>(x-elements['L'][element]):
+        #     tab_sigma.append(calculer_contrainte_poutre1d(Utot, elements['ddl'][element], elements['E'][element],
+        #                                                   elements['L'][element], xp, elements['ymax'][element]))
+        if ddl == 0:
             tab_sigma.append(calculer_contrainte_poutre1d(Utot, elements['ddl'][element], elements['E'][element],
                                                       elements['L'][element], x, elements['ymax'][element]))
         else:
