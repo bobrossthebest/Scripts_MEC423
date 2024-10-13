@@ -299,14 +299,47 @@ Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 # --------
 # Reponses
 # --------
+#Print de tous les deplacement
+tab_deplacement = []
+x = 0
+for element in range(nb_element):
+    for ddl in range(2):
+        if ddl == 0:
+            tab_deplacement.append(calculer_contrainte_poutre1d(Utot, elements['ddl'][element],
+                                                      elements['L'][element], x))
+        else:
+            x +=elements['L'][element]
+            tab_deplacement.append(calculer_contrainte_poutre1d(Utot, elements['ddl'][element],
+                                                                elements['L'][element], x))
+for v in tab_deplacement:
+    if v % 2 == 0:  # Even index
+        print(f"V_{v+1} = %.3f {P}" % tab_deplacement[v] )
+    else:  # Odd index
+        print(f"V_{v+1} = %.3f {P}" % tab_deplacement[v])
 
-xB = 200
-V_B = calculer_deplacement_poutre1d(Utot, ddl1, L1, xB)
-print('V_B = %.3f mm' % V_B)
+#Impression de tous les force
+for i in range(len(Ftot)):
+    if i % 2 == 0:  # Even index
+        print(f"F{i + 1}:\t{Ftot[i]:.3f} {F} ")
+    else:  # Odd index
+        print(f"F{i + 1}:\t{Ftot[i]:.3f} {F}*{L} ")
 
-R_A = extraire_vecteur(Ftot, [1])
-print('R_A = %.3f N' % R_A[0][0])
 
-xE = 400
-sigmaMax_E = calculer_contrainte_poutre1d(Utot, ddl3, E3, L3, xE, ymax3)
-print('SigmaMax_E = %.2f MPa' % sigmaMax_E)
+#Tableau des contraintes et print. Pour avoir chaque position en x la boucle ajoute la longueur de chaque element fin d'element
+#jusqu'a la fin de la poutre
+tab_sigma = []
+x = 0
+for element in range(nb_element):
+    for ddl in range(2):
+        if ddl == 0:
+            tab_sigma.append(calculer_contrainte_poutre1d(Utot, elements['ddl'][element], elements['E'][element],
+                                                      elements['L'][element], x, elements['ymax'][element]))
+        else:
+            x +=elements['L'][element]
+            tab_sigma.append(calculer_contrainte_poutre1d(Utot, elements['ddl'][element], elements['E'][element], elements['L'][element],x,
+                                                          elements['ymax'][element]))
+
+for sigma in tab_sigma:
+    print(f"SigmaMax_{sigma+1} = %.2f {P}" % tab_sigma[sigma])
+
+
