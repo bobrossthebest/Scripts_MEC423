@@ -165,29 +165,6 @@ while redo is True:
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 
-ddl1 = np.array([1, 2, 3, 4])
-L1 = 400
-Iz1 = 384
-E1 = 69000
-ymax1 = -8
-k1 = calculer_k_poutre1d(E1, Iz1, L1)
-
-ddl2 = np.array([3, 4, 5, 6])
-L2 = 400
-Iz2 = 384
-E2 = 69000
-q2 = 0.003
-ymax2 = -8
-k2 = calculer_k_poutre1d(E2, Iz2, L2)
-feq2 = calculer_feq_poutre1d(q2, L2)
-
-ddl3 = np.array([5, 6, 7, 8])
-L3 = 400
-Iz3 = 384
-E3 = 69000
-ymax3 = -8
-k3 = calculer_k_poutre1d(E3, Iz3, L3)
-
 # ----------
 # Assemblage
 # ----------
@@ -249,10 +226,7 @@ while redo is True:
         print(f'F{ddlFc[i]}:\t{Fc[i][0]:.2} {F}')
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
-ddlUc = np.array([1, 7, 8])
-Uc = np.array([[0], [0], [0]])
-ddlFc = np.array([2, 3, 4, 5, 6])
-Fc = np.array([[0], [0], [0], [0], [0]])
+
 
 # ---------------
 # Partitionnement
