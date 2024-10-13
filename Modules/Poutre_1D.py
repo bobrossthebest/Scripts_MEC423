@@ -2,6 +2,7 @@
 
 import numpy as np
 import math
+import keyboard
 
 from Modules.Fonctions_partagées import (calculer_k_poutre1d, assembler_matrice, extraire_matrice, extraire_vecteur,
                                          reconstruire_vecteur, assembler_vecteur)
@@ -56,29 +57,33 @@ def calculer_contrainte_poutre1d(u_tot, ddl, e, l_poutre, x, y):
 def calcul_Iz():
 
     while True:
-        type_element = print(f"Quelle type de poutre avez-vouz:\trectangle\ttriangle\tcercle\tdemi-cercle\tcercle-mince\n"
+        try:
+            type_element = print(f"Quelle type de poutre avez-vouz:\trectangle\ttriangle\tcercle\tdemi-cercle\tcercle-mince\n"
                            "Écrivez exactement la réponse comme elle est écrite.")
+        except(ValueError, SyntaxError, TypeError):
+            continue
+
         if type_element == "rectangle":
-            b = float(print(f"Quelle est la valeur de la base?"))
-            h = float(print(f"Quelle est la valeur de la hauteur?"))
+            b = float(print(f"Quelle est la valeur de la base en {L}?"))
+            h = float(print(f"Quelle est la valeur de la hauteur en {L}?"))
             Iz = (b*(h**3))/12
             return Iz
         elif type_element == "triangle":
-            b = float(print(f"Quelle est la valeur de la base?"))
-            h = float(print(f"Quelle est la valeur de la hauteur?"))
+            b = float(print(f"Quelle est la valeur de la base en {L}?"))
+            h = float(print(f"Quelle est la valeur de la hauteur en {L}?"))
             Iz = (b*(h**3))/36
             return Iz
         elif type_element == "cercle":
-            r = float(print(f"Quelle est la valeur du rayon?"))
+            r = float(print(f"Quelle est la valeur du rayon en {L}?"))
             Iz = (math.pi*(r**4))/4
             return Iz
         elif type_element == "demi-cercle":
-            r = float(print(f"Quelle est la valeur du rayon?"))
+            r = float(print(f"Quelle est la valeur du rayon en {L}?"))
             Iz = math.pi*(r**4)*((1/8)-(8/9*math.pi**2))
             return Iz
         elif type_element == "cercle-mince":
-            rm = float(print(f"Quelle est la valeur du rayon moyen?"))
-            t = float(print(f"Quelle est la valeur de l'epaisseur?"))
+            rm = float(print(f"Quelle est la valeur du rayon moyen en {L}?"))
+            t = float(print(f"Quelle est la valeur de l'epaisseur en {L}?"))
             Iz = math.pi*(rm**3)*t
             return Iz
         else:
@@ -95,9 +100,10 @@ nb_element = int(input("\nCombien de d'element contient la structure?\t"))
 
 #Creation d'un dictionnaire avez toutes les cases pour chaque noeuds
 elements = {'ddl': [0,0,0,0] * nb_element, 'L': [0] * nb_element, 'Iz': [0] * nb_element,
-              'E': [0] * nb_element, 'ymax': [0] * nb_element, 'k': [0] * nb_element, 'feq': [0]*nb_element }
+              'E': [0] * nb_element,'q': [0] * nb_element, 'ymax': [0] * nb_element, 'k': [0] * nb_element, 'feq': [0]*nb_element }
 
 for element in range(nb_element):
+    #Te demande les ddl de la membrure
     while True:
         try:
             for i in range(len(elements['ddl'][element])):
@@ -106,18 +112,52 @@ for element in range(nb_element):
         except(ValueError, SyntaxError, TypeError):
             continue
         break
+    #Te demande la longueur de l'element
     while True:
         try:
-           elements['L'][element] = float(input(f"Quelle est la longueur de l'élément {element+1}?"))
+           elements['L'][element] = float(input(f"Quelle est la longueur de l'élément {element+1} en {L}?"))
         except(ValueError, SyntaxError, TypeError):
             continue
         break
+    #T'envoie dans la function Iz pour calculer l'inertie
+    elements['Iz'][element] = calcul_Iz()
+    #Demande le module d'elasticit/ de l'element
     while True:
         try:
-           elements['L'][element] = float(input(f"Quelle est la longueur de l'élément {element+1}?"))
+           elements['E'][element] = float(input(f"Quelle est le module d'elasticite en {P} de l'élément {element}?"))
         except(ValueError, SyntaxError, TypeError):
             continue
         break
+    #Demande si il y a une charge repartie
+    print(f"Appuyez sur '1' si l'élément {element+1} a une charge répartie, ou '0' pour pas de charge.")
+    while True:
+        if keyboard.is_pressed('1'):
+            q_present = 1
+            print("Vous avez appuyé sur 1.")
+            while True:
+                try:
+                    elements['q'][element] = float(input(f"Quelle est la charge répartie en {F}/{L} de l'élément {element}?"))
+                except(ValueError, SyntaxError, TypeError):
+                    continue
+                break
+            break
+        elif keyboard.is_pressed('0'):
+            q_present = 0
+            print("Vous avez appuyé sur 0.")
+            elements['q'][element] = False
+            break
+    #Demande la fibre la plus éloigné de la fibre neutre
+    while True:
+        try:
+           elements['ymax'][element] = float(input(f"Quelle est le ymax en {L} de l'élément {element}?"))
+        except(ValueError, SyntaxError, TypeError):
+            continue
+        break
+    #Calcul le k de l'element
+    elements['k'][element] = calculer_k_poutre1d(elements['E'][element],elements['Iz'][element],elements['L'][element])
+    #Si charge repartie est presente calcul de feq
+    if q_present == 1:
+
 
 ddl1 = np.array([1, 2, 3, 4])
 L1 = 400
