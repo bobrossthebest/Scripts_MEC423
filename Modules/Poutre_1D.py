@@ -305,10 +305,8 @@ for element in range(nb_element):
             tab_deplacement.append(calculer_deplacement_poutre1d(Utot, elements['ddl'][element],
                                                                 elements['L'][element], x))
 for i, v in enumerate(tab_deplacement):
-    if i % 2 == 0:  # Even index
-        print(f"V_{i + 1} = %.3f {mm}" % v)
-    else:  # Odd index
-        print(f"V_{i + 1} = %.3f rad" % v)
+    print(f"V_{i + 1} = %.3f {L}" % v)
+
 
 
 #Impression de tous les force
