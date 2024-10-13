@@ -96,7 +96,7 @@ def calcul_Iz():
 # Proprietes de chaque element
 # ----------------------------
 
-nb_element = int(input("\nCombien de d'element contient la structure?\t"))
+nb_element = int(input("\nCombien d'element contient la structure?\t"))
 
 #Creation d'un dictionnaire avez toutes les cases pour chaque noeuds
 elements = {'ddl': [0,0,0,0] * nb_element, 'L': [0] * nb_element, 'Iz': [0] * nb_element,
@@ -188,15 +188,17 @@ k3 = calculer_k_poutre1d(E3, Iz3, L3)
 # ----------
 # Assemblage
 # ----------
+# Le plus 1 donne le nombre de noeud et *2 car 2 degree de liberter par noeud
+Ktot = np.zeros(((nb_element+1)*2,((nb_element+1)*2 )))
+for i in range(nb_element):
+    Ktot = assembler_matrice(Ktot, elements['k'][i], elements['ddl'][i], elements['ddl'][i])
 
-Ktot = np.zeros((8, 8))
-Ktot = assembler_matrice(Ktot, k1, ddl1, ddl1)
-Ktot = assembler_matrice(Ktot, k2, ddl2, ddl2)
-Ktot = assembler_matrice(Ktot, k3, ddl3, ddl3)
-
-Feqtot = np.zeros((8, 1))
-Feqtot = assembler_vecteur(Feqtot, feq2, ddl2)
-
+Feqtot = np.zeros((((nb_element+1)*2, 1)))
+for i in range(nb_element):
+    if elements['feq'][i] == False:
+        continue
+    else:
+        Feqtot = assembler_vecteur(Feqtot, elements['feq'][i], elements['ddl'][i])
 # -------------------------
 # Conditions aux frontieres
 # -------------------------
