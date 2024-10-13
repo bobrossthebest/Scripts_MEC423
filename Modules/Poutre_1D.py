@@ -102,64 +102,67 @@ nb_element = int(input("\nCombien d'element contient la structure?\t"))
 elements = {'ddl': [0,0,0,0] * nb_element, 'L': [0] * nb_element, 'Iz': [0] * nb_element,
               'E': [0] * nb_element,'q': [0] * nb_element, 'ymax': [0] * nb_element, 'k': [0] * nb_element, 'feq': [0]*nb_element }
 
-for element in range(nb_element):
-    #Te demande les ddl de la membrure
-    while True:
-        try:
-            for i in range(len(elements['ddl'][element])):
-                elements['ddl'][element][i] = int(input(f"l'élement {element+1} quel est le {i+1} degrée de liberté?"))
+redo = True
+while redo is True:
+    for element in range(nb_element):
+        #Te demande les ddl de la membrure
+        while True:
+            try:
+                for i in range(len(elements['ddl'][element])):
+                    elements['ddl'][element][i] = int(input(f"l'élement {element+1} quel est le {i+1} degrée de liberté?"))
 
-        except(ValueError, SyntaxError, TypeError):
-            continue
-        break
-    #Te demande la longueur de l'element
-    while True:
-        try:
-           elements['L'][element] = float(input(f"Quelle est la longueur de l'élément {element+1} en {L}?"))
-        except(ValueError, SyntaxError, TypeError):
-            continue
-        break
-    #T'envoie dans la function Iz pour calculer l'inertie
-    elements['Iz'][element] = calcul_Iz()
-    #Demande le module d'elasticit/ de l'element
-    while True:
-        try:
-           elements['E'][element] = float(input(f"Quelle est le module d'elasticite en {P} de l'élément {element}?"))
-        except(ValueError, SyntaxError, TypeError):
-            continue
-        break
-    #Demande si il y a une charge repartie
-    print(f"Appuyez sur '1' si l'élément {element+1} a une charge répartie, ou '0' pour pas de charge.")
-    while True:
-        if keyboard.is_pressed('1'):
-            q_present = 1
-            print("Vous avez appuyé sur 1.")
-            while True:
-                try:
-                    elements['q'][element] = float(input(f"Quelle est la charge répartie en {F}/{L} de l'élément {element}?"))
-                except(ValueError, SyntaxError, TypeError):
-                    continue
+            except(ValueError, SyntaxError, TypeError):
+                continue
+            break
+        #Te demande la longueur de l'element
+        while True:
+            try:
+               elements['L'][element] = float(input(f"Quelle est la longueur de l'élément {element+1} en {L}?"))
+            except(ValueError, SyntaxError, TypeError):
+                continue
+            break
+        #T'envoie dans la function Iz pour calculer l'inertie
+        elements['Iz'][element] = calcul_Iz()
+        #Demande le module d'elasticit/ de l'element
+        while True:
+            try:
+               elements['E'][element] = float(input(f"Quelle est le module d'elasticite en {P} de l'élément {element}?"))
+            except(ValueError, SyntaxError, TypeError):
+                continue
+            break
+        #Demande si il y a une charge repartie
+        print(f"Appuyez sur '1' si l'élément {element+1} a une charge répartie, ou '0' pour pas de charge.")
+        while True:
+            if keyboard.is_pressed('1'):
+                q_present = 1
+                print("Vous avez appuyé sur 1.")
+                while True:
+                    try:
+                        elements['q'][element] = float(input(f"Quelle est la charge répartie en {F}/{L} de l'élément {element}?"))
+                    except(ValueError, SyntaxError, TypeError):
+                        continue
+                    break
                 break
+            elif keyboard.is_pressed('0'):
+                q_present = 0
+                print("Vous avez appuyé sur 0.")
+                elements['q'][element] = False
+                break
+        #Demande la fibre la plus éloigné de la fibre neutre
+        while True:
+            try:
+               elements['ymax'][element] = float(input(f"Quelle est le ymax en {L} de l'élément {element}?"))
+            except(ValueError, SyntaxError, TypeError):
+                continue
             break
-        elif keyboard.is_pressed('0'):
-            q_present = 0
-            print("Vous avez appuyé sur 0.")
-            elements['q'][element] = False
-            break
-    #Demande la fibre la plus éloigné de la fibre neutre
-    while True:
-        try:
-           elements['ymax'][element] = float(input(f"Quelle est le ymax en {L} de l'élément {element}?"))
-        except(ValueError, SyntaxError, TypeError):
-            continue
-        break
-    #Calcul le k de l'element
-    elements['k'][element] = calculer_k_poutre1d(elements['E'][element],elements['Iz'][element],elements['L'][element])
-    #Si charge repartie est presente calcul de feq
-    if q_present == 1:
-        elements['feq'][element] = calculer_feq_poutre1d(elements['q'][element],elements['L'][element])
-    elif q_present == 0:
-        elements['feq'][element] = False
+        #Calcul le k de l'element
+        elements['k'][element] = calculer_k_poutre1d(elements['E'][element],elements['Iz'][element],elements['L'][element])
+        #Si charge repartie est presente calcul de feq
+        if q_present == 1:
+            elements['feq'][element] = calculer_feq_poutre1d(elements['q'][element],elements['L'][element])
+        elif q_present == 0:
+            elements['feq'][element] = False
+    redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 
 ddl1 = np.array([1, 2, 3, 4])
@@ -202,6 +205,49 @@ for i in range(nb_element):
 # -------------------------
 # Conditions aux frontieres
 # -------------------------
+redo = True
+while redo is True:
+    while True:
+        try:
+            nb_Uc = int(input('Combien de déplacements sont connus? '))
+        except (ValueError, SyntaxError, TypeError):
+            continue
+        break
+    ddlUc = [0] * nb_Uc
+    Uc = np.zeros((nb_Uc, 1))
+    for i in range(nb_Uc):
+        while True:
+            try:
+                ddlUc[i] = int(input(f'Numéro du ddl déplacement connu #{i + 1}: '))
+                Uc[i][0] = eval(input(f'Déplacement en {L} de U{ddlUc[i]}: '))
+            except (ValueError, SyntaxError, TypeError):
+                print('Valeur erronnée')
+                continue
+            break
+    for i in range(nb_Uc):
+        print(f'U{ddlUc[i]}:\t{Uc[i][0]} {L}')
+    redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
+
+redo = True
+while redo is True:
+    try:
+        nb_Fc = int(input('Combien de forces sont connues? '))
+    except (ValueError, SyntaxError, TypeError):
+        continue
+    ddlFc = [0] * nb_Fc
+    Fc = np.zeros((nb_Fc, 1))
+    for i in range(nb_Fc):
+        while True:
+            try:
+                ddlFc[i] = int(input(f'Numéro du ddl de la force connue #{i + 1}: '))
+                Fc[i][0] = eval(input(f'Grandeur en {F} de  F{ddlFc[i]}: '))
+            except (ValueError, SyntaxError, TypeError):
+                print('Valeur erronnée')
+                continue
+            break
+    for i in range(nb_Fc):
+        print(f'F{ddlFc[i]}:\t{Fc[i][0]:.2} {F}')
+    redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 ddlUc = np.array([1, 7, 8])
 Uc = np.array([[0], [0], [0]])
