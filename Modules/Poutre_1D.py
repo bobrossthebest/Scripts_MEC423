@@ -5,11 +5,14 @@ import math
 
 from Modules.Fonctions_partagées import (calculer_k_poutre1d, assembler_matrice, extraire_matrice, extraire_vecteur,
                                          reconstruire_vecteur, assembler_vecteur)
+from Modules.Treillis_3D import elements
+
 # Unites :
 F = input("\nQuelle est l'unité de mesure de force?\t\t")
 L = input("Quelle est l'unité de mesure de longueur?\t")
 M = input("Quelle est l'unité de mesure du moment?\t")
 P = input("Quelle est l'unité de mesure de contrainte?\t")
+ddl_par_ele = 4
 
 # ---------
 # Fonctions
@@ -88,9 +91,33 @@ def calcul_Iz():
 # Proprietes de chaque element
 # ----------------------------
 
- nb_noeuds = int(input("\nCombien de noeuds contient la structure?\t"))
+nb_element = int(input("\nCombien de d'element contient la structure?\t"))
 
+#Creation d'un dictionnaire avez toutes les cases pour chaque noeuds
+elements = {'ddl': [0,0,0,0] * nb_element, 'L': [0] * nb_element, 'Iz': [0] * nb_element,
+              'E': [0] * nb_element, 'ymax': [0] * nb_element, 'k': [0] * nb_element, 'feq': [0]*nb_element }
 
+for element in range(nb_element):
+    while True:
+        try:
+            for i in range(len(elements['ddl'][element])):
+                elements['ddl'][element][i] = int(input(f"l'élement {element+1} quel est le {i+1} degrée de liberté?"))
+
+        except(ValueError, SyntaxError, TypeError):
+            continue
+        break
+    while True:
+        try:
+           elements['L'][element] = float(input(f"Quelle est la longueur de l'élément {element+1}?"))
+        except(ValueError, SyntaxError, TypeError):
+            continue
+        break
+    while True:
+        try:
+           elements['L'][element] = float(input(f"Quelle est la longueur de l'élément {element+1}?"))
+        except(ValueError, SyntaxError, TypeError):
+            continue
+        break
 
 ddl1 = np.array([1, 2, 3, 4])
 L1 = 400
