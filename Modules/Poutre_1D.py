@@ -157,6 +157,9 @@ for element in range(nb_element):
     elements['k'][element] = calculer_k_poutre1d(elements['E'][element],elements['Iz'][element],elements['L'][element])
     #Si charge repartie est presente calcul de feq
     if q_present == 1:
+        elements['feq'][element] = calculer_feq_poutre1d(elements['q'][element],elements['L'][element])
+    elif q_present == 0:
+        elements['feq'][element] = False
 
 
 ddl1 = np.array([1, 2, 3, 4])
