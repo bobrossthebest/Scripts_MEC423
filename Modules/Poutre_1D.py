@@ -332,19 +332,25 @@ for i in range(len(Ftot)):
 
 
 
+
 #Tableau des contraintes et print. Pour avoir chaque position en x la boucle ajoute la longueur de chaque element fin d'element
 #jusqu'a la fin de la poutre
 tab_sigma = []
 x = 0
+xp = float(input('Veux-tu un point en particulier? Si oui donne la coordonnée en x:'))
 for element in range(nb_element):
     for ddl in range(2):
-        if ddl == 0:
+        if xp<x and xp>(x-elements['L'][element]):
+            tab_sigma.append(calculer_contrainte_poutre1d(Utot, elements['ddl'][element], elements['E'][element],
+                                                          elements['L'][element], xp, elements['ymax'][element]))
+        elif ddl == 0:
             tab_sigma.append(calculer_contrainte_poutre1d(Utot, elements['ddl'][element], elements['E'][element],
                                                       elements['L'][element], x, elements['ymax'][element]))
         else:
             x +=elements['L'][element]
             tab_sigma.append(calculer_contrainte_poutre1d(Utot, elements['ddl'][element], elements['E'][element], elements['L'][element],x,
                                                           elements['ymax'][element]))
+
 print("\nTableau de toutes les contraintes")
 for i, sigma in enumerate(tab_sigma):
     print(f"SigmaMax_{i + 1} = %.2f {P}" % sigma)
