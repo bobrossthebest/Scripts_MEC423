@@ -6,14 +6,14 @@ import keyboard
 
 from Modules.Fonctions_partagées import (calculer_k_poutre1d, assembler_matrice, extraire_matrice, extraire_vecteur,
                                          reconstruire_vecteur, assembler_vecteur)
-from Modules.Treillis_3D import elements
+#from Modules.Treillis_3D import elements
 
 # Unites :
 F = input("\nQuelle est l'unité de mesure de force?\t\t")
 L = input("Quelle est l'unité de mesure de longueur?\t")
 M = input("Quelle est l'unité de mesure du moment?\t")
 P = input("Quelle est l'unité de mesure de contrainte?\t")
-ddl_par_ele = 4
+ddl_par_ele = 2
 
 # ---------
 # Fonctions
@@ -99,7 +99,7 @@ def calcul_Iz():
 nb_element = int(input("\nCombien d'element contient la structure?\t"))
 
 #Creation d'un dictionnaire avez toutes les cases pour chaque noeuds
-elements = {'ddl': [0,0,0,0] * nb_element, 'L': [0] * nb_element, 'Iz': [0] * nb_element,
+elements = {'ddl': [[0,0,0,0] for _ in range(nb_element)], 'L': [0] * nb_element, 'Iz': [0] * nb_element,
               'E': [0] * nb_element,'q': [0] * nb_element, 'ymax': [0] * nb_element, 'k': [0] * nb_element, 'feq': [0]*nb_element }
 
 redo = True
@@ -296,7 +296,7 @@ for i in range(len(Ftot)):
     if i % 2 == 0:  # Even index
         print(f"F{i + 1}:\t{Ftot[i]:.3f} {F} ")
     else:  # Odd index
-        print(f"F{i + 1}:\t{Ftot[i]:.3f} {F}*{L} ")
+        print(f"F{i + 1}:\t{Ftot[i]:.3f} {M} ")
 
 
 #Tableau des contraintes et print. Pour avoir chaque position en x la boucle ajoute la longueur de chaque element fin d'element
