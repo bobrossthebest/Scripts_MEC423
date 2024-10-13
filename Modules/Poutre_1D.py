@@ -194,7 +194,7 @@ for i in range(nb_element):
 
 Feqtot = np.zeros((((nb_element+1)*2, 1)))
 for i in range(nb_element):
-    if elements['feq'][i] == False:
+    if elements['feq'][i] is False:
         continue
     else:
         Feqtot = assembler_vecteur(Feqtot, elements['feq'][i], elements['ddl'][i])
@@ -298,17 +298,18 @@ x = 0
 for element in range(nb_element):
     for ddl in range(2):
         if ddl == 0:
-            tab_deplacement.append(calculer_contrainte_poutre1d(Utot, elements['ddl'][element],
+            tab_deplacement.append(calculer_deplacement_poutre1d(Utot, elements['ddl'][element],
                                                       elements['L'][element], x))
         else:
             x +=elements['L'][element]
-            tab_deplacement.append(calculer_contrainte_poutre1d(Utot, elements['ddl'][element],
+            tab_deplacement.append(calculer_deplacement_poutre1d(Utot, elements['ddl'][element],
                                                                 elements['L'][element], x))
-for v in tab_deplacement:
-    if v % 2 == 0:  # Even index
-        print(f"V_{v+1} = %.3f {P}" % tab_deplacement[v] )
+for i, v in enumerate(tab_deplacement):
+    if i % 2 == 0:  # Even index
+        print(f"V_{i + 1} = %.3f {P}" % v)
     else:  # Odd index
-        print(f"V_{v+1} = %.3f {P}" % tab_deplacement[v])
+        print(f"V_{i + 1} = %.3f rad" % v)
+
 
 #Impression de tous les force
 for i in range(len(Ftot)):
@@ -332,7 +333,8 @@ for element in range(nb_element):
             tab_sigma.append(calculer_contrainte_poutre1d(Utot, elements['ddl'][element], elements['E'][element], elements['L'][element],x,
                                                           elements['ymax'][element]))
 
-for sigma in tab_sigma:
-    print(f"SigmaMax_{sigma+1} = %.2f {P}" % tab_sigma[sigma])
+for i, sigma in enumerate(tab_sigma):
+    print(f"SigmaMax_{i + 1} = %.2f {P}" % sigma)
+
 
 
