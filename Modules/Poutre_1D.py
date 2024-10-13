@@ -55,11 +55,23 @@ def calculer_contrainte_poutre1d(u_tot, ddl, e, l_poutre, x, y):
 
 # Calcul de l'inertie en Iz pour les calculs
 def calcul_Iz():
+    colors = {
+        'rectangle': '\033[91m',  # Red
+        'triangle': '\033[92m',  # Green
+        'cercle': '\033[93m',  # Yellow
+        'demi-cercle': '\033[94m',  # Blue
+        'cercle-mince': '\033[95m',
+        'reset': '\033[0m' }       # Reset to default color}  # Magenta
     while True:
         try:
-            type_element = input(
-                "Quelle type de poutre avez-vous : rectangle, triangle, cercle, demi-cercle, cercle-mince\n"
-                "Écrivez exactement la réponse comme elle est écrite : ")
+            print(f"{colors['rectangle']}rectangle{colors['reset']}, "
+                  f"{colors['triangle']}triangle{colors['reset']}, "
+                  f"{colors['cercle']}cercle{colors['reset']}, "
+                  f"{colors['demi-cercle']}demi-cercle{colors['reset']}, "
+                  f"{colors['cercle-mince']}cercle-mince{colors['reset']}")
+
+            type_element = input("Quelle type de poutre avez-vous :\n")
+
         except (ValueError, SyntaxError, TypeError):
             print('Erreur de saisie, veuillez recommencer.')
             continue
@@ -303,13 +315,15 @@ for element in range(nb_element):
         else:
             x +=elements['L'][element]
             tab_deplacement.append(calculer_deplacement_poutre1d(Utot, elements['ddl'][element],
-                                                                elements['L'][element], x))
+                                                               elements['L'][element], x))
+print("Tableau de toutes les déplacements")
 for i, v in enumerate(tab_deplacement):
     print(f"V_{i + 1} = %.3f {L}" % v)
 
 
 
 #Impression de tous les force
+print("\nTableau de toutes les forces")
 for i in range(len(Ftot)):
     if i % 2 == 0:  # Even index
         print(f"F{i + 1}:\t{Ftot[i].item():.3f} {F} ")
@@ -331,7 +345,7 @@ for element in range(nb_element):
             x +=elements['L'][element]
             tab_sigma.append(calculer_contrainte_poutre1d(Utot, elements['ddl'][element], elements['E'][element], elements['L'][element],x,
                                                           elements['ymax'][element]))
-
+print("\nTableau de toutes les contraintes")
 for i, sigma in enumerate(tab_sigma):
     print(f"SigmaMax_{i + 1} = %.2f {P}" % sigma)
 
