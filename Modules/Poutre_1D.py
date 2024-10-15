@@ -326,7 +326,7 @@ while condition is True:
             print("Entrée invalide, veuillez réessayer.")
     while True:
         try:
-            x = input(("À quelle distance du début de la poutre se trouve le déplacement inconnu en "))
+            x = input(f"À quelle distance du début de l'élément {Nddl} se trouve le déplacement inconnu? ")
             break
         except (ValueError, SyntaxError, TypeError):
             print("Entrée invalide, veuillez réessayer.")
