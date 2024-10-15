@@ -6,7 +6,8 @@ import math
 from Modules.Fonctions_partagées import (calculer_k_poutre1d, assembler_matrice, extraire_matrice, extraire_vecteur,
                                          reconstruire_vecteur, assembler_vecteur)
 
-# from Modules.Treillis_3D import elements
+# Variables définies dans des boucles
+element, nb_Uc, ddlFc, ddlUc, Fc, Uc = [0]*6
 
 # Unites :
 F = input("\nQuelle est l'unité de mesure de force?\t\t")
