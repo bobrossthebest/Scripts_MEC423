@@ -6,6 +6,7 @@ import keyboard
 
 from Modules.Fonctions_partagées import (calculer_k_poutre1d, assembler_matrice, extraire_matrice, extraire_vecteur,
                                          reconstruire_vecteur, assembler_vecteur)
+
 #from Modules.Treillis_3D import elements
 
 # Unites :
@@ -14,6 +15,7 @@ L = input("Quelle est l'unité de mesure de longueur?\t")
 M = input("Quelle est l'unité de mesure du moment?\t")
 P = input("Quelle est l'unité de mesure de contrainte?\t")
 ddl_par_ele = 2
+
 
 # ---------
 # Fonctions
@@ -53,6 +55,7 @@ def calculer_contrainte_poutre1d(u_tot, ddl, e, l_poutre, x, y):
                       (6 * x / l_poutre ** 2 - 2 / l_poutre) * tj)
     return sigma
 
+
 # Calcul de l'inertie en Iz pour les calculs
 def calcul_Iz():
     colors = {
@@ -61,7 +64,7 @@ def calcul_Iz():
         'cercle': '\033[93m',  # Yellow
         'demi-cercle': '\033[94m',  # Blue
         'cercle-mince': '\033[95m',
-        'reset': '\033[0m' }       # Reset to default color}  # Magenta
+        'reset': '\033[0m'}  # Reset to default color}  # Magenta
     while True:
         try:
             print(f"{colors['rectangle']}rectangle{colors['reset']}, "
@@ -121,8 +124,9 @@ def calcul_Iz():
 nb_element = int(input("\nCombien d'element contient la structure?\t"))
 
 #Creation d'un dictionnaire avez toutes les cases pour chaque noeuds
-elements = {'ddl': [[0,0,0,0] for _ in range(nb_element)], 'L': [0] * nb_element, 'Iz': [0] * nb_element,
-              'E': [0] * nb_element,'q': [0] * nb_element, 'ymax': [0] * nb_element, 'k': [0] * nb_element, 'feq': [0]*nb_element }
+elements = {'ddl': [[0, 0, 0, 0] for _ in range(nb_element)], 'L': [0] * nb_element, 'Iz': [0] * nb_element,
+            'E': [0] * nb_element, 'q': [0] * nb_element, 'ymax': [0] * nb_element, 'k': [0] * nb_element,
+            'feq': [0] * nb_element}
 
 redo = True
 while redo:
@@ -131,7 +135,8 @@ while redo:
         while True:
             try:
                 for i in range(len(elements['ddl'][element])):
-                    elements['ddl'][element][i] = int(input(f"L'élément {element + 1}, quel est le {i + 1} degré de liberté? "))
+                    elements['ddl'][element][i] = int(
+                        input(f"L'élément {element + 1}, quel est le {i + 1} degré de liberté? "))
                 break  # Exit this loop after successful input
             except (ValueError, SyntaxError, TypeError):
                 print("Entrée invalide, veuillez réessayer.")
@@ -150,7 +155,8 @@ while redo:
         # Request the modulus of elasticity
         while True:
             try:
-                elements['E'][element] = float(input(f"Quel est le module d'élasticité en {P} de l'élément {element + 1}? "))
+                elements['E'][element] = float(
+                    input(f"Quel est le module d'élasticité en {P} de l'élément {element + 1}? "))
                 break
             except (ValueError, SyntaxError, TypeError):
                 print("Entrée invalide, veuillez réessayer.")
@@ -163,7 +169,8 @@ while redo:
                 print("Vous avez appuyé sur 1.")
                 while True:
                     try:
-                        elements['q'][element] = float(input(f"Quelle est la charge répartie en {F}/{L} de l'élément {element + 1}? "))
+                        elements['q'][element] = float(
+                            input(f"Quelle est la charge répartie en {F}/{L} de l'élément {element + 1}? "))
                         break
                     except (ValueError, SyntaxError, TypeError):
                         print("Entrée invalide, veuillez réessayer.")
@@ -183,7 +190,8 @@ while redo:
                 print("Entrée invalide, veuillez réessayer.")
 
         # Calculate k for the element
-        elements['k'][element] = calculer_k_poutre1d(elements['E'][element], elements['Iz'][element], elements['L'][element])
+        elements['k'][element] = calculer_k_poutre1d(elements['E'][element], elements['Iz'][element],
+                                                     elements['L'][element])
 
         # If distributed load is present, calculate feq
         if q_present == 1:
@@ -195,16 +203,15 @@ while redo:
     redo_input = input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer: ')
     redo = redo_input.strip() == '1'
 
-
 # ----------
 # Assemblage
 # ----------
 # Le plus 1 donne le nombre de noeud et *2 car 2 degree de liberter par noeud
-Ktot = np.zeros(((nb_element+1)*2,((nb_element+1)*2 )))
+Ktot = np.zeros(((nb_element + 1) * 2, ((nb_element + 1) * 2)))
 for i in range(nb_element):
     Ktot = assembler_matrice(Ktot, elements['k'][i], elements['ddl'][i], elements['ddl'][i])
 
-Feqtot = np.zeros((((nb_element+1)*2, 1)))
+Feqtot = np.zeros((((nb_element + 1) * 2, 1)))
 for i in range(nb_element):
     if elements['feq'][i] is False:
         continue
@@ -256,8 +263,6 @@ while redo is True:
     for i in range(nb_Fc):
         print(f'F{ddlFc[i]}:\t{Fc[i][0]:.2} {F}')
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
-
-
 
 # ---------------
 # Partitionnement
@@ -383,7 +388,4 @@ while True:
             print("Entrée invalide, veuillez réessayer.")
     s = calculer_contrainte_poutre1d(Utot, elements['ddl'][Nddl-1], elements['E'][Nddl-1],elements['L'][Nddl-1], x, elements['ymax'][Nddl-1])
     print(f"SigmaMax à {x}{L} du début de l'élément{Nddl} = %.3f mm" % s )
-
-
-
 
