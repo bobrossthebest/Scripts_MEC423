@@ -233,7 +233,7 @@ redo = True
 while redo is True:
     while True:
         try:
-            nb_Uc = int(input('\nCombien de déplacements sont connus? '))
+            nb_Uc = int(input('\nCombien de déplacements sont connus?\n'))
         except (ValueError, SyntaxError, TypeError):
             continue
         break
@@ -252,6 +252,7 @@ while redo is True:
                 print('Valeur erronnée')
                 continue
             break
+    print("\n")
     for i in range(nb_Uc):
         if (ddlUc[i] - 1) % 2 == 0:
             unite = L
@@ -263,7 +264,7 @@ while redo is True:
 redo = True
 while redo is True:
     try:
-        nb_Fc = int(input('\nCombien de forces/moments sont connus? '))
+        nb_Fc = int(input('\nCombien de forces/moments sont connus?\n'))
     except (ValueError, SyntaxError, TypeError):
         continue
     ddlFc = [0] * nb_Fc
@@ -281,13 +282,14 @@ while redo is True:
                 print('Valeur erronnée')
                 continue
             break
+    print("\n")
     for i in range(nb_Fc):
         if (ddlFc[i] - 1) % 2 == 0:
             unite = F
         else:
             unite = M
         print(f'F{ddlFc[i]}:\t{Fc[i][0]:.2} {unite}')
-    redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
+    redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer'))
 
 # ---------------
 # Partitionnement
@@ -300,10 +302,10 @@ Kci = extraire_matrice(Ktot, ddlUc, ddlUc)
 Feqi = extraire_vecteur(Feqtot, ddlUc)
 Feqc = extraire_vecteur(Feqtot, ddlFc)
 
-print('Ktot:')
+print('\nKtot:')
 for i in range(len(Ktot)):
     print(Ktot[i])
-print('Kic:')
+print('\nKic:')
 for i in range(len(Kic)):
     print(Kic[i])
 print('\nKcc:')
@@ -315,7 +317,6 @@ for i in range(len(Kii)):
 print('\nKci:')
 for i in range(len(Kci)):
     print(Kci[i])
-print('\n')
 
 # --------
 # Solution
@@ -336,7 +337,7 @@ Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 # --------
 
 # Print de tous les deplacement
-print("Utot")
+print("\nUtot\n")
 for i in range(len(Utot)):
     if i % 2 == 0:
         print(f"U{i + 1} : {Utot[i][0]} {L}")
@@ -344,7 +345,7 @@ for i in range(len(Utot)):
         print(f"U{i + 1} : {Utot[i][0]} rad")
 
 # Print de toutes les forces
-print("Ftot")
+print("\nFtot\n")
 for i in range(len(Ftot)):
     if i % 2 == 0:
         print(f"F{i + 1} : {Ftot[i][0]} {F}")
@@ -383,14 +384,6 @@ while True:
             print("Entrée invalide, veuillez réessayer.")
     v = calculer_deplacement_poutre1d(Utot, elements['ddl'][Nddl - 1], elements['L'][Nddl - 1], x)
     print(f"V à {x}{L} du début de l'élément {Nddl} = %.3f mm" % v)
-
-# # Impression de tous les force
-# print("\nTableau de toutes les forces")
-# for i in range(len(Ftot)):
-#     if i % 2 == 0:  # Even index
-#         print(f"F{i + 1}:\t{Ftot[i].item():.3f} {F} ")
-#     else:  # Odd index
-#         print(f"F{i + 1}:\t{Ftot[i].item():.3f} {M} ")
 
 # Demande a l'utilisateur si il veux des contraintes particulier
 while True:
