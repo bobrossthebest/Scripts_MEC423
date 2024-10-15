@@ -312,15 +312,25 @@ for i in range(len(Utot[0])):
     else:
         print(f"U{i + 1} : {Utot[0][i]} rad")
 
+#Demande a l'utilisateur si il veux des deplacements particulier
 
-condition = True
-while condition is True:
+while True:
     while True:
         try:
-            condition = bool(input("Est-ce que vous voulez un deplacement en particulier, 1 si oui et 0 si non."))
-            break
+            user_input = input(
+                "Est-ce que vous voulez un déplacement en particulier? Tapez 1 pour oui et 0 pour non : ")
+            if user_input == "1":
+                condition = True
+                break
+            elif user_input == "0":
+                condition = False
+                break
+            else:
+                print("Entrée invalide, veuillez entrer 1 ou 0.")
         except (ValueError, SyntaxError, TypeError):
             print("Entrée invalide, veuillez réessayer.")
+    if user_input == "0":
+        break
     while True:
         try:
             Nddl= int(input("À quelle élément appartient le déplacement inconnu?"))
@@ -345,14 +355,24 @@ for i in range(len(Ftot)):
     else:  # Odd index
         print(f"F{i + 1}:\t{Ftot[i].item():.3f} {M} ")
 
-
+#Demande a l'utilisateur si il veux des contraintes particulier
 while condition is True:
     while True:
         try:
-            condition = bool(input("Est-ce que vous voulez une contrainte en particulier, 1 si oui et 0 si non."))
-            break
+            user_input = input(
+                "Est-ce que vous voulez une contrainte en particulier? Tapez 1 pour oui et 0 pour non : ")
+            if user_input == "1":
+                condition = True
+                break
+            elif user_input == "0":
+                condition = False
+                break
+            else:
+                print("Entrée invalide, veuillez entrer 1 ou 0.")
         except (ValueError, SyntaxError, TypeError):
             print("Entrée invalide, veuillez réessayer.")
+    if user_input == "0":
+        break
     while True:
         try:
             Nddl= int(input("À quelle élément appartient la contrainte inconnue?"))
