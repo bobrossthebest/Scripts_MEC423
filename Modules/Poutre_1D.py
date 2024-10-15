@@ -12,9 +12,8 @@ element, nb_Uc, ddlFc, ddlUc, Fc, Uc = [0]*6
 # Unites :
 F = input("\nQuelle est l'unité de mesure de force?\t\t")
 L = input("Quelle est l'unité de mesure de longueur?\t")
-M = input("Quelle est l'unité de mesure du moment?\t\t")
 P = input("Quelle est l'unité de mesure de contrainte?\t")
-ddl_par_ele = 2
+M = f"{F}*{L}"
 
 
 # ---------
@@ -121,7 +120,7 @@ def calcul_Iz():
 # Proprietes de chaque element
 # ----------------------------
 
-nb_element = int(input("\nCombien d'element contient la structure?\t"))
+nb_element = int(input("\nCombien d'éléments contient la structure?\t"))
 
 # Creation d'un dictionnaire avez toutes les cases pour chaque noeuds
 elements = {'ddl': [[0, 0, 0, 0] for _ in range(nb_element)], 'L': [0] * nb_element, 'Iz': [0] * nb_element,
@@ -136,7 +135,7 @@ while redo:
             try:
                 for i in range(len(elements['ddl'][element])):
                     elements['ddl'][element][i] = int(
-                        input(f"L'élément {element + 1}, quel est le {i + 1} degré de liberté? "))
+                        input(f"Quel est le degré de liberté {i + 1} pour l'élément {element + 1}? "))
                 break  # Exit this loop after successful input
             except (ValueError, SyntaxError, TypeError):
                 print("Entrée invalide, veuillez réessayer.")
@@ -161,9 +160,7 @@ while redo:
             except (ValueError, SyntaxError, TypeError):
                 print("Entrée invalide, veuillez réessayer.")
 
-        # Check for distributed load
-        # print(f"Appuyez sur '1' si l'élément {element + 1} a une charge répartie, ou '0' pour pas de charge.")
-        ch_rep = bool(input("\nEntrez '1' si l'élément {element + 1} a une charge répartie, '0' s'il n'en a pas.\n"))
+        ch_rep = bool(input(f"\nEntrez '1' si l'élément {element + 1} a une charge répartie, '0' s'il n'en a pas.\n"))
         while True:
             if ch_rep:
                 q_present = 1
@@ -207,7 +204,7 @@ while redo:
 # ----------
 # Assemblage
 # ----------
-# Le plus 1 donne le nombre de noeud et *2 car 2 degree de liberter par noeud
+# Le plus 1 donne le nombre de noeud et *2 car 2 degres de liberte par noeud
 Ktot = np.zeros(((nb_element + 1) * 2, ((nb_element + 1) * 2)))
 for i in range(nb_element):
     Ktot = assembler_matrice(Ktot, elements['k'][i], elements['ddl'][i], elements['ddl'][i])
@@ -235,13 +232,21 @@ while redo is True:
         while True:
             try:
                 ddlUc[i] = int(input(f'Numéro du ddl déplacement connu #{i + 1}: '))
-                Uc[i][0] = eval(input(f'Déplacement en {L} de U{ddlUc[i]}: '))
+                if (ddlUc[i]-1) % 2 == 0:
+                    unite = L
+                else:
+                    unite = 'rad'
+                Uc[i][0] = eval(input(f'Déplacement en {unite} de U{ddlUc[i]}: '))
             except (ValueError, SyntaxError, TypeError):
                 print('Valeur erronnée')
                 continue
             break
     for i in range(nb_Uc):
-        print(f'U{ddlUc[i]}:\t{Uc[i][0]} {L}')
+        if (ddlUc[i] - 1) % 2 == 0:
+            unite = L
+        else:
+            unite = M
+        print(f'U{ddlUc[i]}:\t{Uc[i][0]} {unite}')
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 redo = True
@@ -256,6 +261,10 @@ while redo is True:
         while True:
             try:
                 ddlFc[i] = int(input(f'Numéro du ddl de la force connue #{i + 1}: '))
+                if (ddlFc[i]-1) % 2 == 0:
+                    unite = F
+                else:
+                    unite = M
                 Fc[i][0] = eval(input(f'Grandeur en {F} de  F{ddlFc[i]}: '))
             except (ValueError, SyntaxError, TypeError):
                 print('Valeur erronnée')
