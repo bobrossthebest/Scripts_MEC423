@@ -312,32 +312,28 @@ for i in range(len(Utot[0])):
 
 condition = True
 while condition is True:
-    condition = bool(input("Est-ce que vous voulez un deplacement en particulier, 1 si oui et 0 si non."))
+    while True:
+        try:
+            condition = bool(input("Est-ce que vous voulez un deplacement en particulier, 1 si oui et 0 si non."))
+            break
+        except (ValueError, SyntaxError, TypeError):
+            print("Entrée invalide, veuillez réessayer.")
+    while True:
+        try:
+            Nddl= input("À quelle élément appartient le déplacement inconnu?")
+            break
+        except (ValueError, SyntaxError, TypeError):
+            print("Entrée invalide, veuillez réessayer.")
+    while True:
+        try:
+            x = input(("À quelle distance du début de la poutre se trouve le déplacement inconnu en "))
+            break
+        except (ValueError, SyntaxError, TypeError):
+            print("Entrée invalide, veuillez réessayer.")
+    v = calculer_deplacement_poutre1d(Utot, elements['ddl'][Nddl-1],elements['L'][Nddl-1], x)
+    print(f'V à {x}{L} = %.3f mm' % v)
 
 
-
-# while True:
-#     try:
-#         xp = float(input('Veux-tu un point en particulier pour le deplacement? Si oui donne la coordonnée en x:'))
-#     except (ValueError, SyntaxError, TypeError):
-#         print('Valeur erronnée')
-#         continue
-#     break
-for element in range(nb_element):
-    for ddl in range(2):
-        # if xp < x and xp > (x - elements['L'][element]):
-        #     tab_deplacement.append(calculer_deplacement_poutre1d(Utot, elements['ddl'][element],
-        #                                                          elements['L'][element], xp))
-        if ddl == 0:
-            tab_deplacement.append(calculer_deplacement_poutre1d(Utot, elements['ddl'][element],
-                                                      elements['L'][element], x))
-        else:
-            x +=elements['L'][element]
-            tab_deplacement.append(calculer_deplacement_poutre1d(Utot, elements['ddl'][element],
-                                                               elements['L'][element], x))
-print("Tableau de toutes les déplacements")
-for i, v in enumerate(tab_deplacement):
-    print(f"V_{i + 1} = %.3f {L}" % v)
 
 
 
