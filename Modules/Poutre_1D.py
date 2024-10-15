@@ -305,8 +305,17 @@ Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 # Reponses
 # --------
 #Print de tous les deplacement
-tab_deplacement = []
-x = 0
+print("Utot")
+for i in range(len(Utot[0])):
+    print(f"U{i+1} : {Utot[0][i]}")
+
+
+condition = True
+while condition is True:
+    condition = bool(input("Est-ce que vous voulez un deplacement en particulier, 1 si oui et 0 si non."))
+
+
+
 # while True:
 #     try:
 #         xp = float(input('Veux-tu un point en particulier pour le deplacement? Si oui donne la coordonnée en x:'))
