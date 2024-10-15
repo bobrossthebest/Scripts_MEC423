@@ -2,7 +2,6 @@
 
 import numpy as np
 import math
-import keyboard
 
 from Modules.Fonctions_partagées import (calculer_k_poutre1d, assembler_matrice, extraire_matrice, extraire_vecteur,
                                          reconstruire_vecteur, assembler_vecteur)
@@ -162,9 +161,10 @@ while redo:
                 print("Entrée invalide, veuillez réessayer.")
 
         # Check for distributed load
-        print(f"Appuyez sur '1' si l'élément {element + 1} a une charge répartie, ou '0' pour pas de charge.")
+        # print(f"Appuyez sur '1' si l'élément {element + 1} a une charge répartie, ou '0' pour pas de charge.")
+        ch_rep = bool(input("\nEntrez '1' si l'élément {element + 1} a une charge répartie, '0' s'il n'en a pas.\n"))
         while True:
-            if keyboard.is_pressed('1'):
+            if ch_rep:
                 q_present = 1
                 print("Vous avez appuyé sur 1.")
                 while True:
@@ -175,7 +175,7 @@ while redo:
                     except (ValueError, SyntaxError, TypeError):
                         print("Entrée invalide, veuillez réessayer.")
                 break
-            elif keyboard.is_pressed('0'):
+            else:
                 q_present = 0
                 print("Vous avez appuyé sur 0.")
                 elements['q'][element] = False
