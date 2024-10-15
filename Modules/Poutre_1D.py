@@ -7,12 +7,12 @@ import keyboard
 from Modules.Fonctions_partagées import (calculer_k_poutre1d, assembler_matrice, extraire_matrice, extraire_vecteur,
                                          reconstruire_vecteur, assembler_vecteur)
 
-#from Modules.Treillis_3D import elements
+# from Modules.Treillis_3D import elements
 
 # Unites :
 F = input("\nQuelle est l'unité de mesure de force?\t\t")
 L = input("Quelle est l'unité de mesure de longueur?\t")
-M = input("Quelle est l'unité de mesure du moment?\t")
+M = input("Quelle est l'unité de mesure du moment?\t\t")
 P = input("Quelle est l'unité de mesure de contrainte?\t")
 ddl_par_ele = 2
 
@@ -123,7 +123,7 @@ def calcul_Iz():
 
 nb_element = int(input("\nCombien d'element contient la structure?\t"))
 
-#Creation d'un dictionnaire avez toutes les cases pour chaque noeuds
+# Creation d'un dictionnaire avez toutes les cases pour chaque noeuds
 elements = {'ddl': [[0, 0, 0, 0] for _ in range(nb_element)], 'L': [0] * nb_element, 'Iz': [0] * nb_element,
             'E': [0] * nb_element, 'q': [0] * nb_element, 'ymax': [0] * nb_element, 'k': [0] * nb_element,
             'feq': [0] * nb_element}
@@ -309,7 +309,8 @@ Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 # --------
 # Reponses
 # --------
-#Print de tous les deplacement
+
+# Print de tous les deplacement
 print("Utot")
 for i in range(len(Utot)):
     if i % 2 == 0:
@@ -317,7 +318,7 @@ for i in range(len(Utot)):
     else:
         print(f"U{i + 1} : {Utot[0][i]} rad")
 
-#Demande a l'utilisateur si il veux des deplacements particulier
+# Demande a l'utilisateur si il veux des deplacements particulier
 
 while True:
     while True:
@@ -336,7 +337,7 @@ while True:
         break
     while True:
         try:
-            Nddl= int(input("À quelle élément appartient le déplacement inconnu?"))
+            Nddl = int(input("À quelle élément appartient le déplacement inconnu?"))
             break
         except (ValueError, SyntaxError, TypeError):
             print("Entrée invalide, veuillez réessayer.")
@@ -346,11 +347,10 @@ while True:
             break
         except (ValueError, SyntaxError, TypeError):
             print("Entrée invalide, veuillez réessayer.")
-    v = calculer_deplacement_poutre1d(Utot, elements['ddl'][Nddl-1],elements['L'][Nddl-1], x)
+    v = calculer_deplacement_poutre1d(Utot, elements['ddl'][Nddl - 1], elements['L'][Nddl - 1], x)
     print(f"V à {x}{L} du début de l'élément{Nddl} = %.3f mm" % v)
 
-
-#Impression de tous les force
+# Impression de tous les force
 print("\nTableau de toutes les forces")
 for i in range(len(Ftot)):
     if i % 2 == 0:  # Even index
@@ -358,7 +358,7 @@ for i in range(len(Ftot)):
     else:  # Odd index
         print(f"F{i + 1}:\t{Ftot[i].item():.3f} {M} ")
 
-#Demande a l'utilisateur si il veux des contraintes particulier
+# Demande a l'utilisateur si il veux des contraintes particulier
 while True:
     while True:
         try:
@@ -376,7 +376,7 @@ while True:
         break
     while True:
         try:
-            Nddl= int(input("À quelle élément appartient la contrainte inconnue?"))
+            Nddl = int(input("À quelle élément appartient la contrainte inconnue?"))
             break
         except (ValueError, SyntaxError, TypeError):
             print("Entrée invalide, veuillez réessayer.")
@@ -386,6 +386,6 @@ while True:
             break
         except (ValueError, SyntaxError, TypeError):
             print("Entrée invalide, veuillez réessayer.")
-    s = calculer_contrainte_poutre1d(Utot, elements['ddl'][Nddl-1], elements['E'][Nddl-1],elements['L'][Nddl-1], x, elements['ymax'][Nddl-1])
-    print(f"SigmaMax à {x}{L} du début de l'élément{Nddl} = %.3f mm" % s )
-
+    s = calculer_contrainte_poutre1d(Utot, elements['ddl'][Nddl - 1], elements['E'][Nddl - 1], elements['L'][Nddl - 1],
+                                     x, elements['ymax'][Nddl - 1])
+    print(f"SigmaMax à {x}{L} du début de l'élément{Nddl} = %.3f mm" % s)
