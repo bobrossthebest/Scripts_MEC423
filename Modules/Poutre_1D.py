@@ -318,6 +318,14 @@ for i in range(len(Utot)):
     else:
         print(f"U{i + 1} : {Utot[i][0]} rad")
 
+# Print de toutes les forces
+print("Ftot")
+for i in range(len(Ftot)):
+    if i % 2 == 0:
+        print(f"F{i + 1} : {Ftot[i][0]} {F}")
+    else:
+        print(f"F{i + 1} : {Ftot[i][0]} {M}")
+
 # Demande a l'utilisateur si il veux des deplacements particulier
 
 while True:
