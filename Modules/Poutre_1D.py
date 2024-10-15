@@ -314,9 +314,9 @@ Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 print("Utot")
 for i in range(len(Utot)):
     if i % 2 == 0:
-        print(f"U{i + 1} : {Utot[0][i]} {L}")
+        print(f"U{i + 1} : {Utot[i][0]} {L}")
     else:
-        print(f"U{i + 1} : {Utot[0][i]} rad")
+        print(f"U{i + 1} : {Utot[i][0]} rad")
 
 # Demande a l'utilisateur si il veux des deplacements particulier
 
