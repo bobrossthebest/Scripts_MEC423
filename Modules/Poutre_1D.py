@@ -136,7 +136,7 @@ while redo:
             try:
                 for i in range(len(elements['ddl'][element])):
                     elements['ddl'][element][i] = int(
-                        input(f"Quel est le degré de liberté {i + 1} pour l'élément {element + 1}? "))
+                    input(f"Quel est le degré de liberté {i + 1} pour l'élément {element + 1}?\t"))
                 break  # Exit this loop after successful input
             except (ValueError, SyntaxError, TypeError):
                 print("Entrée invalide, veuillez réessayer.")
@@ -144,7 +144,7 @@ while redo:
         # Request the length of the element
         while True:
             try:
-                elements['L'][element] = float(input(f"Quelle est la longueur de l'élément {element + 1} en {L}? "))
+                elements['L'][element] = float(input(f"Quelle est la longueur de l'élément {element + 1} en {L}?\t"))
                 break
             except (ValueError, SyntaxError, TypeError):
                 print("Entrée invalide, veuillez réessayer.")
@@ -233,12 +233,13 @@ redo = True
 while redo is True:
     while True:
         try:
-            nb_Uc = int(input('\nCombien de déplacements sont connus?\n'))
+            nb_Uc = int(input('\nCombien de déplacements sont connus?\t'))
         except (ValueError, SyntaxError, TypeError):
             continue
         break
     ddlUc = [0] * nb_Uc
     Uc = np.zeros((nb_Uc, 1))
+    print("\n")
     for i in range(nb_Uc):
         while True:
             try:
@@ -264,11 +265,12 @@ while redo is True:
 redo = True
 while redo is True:
     try:
-        nb_Fc = int(input('\nCombien de forces/moments sont connus?\n'))
+        nb_Fc = int(input('\nCombien de forces/moments sont connus?\t'))
     except (ValueError, SyntaxError, TypeError):
         continue
     ddlFc = [0] * nb_Fc
     Fc = np.zeros((nb_Fc, 1))
+    print("\n")
     for i in range(nb_Fc):
         while True:
             try:
@@ -358,7 +360,7 @@ while True:
     while True:
         try:
             user_input = input(
-                "\nCherchez-vous un déplacement en particulier? Tapez 1 pour oui et 0 pour non : ")
+                "\nCherchez-vous un déplacement en particulier? Tapez 1 pour oui et 0 pour non :\t")
             if user_input == "1":
                 break
             elif user_input == "0":
@@ -372,18 +374,18 @@ while True:
         break
     while True:
         try:
-            Nddl = int(input("Dans quel élément se trouve le déplacement inconnu?"))
+            Nddl = int(input("Dans quel élément se trouve le déplacement inconnu?\t"))
             break
         except (ValueError, SyntaxError, TypeError):
             print("Entrée invalide, veuillez réessayer.")
     while True:
         try:
-            x = float(input(f"À quelle distance du début de l'élément {Nddl} se trouve le déplacement inconnu? "))
+            x = float(input(f"À quelle distance du début de l'élément {Nddl} se trouve le déplacement inconnu?\t"))
             break
         except (ValueError, SyntaxError, TypeError):
             print("Entrée invalide, veuillez réessayer.")
     v = calculer_deplacement_poutre1d(Utot, elements['ddl'][Nddl - 1], elements['L'][Nddl - 1], x)
-    print(f"V à {x}{L} du début de l'élément {Nddl} = %.3f mm" % v)
+    print(f"V à {x}{L} du début de l'élément {Nddl} = %.5f mm" % v)
 
 # Demande a l'utilisateur si il veux des contraintes particulier
 while True:
@@ -403,16 +405,16 @@ while True:
         break
     while True:
         try:
-            Nddl = int(input("Dans quel élément se trouve la contrainte inconnue?"))
+            Nddl = int(input("Dans quel élément se trouve la contrainte inconnue?\t"))
             break
         except (ValueError, SyntaxError, TypeError):
             print("Entrée invalide, veuillez réessayer.")
     while True:
         try:
-            x = float(input(f"À quelle distance du début de l'élément {Nddl} se trouve la contrainte inconnue? "))
+            x = float(input(f"À quelle distance du début de l'élément {Nddl} se trouve la contrainte inconnue?\t"))
             break
         except (ValueError, SyntaxError, TypeError):
             print("Entrée invalide, veuillez réessayer.")
     s = calculer_contrainte_poutre1d(Utot, elements['ddl'][Nddl - 1], elements['E'][Nddl - 1], elements['L'][Nddl - 1],
                                      x, elements['ymax'][Nddl - 1])
-    print(f"SigmaMax à {x}{L} du début de l'élément {Nddl} = %.3f {P}" % s)
+    print(f"SigmaMax à {x}{L} du début de l'élément {Nddl} = %.5f {P}" % s)
