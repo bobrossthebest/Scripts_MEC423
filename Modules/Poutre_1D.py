@@ -231,7 +231,7 @@ while redo is True:
     for i in range(nb_Uc):
         while True:
             try:
-                ddlUc[i] = int(input(f'Numéro du ddl déplacement connu #{i + 1}: '))
+                ddlUc[i] = int(input(f'Numéro du ddl connu #{i + 1}: '))
                 if (ddlUc[i]-1) % 2 == 0:
                     unite = L
                 else:
@@ -252,7 +252,7 @@ while redo is True:
 redo = True
 while redo is True:
     try:
-        nb_Fc = int(input('Combien de forces sont connues? '))
+        nb_Fc = int(input('Combien de forces/moments sont connus? '))
     except (ValueError, SyntaxError, TypeError):
         continue
     ddlFc = [0] * nb_Fc
@@ -260,18 +260,22 @@ while redo is True:
     for i in range(nb_Fc):
         while True:
             try:
-                ddlFc[i] = int(input(f'Numéro du ddl de la force connue #{i + 1}: '))
+                ddlFc[i] = int(input(f'Numéro de la force ou du moment connu #{i + 1}: '))
                 if (ddlFc[i]-1) % 2 == 0:
                     unite = F
                 else:
                     unite = M
-                Fc[i][0] = eval(input(f'Grandeur en {F} de  F{ddlFc[i]}: '))
+                Fc[i][0] = eval(input(f'Grandeur en {unite} de  F{ddlFc[i]}: '))
             except (ValueError, SyntaxError, TypeError):
                 print('Valeur erronnée')
                 continue
             break
     for i in range(nb_Fc):
-        print(f'F{ddlFc[i]}:\t{Fc[i][0]:.2} {F}')
+        if (ddlFc[i] - 1) % 2 == 0:
+            unite = F
+        else:
+            unite = M
+        print(f'F{ddlFc[i]}:\t{Fc[i][0]:.2} {unite}')
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 # ---------------
