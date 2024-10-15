@@ -307,7 +307,10 @@ Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 #Print de tous les deplacement
 print("Utot")
 for i in range(len(Utot[0])):
-    print(f"U{i+1} : {Utot[0][i]}")
+    if i % 2 == 0:
+        print(f"U{i + 1} : {Utot[0][i]} {L}")
+    else:
+        print(f"U{i + 1} : {Utot[0][i]} rad")
 
 
 condition = True
@@ -320,21 +323,18 @@ while condition is True:
             print("Entrée invalide, veuillez réessayer.")
     while True:
         try:
-            Nddl= input("À quelle élément appartient le déplacement inconnu?")
+            Nddl= int(input("À quelle élément appartient le déplacement inconnu?"))
             break
         except (ValueError, SyntaxError, TypeError):
             print("Entrée invalide, veuillez réessayer.")
     while True:
         try:
-            x = input(f"À quelle distance du début de l'élément {Nddl} se trouve le déplacement inconnu? ")
+            x = float(input(f"À quelle distance du début de l'élément {Nddl} se trouve le déplacement inconnu? "))
             break
         except (ValueError, SyntaxError, TypeError):
             print("Entrée invalide, veuillez réessayer.")
     v = calculer_deplacement_poutre1d(Utot, elements['ddl'][Nddl-1],elements['L'][Nddl-1], x)
-    print(f'V à {x}{L} = %.3f mm' % v)
-
-
-
+    print(f"V à {x}{L} du début de l'élément{Nddl} = %.3f mm" % v)
 
 
 #Impression de tous les force
@@ -346,35 +346,28 @@ for i in range(len(Ftot)):
         print(f"F{i + 1}:\t{Ftot[i].item():.3f} {M} ")
 
 
+while condition is True:
+    while True:
+        try:
+            condition = bool(input("Est-ce que vous voulez une contrainte en particulier, 1 si oui et 0 si non."))
+            break
+        except (ValueError, SyntaxError, TypeError):
+            print("Entrée invalide, veuillez réessayer.")
+    while True:
+        try:
+            Nddl= int(input("À quelle élément appartient la contrainte inconnue?"))
+            break
+        except (ValueError, SyntaxError, TypeError):
+            print("Entrée invalide, veuillez réessayer.")
+    while True:
+        try:
+            x = float(input(f"À quelle distance du début de l'élément {Nddl} se trouve la contrainte inconnue? "))
+            break
+        except (ValueError, SyntaxError, TypeError):
+            print("Entrée invalide, veuillez réessayer.")
+    s = calculer_contrainte_poutre1d(Utot, elements['ddl'][Nddl-1], elements['E'][Nddl-1],elements['L'][Nddl-1], x, elements['ymax'][Nddl-1])
+    print(f"SigmaMax à {x}{L} du début de l'élément{Nddl} = %.3f mm" % s )
 
-
-#Tableau des contraintes et print. Pour avoir chaque position en x la boucle ajoute la longueur de chaque element fin d'element
-#jusqu'a la fin de la poutre
-tab_sigma = []
-x = 0
-# while True:
-#     try:
-#         xp = float(input('Veux-tu un point en particulier pour la contrainte? Si oui donne la coordonnée en x:'))
-#     except (ValueError, SyntaxError, TypeError):
-#         print('Valeur erronnée')
-#         continue
-#     break
-for element in range(nb_element):
-    for ddl in range(2):
-        # if xp<x and xp>(x-elements['L'][element]):
-        #     tab_sigma.append(calculer_contrainte_poutre1d(Utot, elements['ddl'][element], elements['E'][element],
-        #                                                   elements['L'][element], xp, elements['ymax'][element]))
-        if ddl == 0:
-            tab_sigma.append(calculer_contrainte_poutre1d(Utot, elements['ddl'][element], elements['E'][element],
-                                                      elements['L'][element], x, elements['ymax'][element]))
-        else:
-            x +=elements['L'][element]
-            tab_sigma.append(calculer_contrainte_poutre1d(Utot, elements['ddl'][element], elements['E'][element], elements['L'][element],x,
-                                                          elements['ymax'][element]))
-
-print("\nTableau de toutes les contraintes")
-for i, sigma in enumerate(tab_sigma):
-    print(f"SigmaMax_{i + 1} = %.2f {P}" % sigma)
 
 
 
