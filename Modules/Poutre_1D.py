@@ -306,7 +306,7 @@ Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 # --------
 #Print de tous les deplacement
 print("Utot")
-for i in range(len(Utot[0])):
+for i in range(len(Utot)):
     if i % 2 == 0:
         print(f"U{i + 1} : {Utot[0][i]} {L}")
     else:
@@ -320,10 +320,8 @@ while True:
             user_input = input(
                 "Est-ce que vous voulez un déplacement en particulier? Tapez 1 pour oui et 0 pour non : ")
             if user_input == "1":
-                condition = True
                 break
             elif user_input == "0":
-                condition = False
                 break
             else:
                 print("Entrée invalide, veuillez entrer 1 ou 0.")
@@ -356,16 +354,14 @@ for i in range(len(Ftot)):
         print(f"F{i + 1}:\t{Ftot[i].item():.3f} {M} ")
 
 #Demande a l'utilisateur si il veux des contraintes particulier
-while condition is True:
+while True:
     while True:
         try:
             user_input = input(
                 "Est-ce que vous voulez une contrainte en particulier? Tapez 1 pour oui et 0 pour non : ")
             if user_input == "1":
-                condition = True
                 break
             elif user_input == "0":
-                condition = False
                 break
             else:
                 print("Entrée invalide, veuillez entrer 1 ou 0.")
