@@ -7,7 +7,7 @@ from Modules.Fonctions_partagées import (calculer_k_poutre1d, assembler_matrice
                                          reconstruire_vecteur, assembler_vecteur)
 
 # Variables définies dans des boucles
-element, nb_Uc, ddlFc, ddlUc, Fc, Uc = [0]*6
+ch_rep, element, nb_Uc, ddlFc, ddlUc, Fc, Uc = [0] * 7
 
 # Unites :
 F = input("\nQuelle est l'unité de mesure de force?\t\t")
@@ -72,7 +72,7 @@ def calcul_Iz():
                   f"{colors['demi-cercle']}demi-cercle{colors['reset']}, "
                   f"{colors['cercle-mince']}cercle-mince{colors['reset']}")
 
-            type_element = input("Quelle type de poutre avez-vous :\n")
+            type_element = input("Quelle type de poutre avez-vous :\t")
 
         except (ValueError, SyntaxError, TypeError):
             print('Erreur de saisie, veuillez recommencer.')
@@ -130,6 +130,7 @@ elements = {'ddl': [[0, 0, 0, 0] for _ in range(nb_element)], 'L': [0] * nb_elem
 redo = True
 while redo:
     for element in range(nb_element):
+        print("\n")
         # Request the degrees of freedom of the element
         while True:
             try:
@@ -159,12 +160,22 @@ while redo:
                 break
             except (ValueError, SyntaxError, TypeError):
                 print("Entrée invalide, veuillez réessayer.")
-
-        ch_rep = bool(input(f"\nEntrez '1' si l'élément {element + 1} a une charge répartie, '0' s'il n'en a pas.\n"))
+        while True:
+            try:
+                input_ch_rep = input(f"Entrez '1' si l'élément {element + 1}"
+                                     f" a une charge répartie, '0' s'il n'en a pas.\t")
+                if input_ch_rep == '1' or input_ch_rep == '0':
+                    ch_rep = bool(int(input_ch_rep))
+                    break
+                else:
+                    print("Entrée invalide, veuillez réessayer")
+                    continue
+            except (ValueError, SyntaxError, TypeError):
+                print("Entrée invalide, veuillez réessayer")
+                continue
         while True:
             if ch_rep:
                 q_present = 1
-                print("Vous avez appuyé sur 1.")
                 while True:
                     try:
                         elements['q'][element] = float(
@@ -175,14 +186,14 @@ while redo:
                 break
             else:
                 q_present = 0
-                print("Vous avez appuyé sur 0.")
+                print("Cet élément n'a pas de charge répartie")
                 elements['q'][element] = False
                 break
 
         # Request the maximum distance from the neutral axis
         while True:
             try:
-                elements['ymax'][element] = float(input(f"Quelle est le ymax en {L} de l'élément {element + 1}? "))
+                elements['ymax'][element] = float(input(f"Quel est le ymax en {L} de l'élément {element + 1}? "))
                 break
             except (ValueError, SyntaxError, TypeError):
                 print("Entrée invalide, veuillez réessayer.")
@@ -209,7 +220,7 @@ Ktot = np.zeros(((nb_element + 1) * 2, ((nb_element + 1) * 2)))
 for i in range(nb_element):
     Ktot = assembler_matrice(Ktot, elements['k'][i], elements['ddl'][i], elements['ddl'][i])
 
-Feqtot = np.zeros((((nb_element + 1) * 2, 1)))
+Feqtot = np.zeros(((nb_element + 1) * 2, 1))
 for i in range(nb_element):
     if elements['feq'][i] is False:
         continue
@@ -222,7 +233,7 @@ redo = True
 while redo is True:
     while True:
         try:
-            nb_Uc = int(input('Combien de déplacements sont connus? '))
+            nb_Uc = int(input('\nCombien de déplacements sont connus? '))
         except (ValueError, SyntaxError, TypeError):
             continue
         break
@@ -232,7 +243,7 @@ while redo is True:
         while True:
             try:
                 ddlUc[i] = int(input(f'Numéro du ddl connu #{i + 1}: '))
-                if (ddlUc[i]-1) % 2 == 0:
+                if (ddlUc[i] - 1) % 2 == 0:
                     unite = L
                 else:
                     unite = 'rad'
@@ -245,14 +256,14 @@ while redo is True:
         if (ddlUc[i] - 1) % 2 == 0:
             unite = L
         else:
-            unite = M
+            unite = 'rad'
         print(f'U{ddlUc[i]}:\t{Uc[i][0]} {unite}')
-    redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
+    redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer'))
 
 redo = True
 while redo is True:
     try:
-        nb_Fc = int(input('Combien de forces/moments sont connus? '))
+        nb_Fc = int(input('\nCombien de forces/moments sont connus? '))
     except (ValueError, SyntaxError, TypeError):
         continue
     ddlFc = [0] * nb_Fc
@@ -261,7 +272,7 @@ while redo is True:
         while True:
             try:
                 ddlFc[i] = int(input(f'Numéro de la force ou du moment connu #{i + 1}: '))
-                if (ddlFc[i]-1) % 2 == 0:
+                if (ddlFc[i] - 1) % 2 == 0:
                     unite = F
                 else:
                     unite = M
@@ -346,10 +357,11 @@ while True:
     while True:
         try:
             user_input = input(
-                "Est-ce que vous voulez un déplacement en particulier? Tapez 1 pour oui et 0 pour non : ")
+                "\nCherchez-vous un déplacement en particulier? Tapez 1 pour oui et 0 pour non : ")
             if user_input == "1":
                 break
             elif user_input == "0":
+                redo = False
                 break
             else:
                 print("Entrée invalide, veuillez entrer 1 ou 0.")
@@ -359,7 +371,7 @@ while True:
         break
     while True:
         try:
-            Nddl = int(input("À quelle élément appartient le déplacement inconnu?"))
+            Nddl = int(input("Dans quel élément se trouve le déplacement inconnu?"))
             break
         except (ValueError, SyntaxError, TypeError):
             print("Entrée invalide, veuillez réessayer.")
@@ -370,22 +382,22 @@ while True:
         except (ValueError, SyntaxError, TypeError):
             print("Entrée invalide, veuillez réessayer.")
     v = calculer_deplacement_poutre1d(Utot, elements['ddl'][Nddl - 1], elements['L'][Nddl - 1], x)
-    print(f"V à {x}{L} du début de l'élément{Nddl} = %.3f mm" % v)
+    print(f"V à {x}{L} du début de l'élément {Nddl} = %.3f mm" % v)
 
-# Impression de tous les force
-print("\nTableau de toutes les forces")
-for i in range(len(Ftot)):
-    if i % 2 == 0:  # Even index
-        print(f"F{i + 1}:\t{Ftot[i].item():.3f} {F} ")
-    else:  # Odd index
-        print(f"F{i + 1}:\t{Ftot[i].item():.3f} {M} ")
+# # Impression de tous les force
+# print("\nTableau de toutes les forces")
+# for i in range(len(Ftot)):
+#     if i % 2 == 0:  # Even index
+#         print(f"F{i + 1}:\t{Ftot[i].item():.3f} {F} ")
+#     else:  # Odd index
+#         print(f"F{i + 1}:\t{Ftot[i].item():.3f} {M} ")
 
 # Demande a l'utilisateur si il veux des contraintes particulier
 while True:
     while True:
         try:
             user_input = input(
-                "Est-ce que vous voulez une contrainte en particulier? Tapez 1 pour oui et 0 pour non : ")
+                "\nCherchez-vous une contrainte en particulier? Tapez 1 pour oui et 0 pour non : ")
             if user_input == "1":
                 break
             elif user_input == "0":
@@ -398,7 +410,7 @@ while True:
         break
     while True:
         try:
-            Nddl = int(input("À quelle élément appartient la contrainte inconnue?"))
+            Nddl = int(input("Dans quel élément se trouve la contrainte inconnue?"))
             break
         except (ValueError, SyntaxError, TypeError):
             print("Entrée invalide, veuillez réessayer.")
@@ -410,4 +422,4 @@ while True:
             print("Entrée invalide, veuillez réessayer.")
     s = calculer_contrainte_poutre1d(Utot, elements['ddl'][Nddl - 1], elements['E'][Nddl - 1], elements['L'][Nddl - 1],
                                      x, elements['ymax'][Nddl - 1])
-    print(f"SigmaMax à {x}{L} du début de l'élément{Nddl} = %.3f mm" % s)
+    print(f"SigmaMax à {x}{L} du début de l'élément {Nddl} = %.3f {P}" % s)
