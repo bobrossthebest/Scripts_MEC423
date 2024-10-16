@@ -1,7 +1,7 @@
 # Unites : N-mm-MPa
 
 import numpy as np
-import math
+from math import degrees, radians, pi
 
 from Modules.Fonctions_partagées import (calculer_k_poutre1d, assembler_matrice, extraire_matrice, extraire_vecteur,
                                          reconstruire_vecteur, assembler_vecteur)
@@ -95,20 +95,20 @@ def calcul_Iz():
 
         elif type_element == "cercle":
             r = float(input(f"Quelle est la valeur du rayon en {L} ? "))
-            Iz = (math.pi * (r ** 4)) / 4
+            Iz = (pi * (r ** 4)) / 4
             print("Iz =", Iz)
             return Iz
 
         elif type_element == "demi-cercle":
             r = float(input(f"Quelle est la valeur du rayon en {L} ? "))
-            Iz = math.pi * (r ** 4) * ((1 / 8) - (8 / 9 * math.pi ** 2))
+            Iz = pi * (r ** 4) * ((1 / 8) - (8 / 9 * pi ** 2))
             print("Iz =", Iz)
             return Iz
 
         elif type_element == "cercle-mince":
             rm = float(input(f"Quelle est la valeur du rayon moyen en {L} ? "))
             t = float(input(f"Quelle est la valeur de l'épaisseur en {L} ? "))
-            Iz = math.pi * (rm ** 3) * t
+            Iz = pi * (rm ** 3) * t
             print("Iz =", Iz)
             return Iz
         elif type_element == "None":
