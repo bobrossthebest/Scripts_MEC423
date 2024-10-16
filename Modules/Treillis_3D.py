@@ -1,5 +1,5 @@
 import numpy as np
-import math
+from math import degrees, radians, pi
 
 from Modules.Fonctions_partagées import (assembler_matrice, extraire_matrice,
                                          reconstruire_vecteur, assembler_vecteur, extraire_vecteur)
