@@ -70,7 +70,8 @@ def calcul_Iz():
                   f"{colors['triangle']}triangle{colors['reset']}, "
                   f"{colors['cercle']}cercle{colors['reset']}, "
                   f"{colors['demi-cercle']}demi-cercle{colors['reset']}, "
-                  f"{colors['cercle-mince']}cercle-mince{colors['reset']}")
+                  f"{colors['cercle-mince']}cercle-mince{colors['reset']}"
+                  "\tNone")
 
             type_element = input("Quelle type de poutre avez-vous :\t")
 
@@ -110,7 +111,10 @@ def calcul_Iz():
             Iz = math.pi * (rm ** 3) * t
             print("Iz =", Iz)
             return Iz
-
+        elif type_element == "None":
+            Iz = float(input("Valeur de Yz:"))
+            print("Iz =", Iz)
+            return Iz
         else:
             print('Erreur de saisie, veuillez recommencer.')
             continue
