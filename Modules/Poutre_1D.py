@@ -112,7 +112,7 @@ def calcul_Iz():
             print("Iz =", Iz)
             return Iz
         elif type_element == "None":
-            Iz = float(input("Valeur de Yz:"))
+            Iz = float(input("Valeur de Iz:"))
             print("Iz =", Iz)
             return Iz
         else:
@@ -160,6 +160,7 @@ while redo:
         while True:
             try:
                 elements['E'][element] = eval(
+
                     input(f"Quel est le module d'élasticité en {P} de l'élément {element + 1}? "))
                 break
             except (ValueError, SyntaxError, TypeError):
