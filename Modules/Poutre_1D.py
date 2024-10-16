@@ -159,7 +159,7 @@ while redo:
         # Request the modulus of elasticity
         while True:
             try:
-                elements['E'][element] = float(
+                elements['E'][element] = eval(
                     input(f"Quel est le module d'élasticité en {P} de l'élément {element + 1}? "))
                 break
             except (ValueError, SyntaxError, TypeError):
