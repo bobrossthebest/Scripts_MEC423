@@ -112,7 +112,7 @@ def calcul_Iz():
             print("Iz =", Iz)
             return Iz
         elif type_element == "None":
-            Iz = float(input("Valeur de Iz:"))
+            Iz = float(input("Valeur de Iz:\t"))
             print("Iz =", Iz)
             return Iz
         else:
