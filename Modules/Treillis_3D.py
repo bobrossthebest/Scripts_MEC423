@@ -310,13 +310,12 @@ for i in range(nb_elements):
     try:
         tab_force[i] = elements['A'][i] * tab_sigma[i]
     except (ValueError, SyntaxError, TypeError):
-        force_x = Ftot[elements['ddl'][i][0]]
-        force_y = Ftot[elements['ddl'][i][1]]
-        force_z = Ftot[elements['ddl'][i][2]]
-        tab_force[i] = (force_x**2 + force_y**2 + force_z**2)**0.5
+        u = [Utot[elements['ddl'][i][0]-1][0], Utot[elements['ddl'][i][1]-1][0], Utot[elements['ddl'][i][2]-1][0],
+             Utot[elements['ddl'][i][3]-1][0], Utot[elements['ddl'][i][4]-1][0], Utot[elements['ddl'][i][5]-1][0]]
+        tab_force[i] = ((u[3] - u[0]) ** 2 + (u[4] - u[1]) ** 2 + (u[5] - u[2]) ** 2) ** 0.5 * elements['A'][i]
 
 for i in range(nb_elements):
-    print(f"Élément {i + 1}\tForce interne: {tab_force[i]}{F}\tContrainte: {tab_sigma[i]}{P}")
+    print(f"Élément {i + 1}\tForce interne: {tab_force[i]}{F}\tContrainte: {tab_sigma[i]} {P}")
 print('\n')
 for i in range(len(Ui)):
     print(f"U{ddlFc[i]}:\t{Ui[i]} {L}")
