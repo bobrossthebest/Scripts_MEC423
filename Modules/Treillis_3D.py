@@ -63,7 +63,7 @@ def calculer_feq_barre3d(e, a, alpha, dt, xi, yi, zi, xj, yj, zj):
         feq = (e * a * alpha * dt) * np.array([[-cx], [-cy], [-cz],
                                                [cx], [cy], [cz]])
     else:
-        feq = np.array([[0]]*6)
+        feq = np.array([[0]] * 6)
     return feq
 
 
@@ -297,14 +297,23 @@ Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 # Tableau de contraintes
 tab_sigma = [0] * nb_elements
 for i in range(nb_elements):
-    tab_sigma[i] = calculer_contrainte_barre3d(Utot, elements['ddl'][i], elements['E'][i],
-                                               elements['alpha'][i], elements['dT'][i],
-                                               elements['xi'][i], elements['yi'][i], elements['zi'][i],
-                                               elements['xj'][i], elements['yj'][i], elements['zj'][i])
+    if elements['E'][i] != 0:
+        tab_sigma[i] = calculer_contrainte_barre3d(Utot, elements['ddl'][i], elements['E'][i],
+                                                   elements['alpha'][i], elements['dT'][i],
+                                                   elements['xi'][i], elements['yi'][i], elements['zi'][i],
+                                                   elements['xj'][i], elements['yj'][i], elements['zj'][i])
+    else:
+        tab_sigma[i] = "N/A (Ressort)"
 # Tableau de forces
 tab_force = [0] * nb_elements
 for i in range(nb_elements):
-    tab_force[i] = elements['A'][i] * tab_sigma[i]
+    try:
+        tab_force[i] = elements['A'][i] * tab_sigma[i]
+    except (ValueError, SyntaxError, TypeError):
+        force_x = Ftot[elements['ddl'][i][0]]
+        force_y = Ftot[elements['ddl'][i][1]]
+        force_z = Ftot[elements['ddl'][i][2]]
+        tab_force[i] = (force_x**2 + force_y**2 + force_z**2)**0.5
 
 for i in range(nb_elements):
     print(f"Élément {i + 1}\tForce interne: {tab_force[i]}{F}\tContrainte: {tab_sigma[i]}{P}")
