@@ -385,19 +385,3 @@ while True:
 
     print(f"Déplacements au point {x}, {y} dans l'élément {N} : U = {up} {L}, V = {vp} {L}")
 
-Ni2P = evaluer_ni_t3(xi2, yi2, xj2, yj2, xk2, yk2, xP, yP)
-Nj2P = evaluer_nj_t3(xi2, yi2, xj2, yj2, xk2, yk2, xP, yP)
-Nk2P = evaluer_nk_t3(xi2, yi2, xj2, yj2, xk2, yk2, xP, yP)
-vi2 = extraire_vecteur(Utot, [4])
-vj2 = extraire_vecteur(Utot, [6])
-vk2 = extraire_vecteur(Utot, [8])
-vP = vi2[0][0] * Ni2P + vj2[0][0] * Nj2P + vk2[0][0] * Nk2P
-print('vP = %.4f mm' % vP)
-
-sig1 = calculer_contraintes_t3(Utot, ddl1, E1, nu1, xi1, yi1, xj1, yj1, xk1, yk1)
-mises1 = calculer_mises_epc(sig1)
-print('Mises_1 = %.1f MPa' % mises1)
-
-sig2 = calculer_contraintes_t3(Utot, ddl2, E2, nu2, xi2, yi2, xj2, yj2, xk2, yk2)
-mises2 = calculer_mises_epc(sig2)
-print('Mises_2 = %.1f MPa' % mises2)
