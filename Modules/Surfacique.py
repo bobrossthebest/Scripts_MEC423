@@ -335,12 +335,7 @@ Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 # Reponses
 # --------
 
-# Tableau des contraintes, incluant Von Mises
-tab_sigma = [0, 0] * nb_elements
-for i in range(nb_elements):
-    tab_sigma[i][0] = elements['ksi'][i] @ elements['B'][i] @ elements['ddl'][i]
-    tab_sigma[i][1] = calculer_mises_epc(tab_sigma[i][0])
-
+# Déplacements interpolés
 while True:
     while True:
         try:
@@ -384,4 +379,15 @@ while True:
     vp = np.dot(v, np.array([Ni, Nj, Nk]))
 
     print(f"Déplacements au point {x}, {y} dans l'élément {N} : U = {up} {L}, V = {vp} {L}")
+
+# Tableau des contraintes, incluant Von Mises
+tab_sigma = [0, 0] * nb_elements
+for i in range(nb_elements):
+    tab_sigma[i][0] = elements['ksi'][i] @ elements['B'][i] @ elements['ddl'][i]
+    tab_sigma[i][1] = calculer_mises_epc(tab_sigma[i][0])
+
+for i in range(nb_elements):
+    print(f"Élément i: \u03c3x = {tab_sigma[i][0][0]}, \u03c3y = {tab_sigma[i][0][1]}, "
+          f"\U0001d70fxy = {tab_sigma[i][1]} ")
+
 
