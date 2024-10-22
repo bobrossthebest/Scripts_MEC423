@@ -229,7 +229,7 @@ while redo is True:
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
     for i in range(nb_elements):
-        print(f'\nÉlément {i+1}:')
+        print(f'\n\tÉlément {i+1}:')
         print(f'A: {elements['A'][i]:.0f}')
         print(f'\nB: 1/(2*{elements['A'][i]:.0})*')
         for j in range(len(elements['B'][i])):
@@ -267,6 +267,7 @@ while redo is True:
                 print('Valeur erronnée')
                 continue
             break
+    print('\n')
     for i in range(nb_Uc):
         print(f'U{ddlUc[i]}:\t{Uc[i][0]} {L}')
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
@@ -288,6 +289,7 @@ while redo is True:
                 print('Valeur erronnée')
                 continue
             break
+    print('\n')
     for i in range(nb_Fc):
         print(f'F{ddlFc[i]}:\t{Fc[i][0]:.2} {F}')
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
@@ -364,7 +366,7 @@ while True:
     while True:
         try:
             x = float(input(f"À quelle position x (en {L}) se trouve le déplacement inconnu?\t"))
-            y = float(input(f"À quelle position y (en {L}?\t"))
+            y = float(input(f"À quelle position y (en {L})?\t"))
             break
         except (ValueError, SyntaxError, TypeError):
             print("Entrée invalide, veuillez réessayer.")
@@ -375,11 +377,12 @@ while True:
     Nk = evaluer_nk_t3(elements['xi'][N], elements['yi'][N], elements['xj'][N], elements['yj'][N],
                        elements['xk'][N], elements['yk'][N], x, y)
 
-    u = [Utot[elements['ddl'][N][0]-1], Utot[elements['ddl'][N][2]-1], Utot[elements['ddl'][N][4]-1]]
-    v = [Utot[elements['ddl'][N][1]-1], Utot[elements['ddl'][N][3]-1], Utot[elements['ddl'][N][5]-1]]
+    u = [Utot[elements['ddl'][N][0]-1][0], Utot[elements['ddl'][N][2]-1][0], Utot[elements['ddl'][N][4]-1][0]]
+    v = [Utot[elements['ddl'][N][1]-1][0], Utot[elements['ddl'][N][3]-1][0], Utot[elements['ddl'][N][5]-1][0]]
 
-    up = np.dot(u, np.array([[Ni], [Nj], [Nk]]))
-    vp = np.dot(v, np.array([[Ni], [Nj], [Nk]]))
+    Nijk = [Ni, Nj, Nk]
+    up = np.dot(u, Nijk)
+    vp = np.dot(v, Nijk)
 
     print(f"Déplacements au point {x}, {y} dans l'élément {N} : U = {up} {L}, V = {vp} {L}")
 
