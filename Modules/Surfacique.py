@@ -240,9 +240,9 @@ while redo is True:
 # Assemblage
 # ----------
 
-Ktot = np.zeros((8, 8))
-Ktot = assembler_matrice(Ktot, k1, ddl1, ddl1)
-Ktot = assembler_matrice(Ktot, k2, ddl2, ddl2)
+Ktot = np.zeros((nb_noeuds * 2, nb_noeuds * 2))
+for i in range(nb_elements):
+    Ktot = assembler_matrice(Ktot, elements['k'][i], elements['ddl'][i], elements['ddl'][i])
 
 # -------------------------
 # Conditions aux frontieres
