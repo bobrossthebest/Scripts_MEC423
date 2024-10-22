@@ -218,21 +218,13 @@ while redo is True:
             break
 
     print('\n')
+    print('#\ti-j-k\t       DDL        \txi\tyi\txj\tyj\txk\tyk\t t \t E  \t v ')
     for i in range(nb_elements):
-        if elements['E'][i] > 0 and elements['dT'][i] == 0:
-            print(f"Élément {i + 1} du noeud {elements['noeud_i'][i]} au noeud {elements['noeud_j'][i]}:\t"
-                  f"E = {elements['E'][i]:<5} {P},\tA = {elements['A'][i]:<5} {L}^2")
-        elif elements['dT'][i] != 0:
-            print(f"Élément {i + 1} du noeud {elements['noeud_i'][i]} au noeud {elements['noeud_j'][i]}:\t"
-                  f"E = {elements['E'][i]:<5} {P},\tA = {elements['A'][i]:<5} {L}^2,\t"
-                  f"dT = {elements['dT'][i]:<5},\talpha = {elements['alpha'][i]:<5}")
-        elif elements['E'][i] == 0:
-            print(f"Élément {i + 1} du noeud {elements['noeud_i'][i]} au noeud {elements['noeud_j'][i]}:\t"
-                  f"k = {elements['A'][i]:<5} {F}/{L}")
-        else:
-            print(f"Élément {i + 1} du noeud {elements['noeud_i'][i]} au noeud {elements['noeud_j'][i]}:\t"
-                  f"k = {elements['A'][i]:<5} {F}/{L},\t"
-                  f"dT = {elements['dT'][i]:<5},\talpha = {elements['alpha'][i]:<5}")
+        print(f"{i + 1}\t{elements['noeud_i'][i]}-{elements['noeud_j'][i]}-{elements['noeud_k'][i]}\t"
+              f"{float(elements['ddl'][i][0]):<2} {float(elements['ddl'][i][1]):<2} {float(elements['ddl'][i][2]):<2} "
+              f"{float(elements['ddl'][i][3]):<2} {float(elements['ddl'][i][4]):<2} {float(elements['ddl'][i][5]):<2} "
+              f"{elements['xi'][i]:<2}\t{elements['yi'][i]:<2}\t{elements['xj'][i]:<2}\t{elements['xj'][i]:<2}\t"
+              f"{elements['xk'][i]:<2}\t{elements['yk'][i]:<2}\t{float(elements['t'][i]):<3f}\t {elements['nu'][i]:<3}")
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 # ----------------------------
