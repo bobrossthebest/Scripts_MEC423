@@ -228,16 +228,15 @@ while redo is True:
               f"{elements['nu'][i]:<3}")
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
-# Mauvais accès pour ksi, B
     for i in range(nb_elements):
         print(f'\nÉlément {i+1}:')
-        print(f'A: {elements['A'][i]}')
-        print(f'\nB: 1/(2*{elements['A'][i]})*')
-        for j in range(len(elements['B'][i][0])):
-            print(f'{2*elements['A'][i]*elements['B'][i][0][j]}')
+        print(f'A: {elements['A'][i]:.0f}')
+        print(f'\nB: 1/(2*{elements['A'][i]:.0})*')
+        for j in range(len(elements['B'][i])):
+            print(f'{2*elements['A'][i]*elements['B'][i][j]}')
         print(f'\nksi:')
         for k in range(len(elements['ksi'][i][0])):
-            print(f'{elements['ksi'][i][0][k]}')
+            print(f'{elements['ksi'][i][k]}')
 
 # ----------
 # Assemblage
@@ -254,7 +253,7 @@ for i in range(nb_elements):
 redo = True
 while redo is True:
     try:
-        nb_Uc = int(input('Combien de déplacements sont connus? '))
+        nb_Uc = int(input('\nCombien de déplacements sont connus? '))
     except (ValueError, SyntaxError, TypeError):
         continue
     ddlUc = [0] * nb_Uc
@@ -376,11 +375,11 @@ while True:
     Nk = evaluer_nk_t3(elements['xi'][N], elements['yi'][N], elements['xj'][N], elements['yj'][N],
                        elements['xk'][N], elements['yk'][N], x, y)
 
-    u = [Utot[elements['ddl'][N][0]], Utot[elements['ddl'][N][2]], Utot[elements['ddl'][N][4]]]
-    v = [Utot[elements['ddl'][N][1]], Utot[elements['ddl'][N][3]], Utot[elements['ddl'][N][5]]]
+    u = [Utot[elements['ddl'][N][0]-1], Utot[elements['ddl'][N][2]-1], Utot[elements['ddl'][N][4]-1]]
+    v = [Utot[elements['ddl'][N][1]-1], Utot[elements['ddl'][N][3]-1], Utot[elements['ddl'][N][5]-1]]
 
-    up = np.dot(u, np.array([Ni, Nj, Nk]))
-    vp = np.dot(v, np.array([Ni, Nj, Nk]))
+    up = np.dot(u, np.array([[Ni], [Nj], [Nk]]))
+    vp = np.dot(v, np.array([[Ni], [Nj], [Nk]]))
 
     print(f"Déplacements au point {x}, {y} dans l'élément {N} : U = {up} {L}, V = {vp} {L}")
 
