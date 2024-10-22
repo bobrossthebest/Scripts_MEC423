@@ -89,7 +89,7 @@ def calculer_mises_epc(sig):
     return mises
 
 # ----------------------------
-# Boucle pour les propriétés des noeuds
+# Boucle pour l'entrée des propriétés des noeuds
 # ----------------------------
 
 
@@ -129,7 +129,7 @@ while redo is True:
 
 
 # ----------------------------
-# Proprietes de chaque element
+# Boucle pour l'entrée des propriétés des éléments
 # ----------------------------
 
 
@@ -140,11 +140,11 @@ while redo is True:
     except (ValueError, SyntaxError, TypeError):
         continue
     vide = [0] * int(nb_elements)
-    elements = {'noeud_i': vide.copy(), 'noeud_j': vide.copy(), 'noeud_k': vide.copy(), 'ddl': vide.copy(),
-                'xi': vide.copy(), 'xj': vide.copy(), 'xk': vide.copy(),
-                'yi': vide.copy(), 'yj': vide.copy(), 'yk': vide.copy(),
-                'E': vide.copy(), 't': vide.copy(), 'nu': vide.copy(), 'A': vide.copy(), 'B': vide.copy(),
-                'ksi': vide.copy(), 'k': vide.copy()}
+    elements = {'noeud_i': vide.copy(), 'noeud_j': vide.copy(), 'noeud_k': vide.copy(),
+                'E': vide.copy(), 't': vide.copy(), 'nu': vide.copy(),
+                'ddl': vide.copy(), 'xi': vide.copy(), 'yi': vide.copy(),
+                'xj': vide.copy(), 'yj': vide.copy(), 'xk': vide.copy(), 'yk': vide.copy(),
+                'A': vide.copy(), 'B': vide.copy(), 'ksi': vide.copy(), 'k': vide.copy()}
 
     print(f"\tLister les noeuds dans le sens antihoraire autour de l'élément")
     for i in range(nb_elements):
@@ -157,6 +157,7 @@ while redo is True:
                 if not (0 <= noeud_i < nb_noeuds and 0 <= noeud_j < nb_noeuds and 0 <= noeud_k < nb_noeuds):
                     print("\t Un des noeuds n'est pas défini.")
                     continue
+                # On rajoute 1 pour l'affichage à la fin
                 elements['noeud_i'][i] = noeud_i + 1
                 elements['noeud_j'][i] = noeud_j + 1
                 elements['noeud_k'][i] = noeud_k + 1
@@ -168,30 +169,52 @@ while redo is True:
                 [noeuds['ddlx'][noeud_i], noeuds['ddly'][noeud_i],
                  noeuds['ddlx'][noeud_j], noeuds['ddly'][noeud_j],
                  noeuds['ddlx'][noeud_k], noeuds['ddly'][noeud_k]])
-            elements['xi'][i], elements['yi'][i], elements['zi'][i] = (
-                noeuds['x'][noeud_i], noeuds['y'][noeud_i], noeuds['z'][noeud_i])
-            elements['xj'][i], elements['yj'][i], elements['zj'][i] = (
-                noeuds['x'][noeud_j], noeuds['y'][noeud_j], noeuds['z'][noeud_j])
+            elements['xi'][i], elements['yi'][i] = (
+                noeuds['x'][noeud_i], noeuds['y'][noeud_i])
+            elements['xj'][i], elements['yj'][i] = (
+                noeuds['x'][noeud_j], noeuds['y'][noeud_j])
+            elements['xk'][i], elements['yk'][i] = (
+                noeuds['x'][noeud_k], noeuds['y'][noeud_k])
 
+            if calculer_aire_t3(elements['xi'][i], elements['yi'][i],
+                                elements['xj'][i], elements['yj'][i],
+                                elements['xk'][i], elements['yk'][i]) < 0:
+                print("Les noeuds n'étaient pas dans le sens horaire. Leur ordre a été changé.")
+
+                # Changement des ddl de l'élément
+                elements['ddl'][i][2], elements['ddl'][i][3], elements['ddl'][i][4], elements['ddl'][i][5] = (
+                    elements['ddl'][i][4], elements['ddl'][i][5], elements['ddl'][i][2], elements['ddl'][i][3])
+
+                # Changement des positions de l'élément
+                elements['xj'][i], elements['yj'][i], elements['xk'][i], elements['yk'][i] = (
+                    elements['xk'][i], elements['yk'][i], elements['xj'][i], elements['yj'][i])
+
+                # Changement des marqueurs de noeuds
+                elements['noeud_j'][i], elements['noeud_k'][i] = elements['noeud_k'][i], elements['noeud_j'][i]
+
+                print(f"Le nouvel ordre des noeuds pour cet élément est donc {elements['noeud_i'][i]}, "
+                      f"{elements['noeud_j'][i]} et {elements['noeud_k'][i]}.")
             try:
+                elements['t'][i] = eval(input(f"Épaisseur en {L}:\t"))
                 elements['E'][i] = eval(input(f"Module d'élasticité en {P}:\t"))
-                if elements['E'][i] > 0:
-                    elements['A'][i] = eval(input(f"Aire de section en {L}^2:\t"))
-                else:
-                    elements['A'][i] = float(input(f"Raideur du ressort en {F}/{L}:\t"))
-                elements['dT'][i] = float(input('Différence de température:\t'))
-                if elements['dT'][i] != 0:
-                    elements['alpha'][i] = eval(input("Coefficient de dilatation thermique:\t"))
+                elements['nu'][i] = eval(input(f"Module de Poisson:\t\t"))
             except (SyntaxError, ValueError, TypeError):
                 print("Erreur dans les valeurs entrées")
                 continue
-            elements['k'][i] = calculer_k_barre3d(elements['E'][i], elements['A'][i],
-                                                  elements['xi'][i], elements['yi'][i], elements['zi'][i],
-                                                  elements['xj'][i], elements['yj'][i], elements['zj'][i])
-            elements['feq'][i] = calculer_feq_barre3d(elements['E'][i], elements['A'][i],
-                                                      elements['alpha'][i], elements['dT'][i],
-                                                      elements['xi'][i], elements['yi'][i], elements['zi'][i],
-                                                      elements['xj'][i], elements['yj'][i], elements['zj'][i])
+            elements['A'][i] = calculer_aire_t3(elements['xi'][i], elements['yi'][i],
+                                                elements['xj'][i], elements['yj'][i],
+                                                elements['xk'][i], elements['yk'][i])
+
+            elements['B'][i] = calculer_b_t3(elements['xi'][i], elements['yi'][i],
+                                             elements['xj'][i], elements['yj'][i],
+                                             elements['xk'][i], elements['yk'][i])
+
+            elements['ksi'][i] = calculer_ksi_epc(elements['E'][i], elements['nu'][i])
+
+            elements['k'][i] = calculer_k_t3(elements['E'][i], elements['nu'][i], elements['t'][i],
+                                             elements['xi'][i], elements['yi'][i],
+                                             elements['xj'][i], elements['yj'][i],
+                                             elements['xk'][i], elements['yk'][i])
             break
 
     print('\n')
