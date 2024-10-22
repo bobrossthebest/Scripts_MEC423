@@ -307,7 +307,7 @@ Kci = extraire_matrice(Ktot, ddlUc, ddlUc)
 print('Ktot:')
 for i in range(len(Ktot)):
     print(Ktot[i])
-print('Kic:')
+print('\nKic:')
 for i in range(len(Kic)):
     print(Kic[i])
 print('\nKcc:')
@@ -397,6 +397,7 @@ for i in range(nb_elements):
                                               elements['xk'][i], elements['yk'][i])
     tab_sigma[i][1] = calculer_mises_epc(tab_sigma[i][0])
 
+print('\nContraintes:\n')
 for i in range(nb_elements):
     print(f"Élément {i+1}: \u03c3x = {tab_sigma[i][0][0][0]:.3},\t\u03c3y = {tab_sigma[i][0][1][0]:.3},\t"
           f"\U0001d70fxy = {tab_sigma[i][0][2][0]:.3}")
