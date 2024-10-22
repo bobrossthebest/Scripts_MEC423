@@ -2,6 +2,7 @@ import numpy as np
 
 from Modules.Fonctions_partagées import (assembler_matrice, extraire_matrice, extraire_vecteur,
                                          reconstruire_vecteur)
+
 # Unites :
 F = input("\nQuelle est l'unité de mesure de force?\t\t")
 L = input("Quelle est l'unité de mesure de longueur?\t")
@@ -88,6 +89,7 @@ def calculer_mises_epc(sig):
     mises = (sx ** 2 + sy ** 2 + 3 * txy ** 2 - sx * sy) ** 0.5
     return mises
 
+
 # ----------------------------
 # Boucle pour l'entrée des propriétés des noeuds
 # ----------------------------
@@ -126,7 +128,6 @@ while redo is True:
         print(f"Noeud {i + 1}:\t[{noeuds['x'][i]:>6}],\t[{noeuds['y'][i]:>6}], "
               f"ddl {noeuds['ddlx'][i]} et {noeuds['ddly'][i]}")
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
-
 
 # ----------------------------
 # Boucle pour l'entrée des propriétés des éléments
@@ -229,11 +230,11 @@ while redo is True:
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
     for i in range(nb_elements):
-        print(f'\n\tÉlément {i+1}:')
+        print(f'\n\tÉlément {i + 1}:')
         print(f'A: {elements['A'][i]:.0f}')
         print(f'\nB: 1/(2*{elements['A'][i]:.0})*')
         for j in range(len(elements['B'][i])):
-            print(f'{2*elements['A'][i]*elements['B'][i][j]}')
+            print(f'{2 * elements['A'][i] * elements['B'][i][j]}')
         print(f'\nksi:')
         for k in range(len(elements['ksi'][i][0])):
             print(f'{elements['ksi'][i][k]}')
@@ -293,7 +294,6 @@ while redo is True:
     for i in range(nb_Fc):
         print(f'F{ddlFc[i]}:\t{Fc[i][0]:.2} {F}')
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
-
 
 # ---------------
 # Partitionnement
@@ -359,7 +359,7 @@ while True:
     while True:
         try:
             # -1 pour passer du numérotage à l'indice dans le tableau
-            N = int(input("Dans quel élément se trouve le déplacement recherché?\t"))-1
+            N = int(input("Dans quel élément se trouve le déplacement recherché?\t")) - 1
             break
         except (ValueError, SyntaxError, TypeError):
             print("Entrée invalide, veuillez réessayer.")
@@ -377,8 +377,8 @@ while True:
     Nk = evaluer_nk_t3(elements['xi'][N], elements['yi'][N], elements['xj'][N], elements['yj'][N],
                        elements['xk'][N], elements['yk'][N], x, y)
 
-    u = [Utot[elements['ddl'][N][0]-1][0], Utot[elements['ddl'][N][2]-1][0], Utot[elements['ddl'][N][4]-1][0]]
-    v = [Utot[elements['ddl'][N][1]-1][0], Utot[elements['ddl'][N][3]-1][0], Utot[elements['ddl'][N][5]-1][0]]
+    u = [Utot[elements['ddl'][N][0] - 1][0], Utot[elements['ddl'][N][2] - 1][0], Utot[elements['ddl'][N][4] - 1][0]]
+    v = [Utot[elements['ddl'][N][1] - 1][0], Utot[elements['ddl'][N][3] - 1][0], Utot[elements['ddl'][N][5] - 1][0]]
 
     Nijk = [Ni, Nj, Nk]
     up = np.dot(u, Nijk)
@@ -387,11 +387,17 @@ while True:
     print(f"Déplacements au point {x}, {y} dans l'élément {N} : U = {up} {L}, V = {vp} {L}")
 
 # Tableau des contraintes, incluant Von Mises
-tab_sigma = [0, 0] * nb_elements
+tab_sigma = []
 for i in range(nb_elements):
-    tab_sigma[i][0] = elements['ksi'][i] @ elements['B'][i] @ elements['ddl'][i]
+    tab_sigma.append([0, 0])
+for i in range(nb_elements):
+    tab_sigma[i][0] = calculer_contraintes_t3(Utot, elements['ddl'][i], elements['E'][i], elements['nu'][i],
+                                              elements['xi'][i], elements['yi'][i],
+                                              elements['xj'][i], elements['yj'][i],
+                                              elements['xk'][i], elements['yk'][i])
     tab_sigma[i][1] = calculer_mises_epc(tab_sigma[i][0])
 
 for i in range(nb_elements):
-    print(f"Élément i: \u03c3x = {tab_sigma[i][0][0]}, \u03c3y = {tab_sigma[i][0][1]}, "
-          f"\U0001d70fxy = {tab_sigma[i][1]} ")
+    print(f"Élément {i+1}: \u03c3x = {tab_sigma[i][0][0][0]:.3},\t\u03c3y = {tab_sigma[i][0][1][0]:.3},\t"
+          f"\U0001d70fxy = {tab_sigma[i][0][2][0]:.3}")
+    print(f"\t\t\u03c3 de von Mises: {tab_sigma[i][1]:.3}")
