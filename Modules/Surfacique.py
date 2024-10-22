@@ -146,13 +146,13 @@ while redo is True:
                 'xj': vide.copy(), 'yj': vide.copy(), 'xk': vide.copy(), 'yk': vide.copy(),
                 'A': vide.copy(), 'B': vide.copy(), 'ksi': vide.copy(), 'k': vide.copy()}
 
-    print(f"\tLister les noeuds dans le sens antihoraire autour de l'élément")
+    print(f"\nLister les noeuds dans le sens antihoraire autour de l'élément")
     for i in range(nb_elements):
         # soustraction de 1 pour passer du numéro du noeud à son indice dans le tableau
         while True:
             try:
-                noeud_i = int(input(f"\n ÉLÉMENT {i + 1}: \nPremier noeud:\t")) - 1
-                noeud_j = int(input("Second noeud:\t")) - 1
+                noeud_i = int(input(f"\n ÉLÉMENT {i + 1}: \nPremier noeud:\t\t")) - 1
+                noeud_j = int(input("Second noeud:\t\t")) - 1
                 noeud_k = int(input("Troisième noeud:\t")) - 1
                 if not (0 <= noeud_i < nb_noeuds and 0 <= noeud_j < nb_noeuds and 0 <= noeud_k < nb_noeuds):
                     print("\t Un des noeuds n'est pas défini.")
@@ -197,7 +197,7 @@ while redo is True:
             try:
                 elements['t'][i] = eval(input(f"Épaisseur en {L}:\t"))
                 elements['E'][i] = eval(input(f"Module d'élasticité en {P}:\t"))
-                elements['nu'][i] = eval(input(f"Module de Poisson:\t\t"))
+                elements['nu'][i] = eval(input(f"Module de Poisson:\t"))
             except (SyntaxError, ValueError, TypeError):
                 print("Erreur dans les valeurs entrées")
                 continue
@@ -218,16 +218,19 @@ while redo is True:
             break
 
     print('\n')
-    print('#\ti-j-k\t       DDL        \txi\tyi\txj\tyj\txk\tyk\t t \t E  \t v ')
+    print('#\ti-j-k\t       DDL        \t xi \t yi \t xj \t yj \t xk \t yk \t t \t  E  \t v ')
     for i in range(nb_elements):
         print(f"{i + 1}\t{elements['noeud_i'][i]}-{elements['noeud_j'][i]}-{elements['noeud_k'][i]}\t"
-              f"{float(elements['ddl'][i][0]):<2} {float(elements['ddl'][i][1]):<2} {float(elements['ddl'][i][2]):<2} "
-              f"{float(elements['ddl'][i][3]):<2} {float(elements['ddl'][i][4]):<2} {float(elements['ddl'][i][5]):<2} "
-              f"{elements['xi'][i]:<2}\t{elements['yi'][i]:<2}\t{elements['xj'][i]:<2}\t{elements['xj'][i]:<2}\t"
-              f"{elements['xk'][i]:<2}\t{elements['yk'][i]:<2}\t{float(elements['t'][i]):<3f}\t {elements['nu'][i]:<3}")
+              f"{elements['ddl'][i][0]:<2} {elements['ddl'][i][1]:<2} {elements['ddl'][i][2]:<2} "
+              f"{elements['ddl'][i][3]:<2} {elements['ddl'][i][4]:<2} {elements['ddl'][i][5]:<2}\t"
+              f"{elements['xi'][i]:<4}\t{elements['yi'][i]:<4}\t{elements['xj'][i]:<4}\t{elements['yj'][i]:<4}\t"
+              f"{elements['xk'][i]:<4}\t{elements['yk'][i]:<4}\t{elements['t'][i]:<3}\t{int(elements['E'][i]):<6}\t"
+              f"{elements['nu'][i]:<3}")
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
+# Mauvais accès pour ksi, B
     for i in range(nb_elements):
+        print(f'\nÉlément {i+1}:')
         print(f'A: {elements['A'][i]}')
         print(f'\nB: 1/(2*{elements['A'][i]})*')
         for j in range(len(elements['B'][i][0])):
