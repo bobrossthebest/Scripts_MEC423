@@ -227,27 +227,14 @@ while redo is True:
               f"{elements['xk'][i]:<2}\t{elements['yk'][i]:<2}\t{float(elements['t'][i]):<3f}\t {elements['nu'][i]:<3}")
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
-# ----------------------------
-# Proprietes de chaque element
-# ----------------------------
-
-ddl1 = np.array([1, 2, 5, 6, 3, 4])
-xi1, yi1 = 0, 0
-xj1, yj1 = 20, 0
-xk1, yk1 = 0, 10
-t1 = 1.2
-E1 = 2e5
-nu1 = 0.3
-k1 = calculer_k_t3(E1, nu1, t1, xi1, yi1, xj1, yj1, xk1, yk1)
-
-ddl2 = np.array([3, 4, 5, 6, 7, 8])
-xi2, yi2 = 0, 10
-xj2, yj2 = 20, 0
-xk2, yk2 = 20, 10
-t2 = 1.2
-E2 = 2e5
-nu2 = 0.3
-k2 = calculer_k_t3(E2, nu2, t2, xi2, yi2, xj2, yj2, xk2, yk2)
+    for i in range(nb_elements):
+        print(f'A: {elements['A'][i]}')
+        print(f'\nB: 1/(2*{elements['A'][i]})*')
+        for j in range(len(elements['B'][i][0])):
+            print(f'{2*elements['A'][i]*elements['B'][i][0][j]}')
+        print(f'\nksi:')
+        for k in range(len(elements['ksi'][i][0])):
+            print(f'{elements['ksi'][i][0][k]}')
 
 # ----------
 # Assemblage
