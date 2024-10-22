@@ -248,10 +248,48 @@ for i in range(nb_elements):
 # Conditions aux frontieres
 # -------------------------
 
-ddlUc = np.array([1, 2, 3, 4])
-Uc = np.array([[0], [0], [0], [0]])
-ddlFc = np.array([5, 6, 7, 8])
-Fc = np.array([[0], [0], [0], [-3000]])
+redo = True
+while redo is True:
+    try:
+        nb_Uc = int(input('Combien de déplacements sont connus? '))
+    except (ValueError, SyntaxError, TypeError):
+        continue
+    ddlUc = [0] * nb_Uc
+    Uc = np.zeros((nb_Uc, 1))
+    for i in range(nb_Uc):
+        while True:
+            try:
+                ddlUc[i] = int(input(f'Numéro du ddl connu #{i + 1}: '))
+                Uc[i][0] = eval(input(f'Déplacement en {L} de U{ddlUc[i]}: '))
+            except (ValueError, SyntaxError, TypeError):
+                print('Valeur erronnée')
+                continue
+            break
+    for i in range(nb_Uc):
+        print(f'U{ddlUc[i]}:\t{Uc[i][0]} {L}')
+    redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
+
+redo = True
+while redo is True:
+    try:
+        nb_Fc = int(input('Combien de forces sont connues? '))
+    except (ValueError, SyntaxError, TypeError):
+        continue
+    ddlFc = [0] * nb_Fc
+    Fc = np.zeros((nb_Fc, 1))
+    for i in range(nb_Fc):
+        while True:
+            try:
+                ddlFc[i] = int(input(f'Numéro de la force connue #{i + 1}: '))
+                Fc[i][0] = eval(input(f'Grandeur en {F} de  F{ddlFc[i]}: '))
+            except (ValueError, SyntaxError, TypeError):
+                print('Valeur erronnée')
+                continue
+            break
+    for i in range(nb_Fc):
+        print(f'F{ddlFc[i]}:\t{Fc[i][0]:.2} {F}')
+    redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
+
 
 # ---------------
 # Partitionnement
@@ -261,6 +299,8 @@ Kic = extraire_matrice(Ktot, ddlFc, ddlFc)
 Kcc = extraire_matrice(Ktot, ddlFc, ddlUc)
 Kii = extraire_matrice(Ktot, ddlUc, ddlFc)
 Kci = extraire_matrice(Ktot, ddlUc, ddlUc)
+
+
 
 # --------
 # Solution
