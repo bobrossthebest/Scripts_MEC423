@@ -335,6 +335,12 @@ Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 # Reponses
 # --------
 
+# Tableau des contraintes, incluant Von Mises
+tab_sigma = [0, 0] * nb_elements
+for i in range(nb_elements):
+    tab_sigma[i][0] = elements['ksi'][i] @ elements['B'][i] @ elements['ddl'][i]
+    tab_sigma[i][1] = calculer_mises_epc(tab_sigma[i][0])
+
 xP = 17
 yP = 8
 Ni2P = evaluer_ni_t3(xi2, yi2, xj2, yj2, xk2, yk2, xP, yP)
