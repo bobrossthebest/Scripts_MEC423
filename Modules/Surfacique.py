@@ -341,8 +341,50 @@ for i in range(nb_elements):
     tab_sigma[i][0] = elements['ksi'][i] @ elements['B'][i] @ elements['ddl'][i]
     tab_sigma[i][1] = calculer_mises_epc(tab_sigma[i][0])
 
-xP = 17
-yP = 8
+while True:
+    while True:
+        try:
+            user_input = input(
+                "\nCherchez-vous un déplacement spécifique? Tapez 1 pour oui et 0 pour non :\t")
+            if user_input == "1":
+                break
+            elif user_input == "0":
+                redo = False
+                break
+            else:
+                print("Entrée invalide, veuillez entrer 1 ou 0.")
+        except (ValueError, SyntaxError, TypeError):
+            print("Entrée invalide, veuillez réessayer.")
+    if user_input == "0":
+        break
+    while True:
+        try:
+            N = int(input("Dans quel élément se trouve le déplacement recherché?\t"))
+            break
+        except (ValueError, SyntaxError, TypeError):
+            print("Entrée invalide, veuillez réessayer.")
+    while True:
+        try:
+            x = float(input(f"À quelle position x (en {L}) se trouve le déplacement inconnu?\t"))
+            y = float(input(f"À quelle position y (en {L}?\t"))
+            break
+        except (ValueError, SyntaxError, TypeError):
+            print("Entrée invalide, veuillez réessayer.")
+    Ni = evaluer_ni_t3(elements['xi'][N], elements['yi'][N], elements['xj'][N], elements['yj'][N],
+                       elements['xk'][N], elements['yk'][N], x, y)
+    Nj = evaluer_nj_t3(elements['xi'][N], elements['yi'][N], elements['xj'][N], elements['yj'][N],
+                       elements['xk'][N], elements['yk'][N], x, y)
+    Nk = evaluer_nk_t3(elements['xi'][N], elements['yi'][N], elements['xj'][N], elements['yj'][N],
+                       elements['xk'][N], elements['yk'][N], x, y)
+
+    u = [Utot[elements['ddl'][N][0]], Utot[elements['ddl'][N][2]], Utot[elements['ddl'][N][4]]]
+    v = [Utot[elements['ddl'][N][1]], Utot[elements['ddl'][N][3]], Utot[elements['ddl'][N][5]]]
+
+    up = np.dot(u, np.array([Ni, Nj, Nk]))
+    vp = np.dot(v, np.array([Ni, Nj, Nk]))
+
+    print(f"Déplacements au point {x}, {y} dans l'élément {N} : U = {up} {L}, V = {vp} {L}")
+
 Ni2P = evaluer_ni_t3(xi2, yi2, xj2, yj2, xk2, yk2, xP, yP)
 Nj2P = evaluer_nj_t3(xi2, yi2, xj2, yj2, xk2, yk2, xP, yP)
 Nk2P = evaluer_nk_t3(xi2, yi2, xj2, yj2, xk2, yk2, xP, yP)
