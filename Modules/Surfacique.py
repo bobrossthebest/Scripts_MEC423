@@ -357,7 +357,8 @@ while True:
         break
     while True:
         try:
-            N = int(input("Dans quel élément se trouve le déplacement recherché?\t"))
+            # -1 pour passer du numérotage à l'indice dans le tableau
+            N = int(input("Dans quel élément se trouve le déplacement recherché?\t"))-1
             break
         except (ValueError, SyntaxError, TypeError):
             print("Entrée invalide, veuillez réessayer.")
