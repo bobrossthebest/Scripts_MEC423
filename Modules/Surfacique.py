@@ -389,5 +389,3 @@ for i in range(nb_elements):
 for i in range(nb_elements):
     print(f"Élément i: \u03c3x = {tab_sigma[i][0][0]}, \u03c3y = {tab_sigma[i][0][1]}, "
           f"\U0001d70fxy = {tab_sigma[i][1]} ")
-
-
