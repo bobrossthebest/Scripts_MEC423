@@ -2,7 +2,7 @@
 
 import numpy as np
 from Modules.Fonctions_partagées import (assembler_matrice, extraire_matrice, extraire_vecteur, reconstruire_vecteur,
-                                         calculer_k_poutre2d)
+                                         calculer_k_poutre2d, calcul_Iz)
 
 # Unites :
 F = input("\nQuelle est l'unité de mesure de force?\t\t")
@@ -123,27 +123,105 @@ while redo is True:
 # ----------------------------
 # Proprietes de chaque element
 # ----------------------------
-nb_element = int(input("\nCombien d'éléments contient la structure?\t"))
-vide = [0] * int(nb_element)
-# Creation d'un dictionnaire avez toutes les cases pour chaque noeuds
-elements = {'ddl': [[0, 0, 0, 0, 0, 0] for _ in range(nb_element)],
-            'xi':vide.copy(),
-            'yi':vide.copy(),
-            'xj':vide.copy(),
-            'yj':vide.copy(),
-            'Sy':vide.copy(),
-            'Iz': vide.copy(),
-            'yplus':vide.copy(),
-            'ymoins':vide.copy(),
-            'E': vide.copy(),
-            'qx': vide.copy(),
-            'qy':vide.copy(),
-            'alpha':vide.copy(),
-            'dT':vide.copy(),
-            'k': vide.copy(),
-            'feq': vide.copy()}
+
+redo = True
+while redo is True:
+    try:
+        nb_element = int(input("\nCombien d'éléments contient la structure?\t"))
+    except (ValueError, SyntaxError, TypeError):
+        continue
+    vide = [0] * int(nb_element)
+    # Creation d'un dictionnaire avez toutes les cases pour chaque noeuds
+    elements = {'ddl': [[0, 0, 0, 0, 0, 0] for _ in range(nb_element)],
+                'xi': vide.copy(),
+                'yi': vide.copy(),
+                'xj': vide.copy(),
+                'yj': vide.copy(),
+                'Sy': vide.copy(),
+                'Iz': vide.copy(),
+                'yplus': vide.copy(),
+                'ymoins': vide.copy(),
+                'E': vide.copy(),
+                'qx': vide.copy(),
+                'qy': vide.copy(),
+                'alpha': vide.copy(),
+                'dT': vide.copy(),
+                'k': vide.copy(),
+                'feq': vide.copy()}
+
+    for i in range(nb_element):
+        # soustraction de 1 pour passer du numéro du noeud à son indice dans le tableau
+        while True:
+            try:
+                noeud_i = int(input(f"\n ÉLÉMENT {i + 1}: \nPremier noeud:\t\t")) - 1
+                noeud_j = int(input("Second noeud:\t\t")) - 1
+
+                if not (0 <= noeud_i < nb_noeuds and 0 <= noeud_j < nb_noeuds):
+                    print("\t Un des noeuds n'est pas défini.")
+                    continue
+                # On rajoute 1 pour l'affichage à la fin
+                elements['xi'][i] = noeuds['x'][noeud_i]
+                elements['yi'][i] = noeuds['y'][noeud_i]
+                elements['xj'][i] = noeuds['x'][noeud_j]
+                elements['yj'][i] = noeuds['y'][noeud_j]
+                elements['ddl'][i] = [noeuds['ddlx'][noeud_i],
+                                      noeuds['ddly'][noeud_i],
+                                      noeuds['ddltheta'][noeud_i],
+                                      noeuds['ddlx'][noeud_j],
+                                      noeuds['ddly'][noeud_j],
+                                      noeuds['ddltheta'][noeud_j]
+                                      ]
+            except (ValueError, SyntaxError, TypeError):
+                print("Valeur invalide")
+                continue
 
 
+            try:
+                elements['Sy'][i] = eval(input(f"Limite d'ecoulement en {P}:\t"))
+                elements['Iz'][i] = calcul_Iz(L)
+                elements['yplus'][i] = eval(input(f"Y plus de la section en {L}:\t"))
+                elements['ymoins'][i] = eval(input(f"Y moins de la section en {L}:\t"))
+                elements['E'][i] = eval(input(f"Module d'élasticité en {P}:\t"))
+                elements['nu'][i] = eval(input(f"Module de Poisson:\t"))
+            except (SyntaxError, ValueError, TypeError):
+                print("Erreur dans les valeurs entrées")
+                continue
+            elements['A'][i] = calculer_aire_t3(elements['xi'][i], elements['yi'][i],
+                                                elements['xj'][i], elements['yj'][i],
+                                                elements['xk'][i], elements['yk'][i])
+
+            elements['B'][i] = calculer_b_t3(elements['xi'][i], elements['yi'][i],
+                                             elements['xj'][i], elements['yj'][i],
+                                             elements['xk'][i], elements['yk'][i])
+
+            elements['ksi'][i] = calculer_ksi_epc(elements['E'][i], elements['nu'][i])
+
+            elements['k'][i] = calculer_k_t3(elements['E'][i], elements['nu'][i], elements['t'][i],
+                                             elements['xi'][i], elements['yi'][i],
+                                             elements['xj'][i], elements['yj'][i],
+                                             elements['xk'][i], elements['yk'][i])
+            break
+
+    print('\n')
+    print('#\ti-j-k\t       DDL        \t xi \t yi \t xj \t yj \t xk \t yk \t t \t  E  \t v ')
+    for i in range(nb_elements):
+        print(f"{i + 1}\t{elements['noeud_i'][i]}-{elements['noeud_j'][i]}-{elements['noeud_k'][i]}\t"
+              f"{elements['ddl'][i][0]:<2} {elements['ddl'][i][1]:<2} {elements['ddl'][i][2]:<2} "
+              f"{elements['ddl'][i][3]:<2} {elements['ddl'][i][4]:<2} {elements['ddl'][i][5]:<2}\t"
+              f"{elements['xi'][i]:<4}\t{elements['yi'][i]:<4}\t{elements['xj'][i]:<4}\t{elements['yj'][i]:<4}\t"
+              f"{elements['xk'][i]:<4}\t{elements['yk'][i]:<4}\t{elements['t'][i]:<3}\t{int(elements['E'][i]):<6}\t"
+              f"{elements['nu'][i]:<3}")
+    redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
+
+    for i in range(nb_elements):
+        print(f'\n\tÉlément {i + 1}:')
+        print(f'A: {elements['A'][i]:.0f}')
+        print(f'\nB: 1/(2*{elements['A'][i]:.0})*')
+        for j in range(len(elements['B'][i])):
+            print(f'{2 * elements['A'][i] * elements['B'][i][j]}')
+        print(f'\nksi:')
+        for k in range(len(elements['ksi'][i][0])):
+            print(f'{elements['ksi'][i][k]}')
 
 ddl1 = np.array([1, 2, 3, 4, 5, 6])
 xi1, yi1 = 0, 0

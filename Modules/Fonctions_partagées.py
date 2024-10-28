@@ -111,7 +111,7 @@ def noeud_max(liste):
             gros_noeud = liste[i][1]
     return gros_noeud
 
-def calcul_Iz():
+def calcul_Iz(L):
     colors = {
         'rectangle': '\033[91m',  # Red
         'triangle': '\033[92m',  # Green
@@ -150,20 +150,20 @@ def calcul_Iz():
 
         elif type_element == "cercle":
             r = float(input(f"Quelle est la valeur du rayon en {L} ? "))
-            Iz = (pi * (r ** 4)) / 4
+            Iz = (np.pi * (r ** 4)) / 4
             print("Iz =", Iz)
             return Iz
 
         elif type_element == "demi-cercle":
             r = float(input(f"Quelle est la valeur du rayon en {L} ? "))
-            Iz = pi * (r ** 4) * ((1 / 8) - (8 / 9 * pi ** 2))
+            Iz = np.pi * (r ** 4) * ((1 / 8) - (8 / 9 * np.pi ** 2))
             print("Iz =", Iz)
             return Iz
 
         elif type_element == "cercle-mince":
             rm = float(input(f"Quelle est la valeur du rayon moyen en {L} ? "))
             t = float(input(f"Quelle est la valeur de l'épaisseur en {L} ? "))
-            Iz = pi * (rm ** 3) * t
+            Iz = np.pi * (rm ** 3) * t
             print("Iz =", Iz)
             return Iz
         elif type_element == "None":
@@ -174,3 +174,38 @@ def calcul_Iz():
             print('Erreur de saisie, veuillez recommencer.')
             continue
 
+def calcul_q(i,F,L):
+    while True:
+        try:
+            input_ch_rep = input(f"Entrez '1' si l'élément {i + 1}"
+                                 f" a une charge répartie, '0' s'il n'en a pas.\t")
+            if input_ch_rep == '1' or input_ch_rep == '0':
+                ch_rep = bool(int(input_ch_rep))
+                break
+            else:
+                print("Entrée invalide, veuillez réessayer")
+                continue
+        except (ValueError, SyntaxError, TypeError):
+            print("Entrée invalide, veuillez réessayer")
+            continue
+    while True:
+        if ch_rep:
+            q_present = 1
+            while True:
+                try:
+                    q = float(
+                        input(f"Quelle est la charge répartie en {F}/{L} de l'élément {i + 1}? "))
+                    theta = float(
+                        input(f"Quelle est l'angle sur 360 degré que la charge répartie prend de l'élément {i + 1}? "))
+                    break
+                except (ValueError, SyntaxError, TypeError):
+                    print("Entrée invalide, veuillez réessayer.")
+            break
+            qx = q*np.cos(theta*(180 / np.pi))
+            qy = q*np.sin(theta*(180 / np.pi))
+            return qx, qy
+        else:
+            q_present = 0
+            print("Cet élément n'a pas de charge répartie")
+
+            break
