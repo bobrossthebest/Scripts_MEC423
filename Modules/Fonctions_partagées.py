@@ -111,4 +111,66 @@ def noeud_max(liste):
             gros_noeud = liste[i][1]
     return gros_noeud
 
+def calcul_Iz():
+    colors = {
+        'rectangle': '\033[91m',  # Red
+        'triangle': '\033[92m',  # Green
+        'cercle': '\033[93m',  # Yellow
+        'demi-cercle': '\033[94m',  # Blue
+        'cercle-mince': '\033[95m',
+        'reset': '\033[0m'}  # Reset to default color}  # Magenta
+    while True:
+        try:
+            print(f"{colors['rectangle']}rectangle{colors['reset']}, "
+                  f"{colors['triangle']}triangle{colors['reset']}, "
+                  f"{colors['cercle']}cercle{colors['reset']}, "
+                  f"{colors['demi-cercle']}demi-cercle{colors['reset']}, "
+                  f"{colors['cercle-mince']}cercle-mince{colors['reset']}"
+                  "\tNone")
+
+            type_element = input("Quelle type de poutre avez-vous :\t")
+
+        except (ValueError, SyntaxError, TypeError):
+            print('Erreur de saisie, veuillez recommencer.')
+            continue
+
+        if type_element == "rectangle":
+            b = float(input(f"Quelle est la valeur de la base en {L} ? "))
+            h = float(input(f"Quelle est la valeur de la hauteur en {L} ? "))
+            Iz = (b * (h ** 3)) / 12
+            print("Iz =", Iz)
+            return Iz
+
+        elif type_element == "triangle":
+            b = float(input(f"Quelle est la valeur de la base en {L} ? "))
+            h = float(input(f"Quelle est la valeur de la hauteur en {L} ? "))
+            Iz = (b * (h ** 3)) / 36
+            print("Iz =", Iz)
+            return Iz
+
+        elif type_element == "cercle":
+            r = float(input(f"Quelle est la valeur du rayon en {L} ? "))
+            Iz = (pi * (r ** 4)) / 4
+            print("Iz =", Iz)
+            return Iz
+
+        elif type_element == "demi-cercle":
+            r = float(input(f"Quelle est la valeur du rayon en {L} ? "))
+            Iz = pi * (r ** 4) * ((1 / 8) - (8 / 9 * pi ** 2))
+            print("Iz =", Iz)
+            return Iz
+
+        elif type_element == "cercle-mince":
+            rm = float(input(f"Quelle est la valeur du rayon moyen en {L} ? "))
+            t = float(input(f"Quelle est la valeur de l'épaisseur en {L} ? "))
+            Iz = pi * (rm ** 3) * t
+            print("Iz =", Iz)
+            return Iz
+        elif type_element == "None":
+            Iz = float(input("Valeur de Iz:\t"))
+            print("Iz =", Iz)
+            return Iz
+        else:
+            print('Erreur de saisie, veuillez recommencer.')
+            continue
 

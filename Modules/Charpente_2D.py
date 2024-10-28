@@ -123,6 +123,27 @@ while redo is True:
 # ----------------------------
 # Proprietes de chaque element
 # ----------------------------
+nb_element = int(input("\nCombien d'éléments contient la structure?\t"))
+vide = [0] * int(nb_element)
+# Creation d'un dictionnaire avez toutes les cases pour chaque noeuds
+elements = {'ddl': [[0, 0, 0, 0, 0, 0] for _ in range(nb_element)],
+            'xi':vide.copy(),
+            'yi':vide.copy(),
+            'xj':vide.copy(),
+            'yj':vide.copy(),
+            'Sy':vide.copy(),
+            'Iz': vide.copy(),
+            'yplus':vide.copy(),
+            'ymoins':vide.copy(),
+            'E': vide.copy(),
+            'qx': vide.copy(),
+            'qy':vide.copy(),
+            'alpha':vide.copy(),
+            'dT':vide.copy(),
+            'k': vide.copy(),
+            'feq': vide.copy()}
+
+
 
 ddl1 = np.array([1, 2, 3, 4, 5, 6])
 xi1, yi1 = 0, 0
