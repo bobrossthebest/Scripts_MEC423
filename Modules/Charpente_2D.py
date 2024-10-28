@@ -4,6 +4,10 @@ import numpy as np
 from Modules.Fonctions_partagées import (assembler_matrice, extraire_matrice, extraire_vecteur, reconstruire_vecteur,
                                          calculer_k_poutre2d)
 
+# Unites :
+F = input("\nQuelle est l'unité de mesure de force?\t\t")
+L = input("Quelle est l'unité de mesure de longueur?\t")
+P = input("Quelle est l'unité de mesure de contrainte?\t")
 
 # ---------
 # Fonctions
@@ -75,6 +79,46 @@ def calculer_contraintes_poutre2d(utot, ddl, e, alpha, d_t, xi, yi, xj, yj, yplu
          sig_combi_plus, sig_combi_moins, sig_combj_plus, sig_combj_moins])
     return sig
 
+# ----------------------------
+# Boucle pour l'entrée des propriétés des noeuds
+# ----------------------------
+
+redo = True
+while redo is True:
+    try:
+        nb_noeuds = int(input("\nCombien de noeuds contient la charpente?\t"))
+    except (ValueError, SyntaxError, TypeError):
+        continue
+    noeuds = {'x': [0] * nb_noeuds, 'y': [0] * nb_noeuds,
+              'ddlx': [0] * nb_noeuds, 'ddly': [0] * nb_noeuds, 'ddltheta':[0]*nb_noeuds}
+    for i in range(nb_noeuds):
+        # boucle for pour passer à travers les noeuds, boucle while pour valider les entrées
+        while True:
+            try:
+                noeuds['x'][i] = float(input(f"\nPosition x du noeud {i + 1} en {L}:\t"))
+                # commence à 1 quand i est à 0
+                noeuds['ddlx'][i] = 3 * i + 1
+
+                noeuds['y'][i] = float(input(f"Position y du noeud {i + 1} en {L}:\t"))
+                # commence à 2 quand i est à 0
+                noeuds['ddly'][i] = 3 * i + 2
+
+                # commence à 3 quand i est à 0
+                noeuds['ddltheta'][i] = 3 * i + 3
+
+            except (ValueError, SyntaxError, TypeError):
+                print('Entrée invalide pour ce noeud, corrigez les valeurs\n')
+                continue
+
+            # Si aucun problème d'entrée, sortir de la boucle d'entrée
+            break
+
+    print('\n')
+    for i in range(nb_noeuds):
+        # opérateur ">" pour aligner à droite
+        print(f"Noeud {i + 1}:\t[{noeuds['x'][i]:>6}],\t[{noeuds['y'][i]:>6}], "
+              f"ddl {noeuds['ddlx'][i]}, {noeuds['ddly'][i]}, {noeuds['ddltheta'][i]} ")
+    redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 # ----------------------------
 # Proprietes de chaque element

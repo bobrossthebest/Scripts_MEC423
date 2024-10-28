@@ -110,3 +110,5 @@ def noeud_max(liste):
         if liste[i][1] > gros_noeud:
             gros_noeud = liste[i][1]
     return gros_noeud
+
+
