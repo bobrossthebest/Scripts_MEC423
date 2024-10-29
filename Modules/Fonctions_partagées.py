@@ -197,14 +197,15 @@ def calcul_q(i,F,L):
                         input(f"Quelle est la charge répartie en {F}/{L} de l'élément {i + 1}? "))
                     theta = float(
                         input(f"Quelle est l'angle sur 360 degré que la charge répartie prend de l'élément {i + 1}? "))
-                    break
+                    qx = q * np.cos(np.radians(theta))
+                    qy = q * np.sin(np.radians(theta))
+
+                    return qx, qy
+
                 except (ValueError, SyntaxError, TypeError):
                     print("Entrée invalide, veuillez réessayer.")
-            break
-            qx = q * np.cos(np.radians(theta))
-            qy = q * np.sin(np.radians(theta))
 
-            return qx, qy
+
         else:
             q_present = 0
             print("Cet élément n'a pas de charge répartie")
