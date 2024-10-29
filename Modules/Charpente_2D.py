@@ -225,12 +225,12 @@ while redo is True:
     print('\n')
     print('#\ti-j\t       DDL        \t xi \t yi \t xj \t yj \t A \t Iz \t  E  \t Sy \t alpha \t dT \t qx \t qy ')
     for i in range(nb_element):
-        print(f"{i + 1}\t{elements['noeud_i'][i]}-{elements['noeud_j'][i]}\t"
+        print(f"{i + 1}\t{elements['noeud_i'][i]}-{elements['noeud_j'][i]}\t\t"
               f"{elements['ddl'][i][0]:<2} {elements['ddl'][i][1]:<2} {elements['ddl'][i][2]:<2} "
               f"{elements['ddl'][i][3]:<2} {elements['ddl'][i][4]:<2} {elements['ddl'][i][5]:<2}\t"
               f"{elements['xi'][i]:<4}\t{elements['yi'][i]:<4}\t{elements['xj'][i]:<4}\t{elements['yj'][i]:<4}\t"
               f"{elements['A'][i]:<4}\t{elements['Iz'][i]:<4}\t{int(elements['E'][i]):<6}\t{elements['Sy'][i]:<4}\t{elements['alpha'][i]:<4}\t"
-              f"{elements['dT'][i]:<4}\t{elements['qx'][i]:<4}\t{elements['qy'][i]:<4}\t")
+              f"{elements['dT'][i]:<4}\t{elements['qx'][i]:<4.3f}\t{elements['qy'][i]:<4.3f}\t")
 
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
@@ -349,7 +349,7 @@ Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 # Print de tous les deplacement
 print("\nUtot\n")
 for i in range(len(Utot)):
-    if i % 3 == 0:
+    if (i+1) % 3 == 0:
         print(f"U{i + 1} : {Utot[i][0]:.3f} \u03B8")
     else:
         print(f"U{i + 1} : {Utot[i][0]:.3f} {L}")
@@ -357,7 +357,7 @@ for i in range(len(Utot)):
 # Print de toutes les forces
 print("\nFtot\n")
 for i in range(len(Ftot)):
-    if i % 3 == 0:
+    if (i+1) % 3 == 0:
         print(f"F{i + 1} : {Ftot[i][0]} {M}")
     else:
         print(f"F{i + 1} : {Ftot[i][0]} {F}")
