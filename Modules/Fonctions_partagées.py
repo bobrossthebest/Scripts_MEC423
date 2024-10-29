@@ -209,5 +209,5 @@ def calcul_q(i,F,L):
         else:
             q_present = 0
             print("Cet élément n'a pas de charge répartie")
+            return 0, 0
 
-            break

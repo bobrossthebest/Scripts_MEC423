@@ -134,6 +134,8 @@ while redo is True:
     vide = [0] * int(nb_element)
     # Creation d'un dictionnaire avez toutes les cases pour chaque noeuds
     elements = {'ddl': [[0, 0, 0, 0, 0, 0] for _ in range(nb_element)],
+                'noeud_i': vide.copy(),
+                'noeud_j': vide.copy(),
                 'xi': vide.copy(),
                 'yi': vide.copy(),
                 'xj': vide.copy(),
@@ -162,6 +164,8 @@ while redo is True:
                     print("\t Un des noeuds n'est pas défini.")
                     continue
                 # On rajoute 1 pour l'affichage à la fin
+                elements['noeud_i'][i] = noeud_i + 1
+                elements['noeud_j'][i] = noeud_j + 1
                 elements['xi'][i] = noeuds['x'][noeud_i]
                 elements['yi'][i] = noeuds['y'][noeud_i]
                 elements['xj'][i] = noeuds['x'][noeud_j]
@@ -173,14 +177,15 @@ while redo is True:
                                       noeuds['ddly'][noeud_j],
                                       noeuds['ddltheta'][noeud_j]
                                       ]
+
             except (ValueError, SyntaxError, TypeError):
                 print("Valeur invalide")
                 continue
-
+            break
         while True:
             try:
                 elements['Sy'][i] = eval(input(f"Limite d'ecoulement en {P}:\t"))
-                elements['A'][i] = eval(input(f"Limite d'ecoulement en {P}:\t"))
+                elements['A'][i] = eval(input(f"Aire de la section en {L}\u00B2 :\t"))
                 elements['Iz'][i] = calcul_Iz(L)
             except (SyntaxError, ValueError, TypeError):
                 print("Erreur dans les valeurs entrées")
