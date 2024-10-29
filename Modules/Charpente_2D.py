@@ -2,7 +2,7 @@
 
 import numpy as np
 from Modules.Fonctions_partagées import (assembler_matrice, extraire_matrice, extraire_vecteur, reconstruire_vecteur,
-                                         calculer_k_poutre2d, calcul_Iz)
+                                         calculer_k_poutre2d, calcul_Iz, calcul_q)
 
 # Unites :
 F = input("\nQuelle est l'unité de mesure de force?\t\t")
@@ -137,6 +137,7 @@ while redo is True:
                 'yi': vide.copy(),
                 'xj': vide.copy(),
                 'yj': vide.copy(),
+                'A' : vide.copy(),
                 'Sy': vide.copy(),
                 'Iz': vide.copy(),
                 'yplus': vide.copy(),
@@ -178,82 +179,49 @@ while redo is True:
 
             try:
                 elements['Sy'][i] = eval(input(f"Limite d'ecoulement en {P}:\t"))
+                elements['A'][i] = eval(input(f"Limite d'ecoulement en {P}:\t"))
                 elements['Iz'][i] = calcul_Iz(L)
                 elements['yplus'][i] = eval(input(f"Y plus de la section en {L}:\t"))
                 elements['ymoins'][i] = eval(input(f"Y moins de la section en {L}:\t"))
                 elements['E'][i] = eval(input(f"Module d'élasticité en {P}:\t"))
-                elements['nu'][i] = eval(input(f"Module de Poisson:\t"))
+                elements['qx'][i], elements['qy'][i] = calcul_q(i,F,L)
+                elements['dT'][i] = float(input('Différence de température:\t'))
+                if elements['dT'][i] != 0:
+                    elements['alpha'][i] = eval(input("Coefficient de dilatation thermique:\t"))
+                elements['k'][i] = calculer_k_poutre2d(elements['E'][i],
+                                                       elements['A'][i],
+                                                       elements['Iz'][i],
+                                                       elements['xi'][i],
+                                                       elements['yi'][i],
+                                                       elements['xj'][i],
+                                                       elements['yj'][i])
+                elements['feq'][i] = calculer_feq_poutre2d(elements['E'][i],
+                                                           elements['A'][i],
+                                                           elements['alpha'][i],
+                                                           elements['dT'][i],
+                                                           elements['qx'][i],
+                                                           elements['qy'][i],
+                                                           elements['xi'][i],
+                                                           elements['yi'][i],
+                                                           elements['xj'][i],
+                                                           elements['yj'][i])
             except (SyntaxError, ValueError, TypeError):
                 print("Erreur dans les valeurs entrées")
                 continue
-            elements['A'][i] = calculer_aire_t3(elements['xi'][i], elements['yi'][i],
-                                                elements['xj'][i], elements['yj'][i],
-                                                elements['xk'][i], elements['yk'][i])
-
-            elements['B'][i] = calculer_b_t3(elements['xi'][i], elements['yi'][i],
-                                             elements['xj'][i], elements['yj'][i],
-                                             elements['xk'][i], elements['yk'][i])
-
-            elements['ksi'][i] = calculer_ksi_epc(elements['E'][i], elements['nu'][i])
-
-            elements['k'][i] = calculer_k_t3(elements['E'][i], elements['nu'][i], elements['t'][i],
-                                             elements['xi'][i], elements['yi'][i],
-                                             elements['xj'][i], elements['yj'][i],
-                                             elements['xk'][i], elements['yk'][i])
             break
 
     print('\n')
-    print('#\ti-j-k\t       DDL        \t xi \t yi \t xj \t yj \t xk \t yk \t t \t  E  \t v ')
-    for i in range(nb_elements):
-        print(f"{i + 1}\t{elements['noeud_i'][i]}-{elements['noeud_j'][i]}-{elements['noeud_k'][i]}\t"
+    print('#\ti-j\t       DDL        \t xi \t yi \t xj \t yj \t A \t Iz \t  E  \t Sy \t alpha \t dT \t qx \t qy ')
+    for i in range(nb_element):
+        print(f"{i + 1}\t{elements['noeud_i'][i]}-{elements['noeud_j'][i]}\t"
               f"{elements['ddl'][i][0]:<2} {elements['ddl'][i][1]:<2} {elements['ddl'][i][2]:<2} "
               f"{elements['ddl'][i][3]:<2} {elements['ddl'][i][4]:<2} {elements['ddl'][i][5]:<2}\t"
               f"{elements['xi'][i]:<4}\t{elements['yi'][i]:<4}\t{elements['xj'][i]:<4}\t{elements['yj'][i]:<4}\t"
-              f"{elements['xk'][i]:<4}\t{elements['yk'][i]:<4}\t{elements['t'][i]:<3}\t{int(elements['E'][i]):<6}\t"
-              f"{elements['nu'][i]:<3}")
+              f"{elements['A'][i]:<4}\t{elements['Iz'][i]:<4}\t{int(elements['E'][i]):<6}\t{elements['Sy'][i]:<4}\t{elements['alpha'][i]:<4}\t"
+              f"{elements['dT'][i]:<4}\t{elements['qx'][i]:<4}\t{elements['qy'][i]:<4}\t")
+
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
-    for i in range(nb_elements):
-        print(f'\n\tÉlément {i + 1}:')
-        print(f'A: {elements['A'][i]:.0f}')
-        print(f'\nB: 1/(2*{elements['A'][i]:.0})*')
-        for j in range(len(elements['B'][i])):
-            print(f'{2 * elements['A'][i] * elements['B'][i][j]}')
-        print(f'\nksi:')
-        for k in range(len(elements['ksi'][i][0])):
-            print(f'{elements['ksi'][i][k]}')
-
-ddl1 = np.array([1, 2, 3, 4, 5, 6])
-xi1, yi1 = 0, 0
-xj1, yj1 = 4000, 3000
-A1 = 24 * 24
-Iz1 = 24 * 24 ** 3 / 12
-E1 = 2e5
-Sy1 = 250
-yplus1 = 12
-ymoins1 = -12
-qx1 = 0.15
-qy1 = -0.2
-alpha1 = 12e-6
-dT1 = 0
-k1 = calculer_k_poutre2d(E1, A1, Iz1, xi1, yi1, xj1, yj1)
-feq1 = calculer_feq_poutre2d(E1, A1, alpha1, dT1, qx1, qy1, xi1, yi1, xj1, yj1)
-
-ddl2 = np.array([4, 5, 6, 7, 8, 9])
-xi2, yi2 = 4000, 3000
-xj2, yj2 = 4000, 0
-A2 = 24 * 24
-Iz2 = 24 * 24 ** 3 / 12
-E2 = 2e5
-Sy2 = 250
-yplus2 = 12
-ymoins2 = -12
-qx2 = 0
-qy2 = 0
-alpha2 = 12e-6
-dT2 = 40
-k2 = calculer_k_poutre2d(E2, A2, Iz2, xi2, yi2, xj2, yj2)
-feq2 = calculer_feq_poutre2d(E2, A2, alpha2, dT2, qx2, qy2, xi2, yi2, xj2, yj2)
 
 # ----------
 # Assemblage
