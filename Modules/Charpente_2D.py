@@ -227,13 +227,14 @@ while redo is True:
 # Assemblage
 # ----------
 
-Ktot = np.zeros((9, 9))
-Ktot = assembler_matrice(Ktot, k1, ddl1, ddl1)
-Ktot = assembler_matrice(Ktot, k2, ddl2, ddl2)
+Ktot = np.zeros((nb_noeuds * 3, nb_noeuds * 3))
+for i in range(nb_element):
+    Ktot = assembler_matrice(Ktot, elements['k'][i], elements['ddl'][i], elements['ddl'][i])
 
-Feqtot = np.zeros((9, 1))
-Feqtot = assembler_vecteur(Feqtot, feq1, ddl1)
-Feqtot = assembler_vecteur(Feqtot, feq2, ddl2)
+Feqtot = np.zeros((nb_noeuds * 3, 1))
+for i in range(nb_element):
+    Feqtot = assembler_vecteur(Feqtot,  elements['feq'][i], elements['ddl'][i])
+
 
 # -------------------------
 # Conditions aux frontieres
