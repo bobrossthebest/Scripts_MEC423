@@ -8,6 +8,7 @@ from Modules.Fonctions_partagées import (assembler_matrice, extraire_matrice, e
 F = input("\nQuelle est l'unité de mesure de force?\t\t")
 L = input("Quelle est l'unité de mesure de longueur?\t")
 P = input("Quelle est l'unité de mesure de contrainte?\t")
+M = f"{F}*{L}"
 
 # ---------
 # Fonctions
@@ -334,11 +335,38 @@ Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 # --------
 # Reponses
 # --------
+# Print de tous les deplacement
+print("\nUtot\n")
+for i in range(len(Utot)):
+    if i % 3 == 0:
+        print(f"U{i + 1} : {Utot[i][0]:.3f} \u03B8")
+    else:
+        print(f"U{i + 1} : {Utot[i][0]:.3f} {L}")
 
-UxB = extraire_vecteur(Utot, [4])
-print('UxB = %.3f mm' % UxB[0][0])
+# Print de toutes les forces
+print("\nFtot\n")
+for i in range(len(Ftot)):
+    if i % 3 == 0:
+        print(f"F{i + 1} : {Ftot[i][0]} {M}")
+    else:
+        print(f"F{i + 1} : {Ftot[i][0]} {F}")
 
-sig1 = calculer_contraintes_poutre2d(Utot, ddl1, E1, alpha1, dT1, xi1, yi1, xj1, yj1, yplus1, ymoins1)
-sigMax1 = max(abs(sig1))
-FS1 = Sy1 / sigMax1
-print('FS1 = %.2f' % FS1)
+# Tableau des contraintes, incluant Von Mises
+tab_sigma_contrainte = []
+for i in range(nb_element):
+    tab_sigma_contrainte.append([0, 0])
+for i in range(nb_element):
+    tab_sigma_contrainte[i][0] = max(abs(calculer_contraintes_poutre2d(Utot, elements['ddl'][i],
+                                              elements['E'][i], elements['alpha'][i],
+                                              elements['dT'][i],
+                                              elements['xi'][i], elements['yi'][i],
+                                              elements['xj'][i], elements['yj'][i],
+                                              elements['yplus'][i], elements['ymoins'][i])))
+    tab_sigma_contrainte[i][1] = elements['Sy'][i]/tab_sigma_contrainte[i][0]
+
+print('\nContraintes et F.O.S:\n')
+for i in range(nb_element):
+    print(f"Élément {i+1}: \u03c3max = {tab_sigma_contrainte[i][0]:.3}{P},\t")
+    print(f'FS = %.2f' % tab_sigma_contrainte[i][1])
+
+
