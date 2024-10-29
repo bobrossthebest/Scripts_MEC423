@@ -201,8 +201,9 @@ def calcul_q(i,F,L):
                 except (ValueError, SyntaxError, TypeError):
                     print("Entrée invalide, veuillez réessayer.")
             break
-            qx = q*np.cos(theta*(180 / np.pi))
-            qy = q*np.sin(theta*(180 / np.pi))
+            qx = q * np.cos(np.radians(theta))
+            qy = q * np.sin(np.radians(theta))
+
             return qx, qy
         else:
             q_present = 0

@@ -177,11 +177,17 @@ while redo is True:
                 print("Valeur invalide")
                 continue
 
-
+        while True:
             try:
                 elements['Sy'][i] = eval(input(f"Limite d'ecoulement en {P}:\t"))
                 elements['A'][i] = eval(input(f"Limite d'ecoulement en {P}:\t"))
                 elements['Iz'][i] = calcul_Iz(L)
+            except (SyntaxError, ValueError, TypeError):
+                print("Erreur dans les valeurs entrées")
+                continue
+            break
+        while True:
+            try:
                 elements['yplus'][i] = eval(input(f"Y plus de la section en {L}:\t"))
                 elements['ymoins'][i] = eval(input(f"Y moins de la section en {L}:\t"))
                 elements['E'][i] = eval(input(f"Module d'élasticité en {P}:\t"))
