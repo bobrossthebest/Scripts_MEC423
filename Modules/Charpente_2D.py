@@ -297,9 +297,9 @@ while redo is True:
     print('\n')
     for i in range(nb_Fc):
         if ddlFc[i] % 3 == 0:  # Check si c'est le c'est un angle ou deplacement
-            print(f'U{ddlFc[i]} :\t{Fc[i][0]} {F}*{L}')
+            print(f'F{ddlFc[i]} :\t{Fc[i][0]} {F}*{L}')
         else:
-            print(f'U{ddlFc[i]}:\t{Fc[i][0]} {L}')
+            print(f'F{ddlFc[i]}:\t{Fc[i][0]} {F}')
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
 
 # ---------------
