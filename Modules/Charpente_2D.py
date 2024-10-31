@@ -10,6 +10,7 @@ L = input("Quelle est l'unité de mesure de longueur?\t")
 P = input("Quelle est l'unité de mesure de contrainte?\t")
 M = f"{F}*{L}"
 
+
 # ---------
 # Fonctions
 # ---------
@@ -20,17 +21,17 @@ def calculer_feq_poutre2d(e, a, alpha, d_t, qx, qy, xi, yi, xj, yj):
     cx = (xj - xi) / l_
     cy = (yj - yi) / l_
     feq_t = a * e * alpha * d_t * np.array([[-cx],
-                                           [-cy],
-                                           [0],
-                                           [cx],
-                                           [cy],
-                                           [0]])
+                                            [-cy],
+                                            [0],
+                                            [cx],
+                                            [cy],
+                                            [0]])
     feq_q = np.array([[qx * l_ / 2],
-                     [qy * l_ / 2],
-                     [(qy * cx - qx * cy) * l_ ** 2 / 12],
-                     [qx * l_ / 2],
-                     [qy * l_ / 2],
-                     [(qx * cy - qy * cx) * l_ ** 2 / 12]])
+                      [qy * l_ / 2],
+                      [(qy * cx - qx * cy) * l_ ** 2 / 12],
+                      [qx * l_ / 2],
+                      [qy * l_ / 2],
+                      [(qx * cy - qy * cx) * l_ ** 2 / 12]])
     feq = feq_t + feq_q
     return feq
 
@@ -54,11 +55,11 @@ def calculer_contraintes_poutre2d(utot, ddl, e, alpha, d_t, xi, yi, xj, yj, yplu
                   [0, 0, 0, -cy, cx, 0],
                   [0, 0, 0, 0, 0, 1]])
     disp_global = np.array([[utot[ddl[0] - 1][0]],
-                           [utot[ddl[1] - 1][0]],
-                           [utot[ddl[2] - 1][0]],
-                           [utot[ddl[3] - 1][0]],
-                           [utot[ddl[4] - 1][0]],
-                           [utot[ddl[5] - 1][0]]])
+                            [utot[ddl[1] - 1][0]],
+                            [utot[ddl[2] - 1][0]],
+                            [utot[ddl[3] - 1][0]],
+                            [utot[ddl[4] - 1][0]],
+                            [utot[ddl[5] - 1][0]]])
     disp_local = r @ disp_global
     ui = disp_local[0][0]
     vi = disp_local[1][0]
@@ -80,6 +81,7 @@ def calculer_contraintes_poutre2d(utot, ddl, e, alpha, d_t, xi, yi, xj, yj, yplu
          sig_combi_plus, sig_combi_moins, sig_combj_plus, sig_combj_moins])
     return sig
 
+
 # ----------------------------
 # Boucle pour l'entrée des propriétés des noeuds
 # ----------------------------
@@ -91,7 +93,7 @@ while redo is True:
     except (ValueError, SyntaxError, TypeError):
         continue
     noeuds = {'x': [0] * nb_noeuds, 'y': [0] * nb_noeuds,
-              'ddlx': [0] * nb_noeuds, 'ddly': [0] * nb_noeuds, 'ddltheta':[0]*nb_noeuds}
+              'ddlx': [0] * nb_noeuds, 'ddly': [0] * nb_noeuds, 'ddltheta': [0] * nb_noeuds}
     for i in range(nb_noeuds):
         # boucle for pour passer à travers les noeuds, boucle while pour valider les entrées
         while True:
@@ -140,7 +142,7 @@ while redo is True:
                 'yi': vide.copy(),
                 'xj': vide.copy(),
                 'yj': vide.copy(),
-                'A' : vide.copy(),
+                'A': vide.copy(),
                 'Sy': vide.copy(),
                 'Iz': vide.copy(),
                 'yplus': vide.copy(),
@@ -196,7 +198,7 @@ while redo is True:
                 elements['yplus'][i] = eval(input(f"Y plus de la section en {L}:\t"))
                 elements['ymoins'][i] = eval(input(f"Y moins de la section en {L}:\t"))
                 elements['E'][i] = eval(input(f"Module d'élasticité en {P}:\t"))
-                elements['qx'][i], elements['qy'][i] = calcul_q(i,F,L)
+                elements['qx'][i], elements['qy'][i] = calcul_q(i, F, L)
                 elements['dT'][i] = float(input('Différence de température:\t'))
                 if elements['dT'][i] != 0:
                     elements['alpha'][i] = eval(input("Coefficient de dilatation thermique:\t"))
@@ -229,11 +231,11 @@ while redo is True:
               f"{elements['ddl'][i][0]:<2} {elements['ddl'][i][1]:<2} {elements['ddl'][i][2]:<2} "
               f"{elements['ddl'][i][3]:<2} {elements['ddl'][i][4]:<2} {elements['ddl'][i][5]:<2}\t"
               f"{elements['xi'][i]:<4}\t{elements['yi'][i]:<4}\t{elements['xj'][i]:<4}\t{elements['yj'][i]:<4}\t"
-              f"{elements['A'][i]:<4}\t{elements['Iz'][i]:<4}\t{int(elements['E'][i]):<6}\t{elements['Sy'][i]:<4}\t{elements['alpha'][i]:<4}\t"
+              f"{elements['A'][i]:<4}\t{elements['Iz'][i]:<4}\t{int(elements['E'][i]):<6}\t{elements['Sy'][i]:<4}\t"
+              f"{elements['alpha'][i]:<4}\t"
               f"{elements['dT'][i]:<4}\t{elements['qx'][i]:<4.3f}\t{elements['qy'][i]:<4.3f}\t")
 
     redo = bool(input('\nAppuyez sur Enter pour passer à la prochaine étape, entrez 1 pour recommencer\n'))
-
 
 # ----------
 # Assemblage
@@ -245,8 +247,7 @@ for i in range(nb_element):
 
 Feqtot = np.zeros((nb_noeuds * 3, 1))
 for i in range(nb_element):
-    Feqtot = assembler_vecteur(Feqtot,  elements['feq'][i], elements['ddl'][i])
-
+    Feqtot = assembler_vecteur(Feqtot, elements['feq'][i], elements['ddl'][i])
 
 # -------------------------
 # Conditions aux frontieres
@@ -349,7 +350,7 @@ Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 # Print de tous les deplacement
 print("\nUtot\n")
 for i in range(len(Utot)):
-    if (i+1) % 3 == 0:
+    if (i + 1) % 3 == 0:
         print(f"U{i + 1} : {Utot[i][0]:.3f} \u03B8")
     else:
         print(f"U{i + 1} : {Utot[i][0]:.3f} {L}")
@@ -357,7 +358,7 @@ for i in range(len(Utot)):
 # Print de toutes les forces
 print("\nFtot\n")
 for i in range(len(Ftot)):
-    if (i+1) % 3 == 0:
+    if (i + 1) % 3 == 0:
         print(f"F{i + 1} : {Ftot[i][0]} {M}")
     else:
         print(f"F{i + 1} : {Ftot[i][0]} {F}")
@@ -368,16 +369,14 @@ for i in range(nb_element):
     tab_sigma_contrainte.append([0, 0])
 for i in range(nb_element):
     tab_sigma_contrainte[i][0] = max(abs(calculer_contraintes_poutre2d(Utot, elements['ddl'][i],
-                                              elements['E'][i], elements['alpha'][i],
-                                              elements['dT'][i],
-                                              elements['xi'][i], elements['yi'][i],
-                                              elements['xj'][i], elements['yj'][i],
-                                              elements['yplus'][i], elements['ymoins'][i])))
-    tab_sigma_contrainte[i][1] = elements['Sy'][i]/tab_sigma_contrainte[i][0]
+                                                                       elements['E'][i], elements['alpha'][i],
+                                                                       elements['dT'][i],
+                                                                       elements['xi'][i], elements['yi'][i],
+                                                                       elements['xj'][i], elements['yj'][i],
+                                                                       elements['yplus'][i], elements['ymoins'][i])))
+    tab_sigma_contrainte[i][1] = elements['Sy'][i] / tab_sigma_contrainte[i][0]
 
 print('\nContraintes et F.O.S:\n')
 for i in range(nb_element):
-    print(f"Élément {i+1}: \u03c3max = {tab_sigma_contrainte[i][0]:.3}{P},\t")
+    print(f"Élément {i + 1}: \u03c3max = {tab_sigma_contrainte[i][0]:.3}{P},\t")
     print(f'FS = %.2f' % tab_sigma_contrainte[i][1])
-
-
