@@ -1,4 +1,7 @@
 Scripts python automatisés pour MEC423
 
-Prochaines étapes:
-  Ajouter Poutre 1D
+Les scripts modifiés sont:
+- Treillis 3D
+- Poutre 1D
+- Charpente 2D
+- Surfacique
