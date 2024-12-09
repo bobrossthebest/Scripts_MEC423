@@ -1,4 +1,6 @@
-# Unites : N-mm-MPa
+# Unites : lb-po-psi
+
+# Pour des situations où les déplacements sont déjà donnés
 
 import numpy as np
 
@@ -119,83 +121,85 @@ def calculer_mises_EPC(sig):
 # Proprietes de chaque element
 # ----------------------------
 
-ddl1 = np.array([1, 2, 5, 6, 3, 4])
-xi1, yi1 = 0, 0
-xj1, yj1 = 20, 0
-xk1, yk1 = 0, 10
-t1 = 1.2
-E1 = 2e5
-nu1 = 0.3
+ddl1 = np.array([1, 2, 3, 4, 5, 6])
+xi1, yi1 = 0, 0.787
+xj1, yj1 = 0.301, 0.727
+xk1, yk1 = 0, 1.083
+t1 = 0.197
+E1 = 3.9 * 10**6
+nu1 = 0.33
 k1 = calculer_k_T3(E1, nu1, t1, xi1, yi1, xj1, yj1, xk1, yk1)
 
-ddl2 = np.array([3, 4, 5, 6, 7, 8])
-xi2, yi2 = 0, 10
-xj2, yj2 = 20, 0
-xk2, yk2 = 20, 10
-t2 = 1.2
-E2 = 2e5
-nu2 = 0.3
-k2 = calculer_k_T3(E2, nu2, t2, xi2, yi2, xj2, yj2, xk2, yk2)
+# ddl2 = np.array([3, 4, 5, 6, 7, 8])
+# xi2, yi2 = 0, 10
+# xj2, yj2 = 20, 0
+# xk2, yk2 = 20, 10
+# t2 = 1.2
+# E2 = 2e5
+# nu2 = 0.3
+# k2 = calculer_k_T3(E2, nu2, t2, xi2, yi2, xj2, yj2, xk2, yk2)
 
 # ----------
 # Assemblage
 # ----------
 
-Ktot = np.zeros((8, 8))
-Ktot = assembler_matrice(Ktot, k1, ddl1, ddl1)
-Ktot = assembler_matrice(Ktot, k2, ddl2, ddl2)
+# Ktot = np.zeros((8, 8))
+# Ktot = assembler_matrice(Ktot, k1, ddl1, ddl1)
+# Ktot = assembler_matrice(Ktot, k2, ddl2, ddl2)
 
 # -------------------------
 # Conditions aux frontieres
 # -------------------------
 
-ddlUc = np.array([1, 2, 3, 4])
-Uc = np.array([[0], [0], [0], [0]])
-ddlFc = np.array([5, 6, 7, 8])
-Fc = np.array([[0], [0], [0], [-3000]])
+# ddlUc = np.array([1, 2, 3, 4])
+# Uc = np.array([[0], [0], [0], [0]])
+# ddlFc = np.array([5, 6, 7, 8])
+# Fc = np.array([[0], [0], [0], [-3000]])
 
 # ---------------
 # Partitionnement
 # ---------------
-
-Kic = extraire_matrice(Ktot, ddlFc, ddlFc)
-Kcc = extraire_matrice(Ktot, ddlFc, ddlUc)
-Kii = extraire_matrice(Ktot, ddlUc, ddlFc)
-Kci = extraire_matrice(Ktot, ddlUc, ddlUc)
+#
+# Kic = extraire_matrice(Ktot, ddlFc, ddlFc)
+# Kcc = extraire_matrice(Ktot, ddlFc, ddlUc)
+# Kii = extraire_matrice(Ktot, ddlUc, ddlFc)
+# Kci = extraire_matrice(Ktot, ddlUc, ddlUc)
 
 # --------
 # Solution
 # --------
 
-Ui = np.linalg.inv(Kic) @ (Fc - Kcc @ Uc)
-Fi = Kii @ Ui + Kci @ Uc
+# Ui = np.linalg.inv(Kic) @ (Fc - Kcc @ Uc)
+# Fi = Kii @ Ui + Kci @ Uc
 
 # --------------
 # Reconstruction
 # --------------
-
-Utot = reconstruire_vecteur(Uc, ddlUc, Ui, ddlFc)
-Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
+# Pour l'exo 6.1
+Utot = [[0], [-0.00251], [0.00198],[-0.00228], [0], [-0.00318]]
+# Utot = reconstruire_vecteur(Uc, ddlUc, Ui, ddlFc)
+# Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 
 # --------
 # Reponses
 # --------
 
-xP = 17
-yP = 8
-Ni2P = evaluer_Ni_T3(xi2, yi2, xj2, yj2, xk2, yk2, xP, yP)
-Nj2P = evaluer_Nj_T3(xi2, yi2, xj2, yj2, xk2, yk2, xP, yP)
-Nk2P = evaluer_Nk_T3(xi2, yi2, xj2, yj2, xk2, yk2, xP, yP)
-vi2 = extraire_vecteur(Utot, [4])
-vj2 = extraire_vecteur(Utot, [6])
-vk2 = extraire_vecteur(Utot, [8])
-vP = vi2[0][0] * Ni2P + vj2[0][0] * Nj2P + vk2[0][0] * Nk2P
-print('vP = %.4f mm' % vP)
+# xP = 17
+# yP = 8
+# Ni2P = evaluer_Ni_T3(xi2, yi2, xj2, yj2, xk2, yk2, xP, yP)
+# Nj2P = evaluer_Nj_T3(xi2, yi2, xj2, yj2, xk2, yk2, xP, yP)
+# Nk2P = evaluer_Nk_T3(xi2, yi2, xj2, yj2, xk2, yk2, xP, yP)
+# vi2 = extraire_vecteur(Utot, [4])
+# vj2 = extraire_vecteur(Utot, [6])
+# vk2 = extraire_vecteur(Utot, [8])
+# vP = vi2[0][0] * Ni2P + vj2[0][0] * Nj2P + vk2[0][0] * Nk2P
+# print('vP = %.4f mm' % vP)
 
 sig1 = calculer_contraintes_T3(Utot, ddl1, E1, nu1, xi1, yi1, xj1, yj1, xk1, yk1)
 mises1 = calculer_mises_EPC(sig1)
 print('Mises_1 = %.1f MPa' % mises1)
+print('sig_x = %.1f MPa' % sig1[0][0])
 
-sig2 = calculer_contraintes_T3(Utot, ddl2, E2, nu2, xi2, yi2, xj2, yj2, xk2, yk2)
-mises2 = calculer_mises_EPC(sig2)
-print('Mises_2 = %.1f MPa' % mises2)
+# sig2 = calculer_contraintes_T3(Utot, ddl2, E2, nu2, xi2, yi2, xj2, yj2, xk2, yk2)
+# mises2 = calculer_mises_EPC(sig2)
+# print('Mises_2 = %.1f MPa' % mises2)
