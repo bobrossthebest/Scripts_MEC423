@@ -384,7 +384,7 @@ while True:
     up = np.dot(u, Nijk)
     vp = np.dot(v, Nijk)
 
-    print(f"Déplacements au point {x}, {y} dans l'élément {N} : U = {up} {L}, V = {vp} {L}")
+    print(f"Déplacements au point {x}, {y} dans l'élément {N+1} : U = {up} {L}, V = {vp} {L}")
 
 # Tableau des contraintes, incluant Von Mises
 tab_sigma = []
@@ -402,3 +402,4 @@ for i in range(nb_elements):
     print(f"Élément {i+1}: \u03c3x = {tab_sigma[i][0][0][0]:.3},\t\u03c3y = {tab_sigma[i][0][1][0]:.3},\t"
           f"\U0001d70fxy = {tab_sigma[i][0][2][0]:.3}")
     print(f"\t\t\u03c3 de von Mises: {tab_sigma[i][1]:.3}")
+    print(f"\t\tFS = {25 / tab_sigma[i][1]:.3}\n")
