@@ -176,7 +176,7 @@ k1 = calculer_k_T3(E1, nu1, t1, xi1, yi1, xj1, yj1, xk1, yk1)
 # Reconstruction
 # --------------
 # Pour l'exo 6.1
-Utot = [[0], [-0.00251], [0.00198],[-0.00228], [0], [-0.00318]]
+Utot = [[0], [-0.00251], [0.00198], [-0.00228], [0], [-0.00318]]
 # Utot = reconstruire_vecteur(Uc, ddlUc, Ui, ddlFc)
 # Ftot = reconstruire_vecteur(Fc, ddlFc, Fi, ddlUc)
 
